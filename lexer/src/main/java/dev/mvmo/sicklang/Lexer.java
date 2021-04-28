@@ -41,9 +41,32 @@ public class Lexer {
         Token token;
 
         switch (currentChar) {
+            //<editor-fold desc="operators">
             case '=':
                 token = Token.newInstance(TokenType.ASSIGN, "=");
                 break;
+            case '+':
+                token = Token.newInstance(TokenType.PLUS, "+");
+                break;
+            case '-':
+                token = Token.newInstance(TokenType.MINUS, "-");
+                break;
+            case '*':
+                token = Token.newInstance(TokenType.ASTERISK, "*");
+                break;
+            case '/':
+                token = Token.newInstance(TokenType.SLASH, "/");
+                break;
+            case '!':
+                token = Token.newInstance(TokenType.BANG, "!");
+                break;
+            case '<':
+                token = Token.newInstance(TokenType.LESS_THAN, "<");
+                break;
+            case '>':
+                token = Token.newInstance(TokenType.GREATER_THAN, ">");
+                break;
+            //</editor-fold>
             case ';':
                 token = Token.newInstance(TokenType.SEMICOLON, ";");
                 break;
@@ -55,9 +78,6 @@ public class Lexer {
                 break;
             case ',':
                 token = Token.newInstance(TokenType.COMMA, ",");
-                break;
-            case '+':
-                token = Token.newInstance(TokenType.PLUS, "+");
                 break;
             case '{':
                 token = Token.newInstance(TokenType.LEFT_BRACE, "{");

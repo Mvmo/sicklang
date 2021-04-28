@@ -16,7 +16,14 @@ public class LexerTest {
                 " let add = fn(x, y) {" +
                 "    x + y;" +
                 " };" +
-                " let result = add(five , ten);";
+                " let result = add(five , ten);" +
+                " !-/*5;" +
+                " 5 < 10 > 5;" +
+                " if (5 < 10) {" +
+                "    return true;" +
+                " } else {" +
+                "    return false;" +
+                " }";
 
         Token[] expectedTokens = new Token[]{
                 Token.newInstance(TokenType.LET, "let"),
@@ -55,6 +62,35 @@ public class LexerTest {
                 Token.newInstance(TokenType.IDENTIFIER, "ten"),
                 Token.newInstance(TokenType.RIGHT_PAREN, ")"),
                 Token.newInstance(TokenType.SEMICOLON, ";"),
+                Token.newInstance(TokenType.BANG, "!"),
+                Token.newInstance(TokenType.MINUS, "-"),
+                Token.newInstance(TokenType.SLASH, "/"),
+                Token.newInstance(TokenType.ASTERISK, "*"),
+                Token.newInstance(TokenType.INTEGER, "5"),
+                Token.newInstance(TokenType.SEMICOLON, ";"),
+                Token.newInstance(TokenType.INTEGER, "5"),
+                Token.newInstance(TokenType.LESS_THAN, "<"),
+                Token.newInstance(TokenType.INTEGER, "10"),
+                Token.newInstance(TokenType.GREATER_THAN, ">"),
+                Token.newInstance(TokenType.INTEGER, "5"),
+                Token.newInstance(TokenType.SEMICOLON, ";"),
+                Token.newInstance(TokenType.IF, "if"),
+                Token.newInstance(TokenType.LEFT_PAREN, "("),
+                Token.newInstance(TokenType.INTEGER, "5"),
+                Token.newInstance(TokenType.LESS_THAN, "<"),
+                Token.newInstance(TokenType.INTEGER, "10"),
+                Token.newInstance(TokenType.RIGHT_PAREN, ")"),
+                Token.newInstance(TokenType.LEFT_BRACE, "{"),
+                Token.newInstance(TokenType.RETURN, "return"),
+                Token.newInstance(TokenType.TRUE, "true"),
+                Token.newInstance(TokenType.SEMICOLON, ";"),
+                Token.newInstance(TokenType.RIGHT_BRACE, "}"),
+                Token.newInstance(TokenType.ELSE, "else"),
+                Token.newInstance(TokenType.LEFT_BRACE, "{"),
+                Token.newInstance(TokenType.RETURN, "return"),
+                Token.newInstance(TokenType.FALSE, "false"),
+                Token.newInstance(TokenType.SEMICOLON, ";"),
+                Token.newInstance(TokenType.RIGHT_BRACE, "}"),
                 Token.newInstance(TokenType.EOF, "")
         };
 

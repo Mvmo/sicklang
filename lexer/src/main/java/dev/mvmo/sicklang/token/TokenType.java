@@ -11,8 +11,16 @@ public enum TokenType {
     IDENTIFIER("IDENT"),
     INTEGER("INT"),
 
+    // Operators
     ASSIGN("="),
     PLUS("+"),
+    MINUS("-"),
+    BANG("!"),
+    ASTERISK("*"),
+    SLASH("/"),
+
+    LESS_THAN("<"),
+    GREATER_THAN(">"),
 
     COMMA(","),
     SEMICOLON(";"),
@@ -23,8 +31,14 @@ public enum TokenType {
     LEFT_BRACE("{"),
     RIGHT_BRACE("}"),
 
+    // Keywords
     FUNCTION("FUNCTION"),
-    LET("LET");
+    LET("LET"),
+    TRUE("TRUE"),
+    FALSE("FALSE"),
+    IF("IF"),
+    ELSE("ELSE"),
+    RETURN("RETURN");
 
     private final String literal;
 
