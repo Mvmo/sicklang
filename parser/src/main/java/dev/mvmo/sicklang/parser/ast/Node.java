@@ -1,4 +1,4 @@
-package dev.mvmo.sicklang.parser.ast.node;
+package dev.mvmo.sicklang.parser.ast;
 
 public interface Node {
 
