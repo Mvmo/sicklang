@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>lexer</module>
+        <module>repl</module>
     </modules>
 
     <properties>
