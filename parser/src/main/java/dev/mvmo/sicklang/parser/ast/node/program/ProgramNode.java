@@ -5,7 +5,7 @@ import dev.mvmo.sicklang.parser.ast.node.statement.StatementNode;
 
 import java.util.List;
 
-public class Program implements Node {
+public class ProgramNode implements Node {
 
     private List<StatementNode> statementNodes;
 
