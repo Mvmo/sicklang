@@ -23,7 +23,9 @@ public class LexerTest {
                 "    return true;" +
                 " } else {" +
                 "    return false;" +
-                " }";
+                " }" +
+                "10 == 10;" +
+                "10 != 9;";
 
         Token[] expectedTokens = new Token[]{
                 Token.newInstance(TokenType.LET, "let"),
@@ -91,6 +93,14 @@ public class LexerTest {
                 Token.newInstance(TokenType.FALSE, "false"),
                 Token.newInstance(TokenType.SEMICOLON, ";"),
                 Token.newInstance(TokenType.RIGHT_BRACE, "}"),
+                Token.newInstance(TokenType.INTEGER, "10"),
+                Token.newInstance(TokenType.EQUALS, "=="),
+                Token.newInstance(TokenType.INTEGER, "10"),
+                Token.newInstance(TokenType.SEMICOLON, ";"),
+                Token.newInstance(TokenType.INTEGER, "10"),
+                Token.newInstance(TokenType.NOT_EQUALS, "!="),
+                Token.newInstance(TokenType.INTEGER, "9"),
+                Token.newInstance(TokenType.SEMICOLON, ";"),
                 Token.newInstance(TokenType.EOF, "")
         };
 
