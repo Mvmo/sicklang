@@ -35,6 +35,13 @@ public class Lexer {
         this.readPosition += 1;
     }
 
+    private char peekChar() {
+        if (this.readPosition >= this.input.length())
+            return 0;
+        else
+            return this.input.charAt(this.readPosition);
+    }
+
     public Token nextToken() {
         skipWhitespace();
 
