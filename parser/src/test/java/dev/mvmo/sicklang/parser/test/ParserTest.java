@@ -21,6 +21,8 @@ public class ParserTest {
         Parser parser = Parser.newInstance(lexer);
 
         ProgramNode node = parser.parseProgram();
+        checkParserErrors(parser);
+
         assertNotNull(node);
         assertEquals(3, node.statementNodes().size());
 
@@ -44,6 +46,18 @@ public class ParserTest {
 
         assertEquals(name, letStatement.identifier().value());
         assertEquals(name, letStatement.identifier().tokenLiteral());
+    }
+
+    private void checkParserErrors(Parser parser) {
+        if (parser.errorMessages().size() == 0)
+            return;
+
+        System.err.printf("parser has %d errors\n", parser.errorMessages().size());
+        parser.errorMessages().stream()
+                .map(message -> "parser error: " + message)
+                .forEach(System.err::println);
+
+        fail();
     }
 
 }

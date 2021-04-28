@@ -8,18 +8,27 @@ import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
 import dev.mvmo.sicklang.token.Token;
 import dev.mvmo.sicklang.token.TokenType;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Accessors(fluent = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class Parser {
 
     private final Lexer lexer;
 
+    private final List<String> errorMessages;
+
     private Token currentToken;
     private Token peekToken;
 
     public static Parser newInstance(Lexer lexer) {
-        Parser parser = new Parser(lexer);
+        Parser parser = new Parser(lexer, new ArrayList<>());
 
         parser.nextToken();
         parser.nextToken();
@@ -35,7 +44,7 @@ public class Parser {
     public ProgramNode parseProgram() {
         ProgramNode programNode = ProgramNode.newInstance();
 
-        while (!currentToken.type().equals(TokenType.EOF)) {
+        while (!currentTokenIs(TokenType.EOF)) {
             StatementNode statementNode = parseStatement();
             if (statementNode != null)
                 programNode.statementNodes().add(statementNode);
@@ -87,8 +96,15 @@ public class Parser {
         if (peekTokenIs(tokenType)) {
             nextToken();
             return true;
-        } else
+        } else {
+            peekError(tokenType);
             return false;
+        }
+    }
+
+    private void peekError(TokenType tokenType) {
+        String message = String.format("expected next token to be %s, got %s instead", tokenType, peekToken.type());
+        errorMessages.add(message);
     }
 
 }
