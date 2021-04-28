@@ -7,15 +7,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@Setter
 @Getter
+@Setter
 @Accessors(fluent = true)
 @RequiredArgsConstructor(staticName = "newInstance")
-public class ReturnStatementNode implements StatementNode {
+public class ExpressionStatement implements StatementNode {
 
     private final Token token;
 
-    private ExpressionNode returnValue;
+    private ExpressionNode expressionNode;
 
     @Override
     public String tokenLiteral() {
@@ -24,16 +24,9 @@ public class ReturnStatementNode implements StatementNode {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        if (expressionNode != null)
+            return expressionNode.toString();
 
-        builder.append(tokenLiteral())
-                .append(" ");
-
-        if (returnValue != null)
-            builder.append(returnValue.toString());
-
-        builder.append(";");
-
-        return builder.toString();
+        return "";
     }
 }

@@ -18,4 +18,8 @@ public class IdentifierExpressionNode implements ExpressionNode {
         return token.literal();
     }
 
+    @Override
+    public String toString() {
+        return value;
+    }
 }

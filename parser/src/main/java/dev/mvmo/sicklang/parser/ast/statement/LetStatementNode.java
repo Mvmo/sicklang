@@ -23,4 +23,13 @@ public class LetStatementNode implements StatementNode {
         return token.literal();
     }
 
+    @Override
+    public String toString() {
+        return token.literal() +
+                " " +
+                identifier.toString() +
+                " = " +
+                value.toString() +
+                ";";
+    }
 }

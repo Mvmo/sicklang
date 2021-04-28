@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Accessors(fluent = true)
@@ -24,4 +25,10 @@ public class ProgramNode implements Node {
             return "";
     }
 
+    @Override
+    public String toString() {
+        return statementNodes.stream()
+                .map(Node::toString)
+                .collect(Collectors.joining());
+    }
 }
