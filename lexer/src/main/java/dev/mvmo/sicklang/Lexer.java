@@ -50,6 +50,15 @@ public class Lexer {
         switch (currentChar) {
             //<editor-fold desc="operators">
             case '=':
+                if (peekChar() == '=') {
+                    char c = currentChar;
+                    readChar();
+
+                    String literal = "" + c + currentChar;
+                    token = Token.newInstance(TokenType.EQUALS, literal);
+                    break;
+                }
+
                 token = Token.newInstance(TokenType.ASSIGN, "=");
                 break;
             case '+':
@@ -65,6 +74,14 @@ public class Lexer {
                 token = Token.newInstance(TokenType.SLASH, "/");
                 break;
             case '!':
+                if (peekChar() == '=') {
+                    char c = currentChar;
+                    readChar();
+
+                    String literal = "" + c + currentChar;
+                    token = Token.newInstance(TokenType.NOT_EQUALS, literal);
+                    break;
+                }
                 token = Token.newInstance(TokenType.BANG, "!");
                 break;
             case '<':
