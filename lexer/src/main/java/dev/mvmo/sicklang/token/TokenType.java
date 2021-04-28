@@ -18,9 +18,10 @@ public enum TokenType {
     BANG("!"),
     ASTERISK("*"),
     SLASH("/"),
-
     LESS_THAN("<"),
     GREATER_THAN(">"),
+    EQUALS("=="),
+    NOT_EQUALS("!="),
 
     COMMA(","),
     SEMICOLON(";"),
