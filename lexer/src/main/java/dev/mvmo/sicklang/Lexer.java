@@ -29,8 +29,6 @@ public class Lexer {
         else
             this.currentChar = this.input.charAt(this.readPosition);
 
-        System.out.println("currentChar -> " + currentChar);
-
         this.position = this.readPosition;
         this.readPosition += 1;
     }
