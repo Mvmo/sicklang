@@ -4,6 +4,7 @@ import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.parser.Parser;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 import dev.mvmo.sicklang.parser.ast.statement.LetStatementNode;
+import dev.mvmo.sicklang.parser.ast.statement.ReturnStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
 import org.junit.Test;
 
@@ -20,11 +21,11 @@ public class ParserTest {
         Lexer lexer = Lexer.newInstance(input);
         Parser parser = Parser.newInstance(lexer);
 
-        ProgramNode node = parser.parseProgram();
+        ProgramNode programNode = parser.parseProgram();
         checkParserErrors(parser);
 
-        assertNotNull(node);
-        assertEquals(3, node.statementNodes().size());
+        assertNotNull(programNode);
+        assertEquals(3, programNode.statementNodes().size());
 
         String[] expectedIdentifiers = new String[]{
                 "x",
@@ -33,8 +34,29 @@ public class ParserTest {
         };
 
         for (int i = 0; i < expectedIdentifiers.length; i++) {
-            StatementNode statementNode = node.statementNodes().get(i);
+            StatementNode statementNode = programNode.statementNodes().get(i);
             testLetStatement(statementNode, expectedIdentifiers[i]);
+        }
+    }
+
+    @Test
+    public void test$returnStatements() {
+        String input = "return 5;" +
+                "return 10;" +
+                "return 993322;";
+
+        Lexer lexer = Lexer.newInstance(input);
+        Parser parser = Parser.newInstance(lexer);
+
+        ProgramNode programNode = parser.parseProgram();
+        checkParserErrors(parser);
+
+        assertNotNull(programNode);
+        assertEquals(3, programNode.statementNodes().size());
+
+        for (StatementNode statementNode : programNode.statementNodes()) {
+            assertTrue(statementNode instanceof ReturnStatementNode);
+            assertEquals("return", statementNode.tokenLiteral());
         }
     }
 

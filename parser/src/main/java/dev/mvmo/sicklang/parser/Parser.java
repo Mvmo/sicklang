@@ -4,6 +4,7 @@ import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.parser.ast.expression.IdentifierExpressionNode;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 import dev.mvmo.sicklang.parser.ast.statement.LetStatementNode;
+import dev.mvmo.sicklang.parser.ast.statement.ReturnStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
 import dev.mvmo.sicklang.token.Token;
 import dev.mvmo.sicklang.token.TokenType;
@@ -59,6 +60,8 @@ public class Parser {
         switch (currentToken.type()) {
             case LET:
                 return parseLetStatement();
+            case RETURN:
+                return parseReturnStatement();
             default:
                 return null;
         }
@@ -80,6 +83,17 @@ public class Parser {
         while (!currentTokenIs(TokenType.SEMICOLON)) {
             nextToken();
         }
+
+        return statementNode;
+    }
+
+    public ReturnStatementNode parseReturnStatement() {
+        ReturnStatementNode statementNode = ReturnStatementNode.newInstance(currentToken);
+        nextToken();
+
+        // TODO: were' skipping the the expression until we encounter a semicolon
+        while (!currentTokenIs(TokenType.SEMICOLON))
+            nextToken();
 
         return statementNode;
     }
