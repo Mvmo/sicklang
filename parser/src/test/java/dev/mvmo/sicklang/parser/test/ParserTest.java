@@ -205,13 +205,7 @@ public class ParserTest {
 
             ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
 
-            assertTrue(statementNode.expressionNode() instanceof InfixExpressionNode);
-
-            InfixExpressionNode infixExpressionNode = (InfixExpressionNode) statementNode.expressionNode();
-
-            testLiteralExpression(testCase.leftValue, infixExpressionNode.left());
-            assertEquals(testCase.operator, infixExpressionNode.operator());
-            testLiteralExpression(testCase.rightValue, infixExpressionNode.right());
+            testInfixExpression(testCase.leftValue, testCase.operator, testCase.rightValue, statementNode.expressionNode());
         }
     }
 
@@ -258,6 +252,73 @@ public class ParserTest {
         }
     }
 
+    @Test
+    public void test$ifExpression() {
+        String input = "if (x < y) { x }";
+
+        Lexer lexer = Lexer.newInstance(input);
+        Parser parser = Parser.newInstance(lexer);
+
+        ProgramNode programNode = parser.parseProgram();
+        checkParserErrors(parser);
+
+        assertEquals(1, programNode.statementNodes().size());
+        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+        assertTrue(statementNode.expressionNode() instanceof IfExpressionNode);
+
+        IfExpressionNode ifExpressionNode = (IfExpressionNode) statementNode.expressionNode();
+
+        testInfixExpression("x", "<", "y", ifExpressionNode.conditionalExpressionNode());
+
+        assertEquals(1, ifExpressionNode.consequence().statementNodes().size());
+        assertTrue(ifExpressionNode.consequence().statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        ExpressionStatementNode consequenceStatementNode = (ExpressionStatementNode) ifExpressionNode.consequence().statementNodes().get(0);
+
+        testIdentifier("x", consequenceStatementNode.expressionNode());
+
+        assertNull(ifExpressionNode.alternative());
+    }
+
+    @Test
+    public void test$ifElseExpression() {
+        String input = "if (x < y) { x } else { y }";
+
+        Lexer lexer = Lexer.newInstance(input);
+        Parser parser = Parser.newInstance(lexer);
+
+        ProgramNode programNode = parser.parseProgram();
+        checkParserErrors(parser);
+
+        assertEquals(1, programNode.statementNodes().size());
+        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+        assertTrue(statementNode.expressionNode() instanceof IfExpressionNode);
+
+        IfExpressionNode ifExpressionNode = (IfExpressionNode) statementNode.expressionNode();
+
+        testInfixExpression("x", "<", "y", ifExpressionNode.conditionalExpressionNode());
+
+        assertEquals(1, ifExpressionNode.consequence().statementNodes().size());
+        assertTrue(ifExpressionNode.consequence().statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        ExpressionStatementNode consequenceStatementNode = (ExpressionStatementNode) ifExpressionNode.consequence().statementNodes().get(0);
+
+        testIdentifier("x", consequenceStatementNode.expressionNode());
+
+        assertEquals(1, ifExpressionNode.alternative().statementNodes().size());
+        assertTrue(ifExpressionNode.alternative().statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        ExpressionStatementNode alternativeStatementNode = (ExpressionStatementNode) ifExpressionNode.alternative().statementNodes().get(0);
+
+        testIdentifier("y", alternativeStatementNode.expressionNode());
+    }
+
     private void testLetStatement(StatementNode statement, String name) {
         assertEquals("let", statement.tokenLiteral());
         assertTrue("Statement is not instanceof LetStatementNode", statement instanceof LetStatementNode);
@@ -277,6 +338,18 @@ public class ParserTest {
         assertEquals(String.valueOf(expectedValue), literalExpressionNode.tokenLiteral());
 
         return literalExpressionNode;
+    }
+
+    private InfixExpressionNode testInfixExpression(Object expectedLeft, String expectedOperator, Object expectedRight, ExpressionNode expressionNode) {
+        assertTrue(expressionNode instanceof InfixExpressionNode);
+
+        InfixExpressionNode infixExpressionNode = (InfixExpressionNode) expressionNode;
+
+        testLiteralExpression(expectedLeft, infixExpressionNode.left());
+        assertEquals(expectedOperator, infixExpressionNode.operator());
+        testLiteralExpression(expectedRight, infixExpressionNode.right());
+
+        return infixExpressionNode;
     }
 
     private BooleanExpressionNode testBooleanLiteral(boolean expectedValue, ExpressionNode expressionNode) {
