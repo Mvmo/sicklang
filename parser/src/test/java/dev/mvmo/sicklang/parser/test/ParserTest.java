@@ -3,10 +3,7 @@ package dev.mvmo.sicklang.parser.test;
 import com.google.common.collect.Lists;
 import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.parser.Parser;
-import dev.mvmo.sicklang.parser.ast.expression.ExpressionNode;
-import dev.mvmo.sicklang.parser.ast.expression.IdentifierExpressionNode;
-import dev.mvmo.sicklang.parser.ast.expression.IntegerLiteralExpressionNode;
-import dev.mvmo.sicklang.parser.ast.expression.PrefixExpressionNode;
+import dev.mvmo.sicklang.parser.ast.expression.*;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 import dev.mvmo.sicklang.parser.ast.statement.ExpressionStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.LetStatementNode;
@@ -146,7 +143,52 @@ public class ParserTest {
             PrefixExpressionNode prefixExpressionNode = (PrefixExpressionNode) statementNode.expressionNode();
 
             assertEquals(expected.operator, prefixExpressionNode.operator());
-            testIntegerLiteral(prefixExpressionNode.right(), expected.value);
+            testIntegerLiteral(expected.value, prefixExpressionNode.right());
+        }
+    }
+
+    @Test
+    public void test$infixExpressions() {
+        @Value
+        class Expected {
+            String input;
+            int leftValue;
+            String operator;
+            int rightValue;
+        }
+
+        List<Expected> expectedList = Lists.newArrayList(
+            new Expected("5 + 5", 5, "+", 5), // +
+            new Expected("5 - 5", 5, "-", 5), // -
+            new Expected("5 * 5", 5, "*", 5), // *
+            new Expected("5 / 5", 5, "/", 5), // /
+            new Expected("5 > 5", 5, ">", 5), // >
+            new Expected("5 < 5", 5, "<", 5), // <
+            new Expected("5 == 5", 5, "==", 5), // ==
+            new Expected("5 != 5", 5, "!=", 5)// !=
+        );
+
+        for (Expected expected : expectedList) {
+            Lexer lexer = Lexer.newInstance(expected.input);
+            Parser parser = Parser.newInstance(lexer);
+
+            ProgramNode programNode = parser.parseProgram();
+            checkParserErrors(parser);
+
+            assertEquals(1, programNode.statementNodes().size());
+            assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+            ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+            assertTrue(statementNode.expressionNode() instanceof InfixExpressionNode);
+
+            InfixExpressionNode infixExpressionNode = (InfixExpressionNode) statementNode.expressionNode();
+
+            testIntegerLiteral(expected.leftValue, infixExpressionNode.left());
+
+            assertEquals(expected.operator, infixExpressionNode.operator());
+
+            testIntegerLiteral(expected.rightValue, infixExpressionNode.right());
         }
     }
 
@@ -160,13 +202,13 @@ public class ParserTest {
         assertEquals(name, letStatement.identifier().tokenLiteral());
     }
 
-    private void testIntegerLiteral(ExpressionNode expressionNode, int value) {
+    private void testIntegerLiteral(int expectedValue, ExpressionNode expressionNode) {
         assertTrue(expressionNode instanceof IntegerLiteralExpressionNode);
 
         IntegerLiteralExpressionNode literalExpressionNode = (IntegerLiteralExpressionNode) expressionNode;
 
-        assertEquals(value, literalExpressionNode.value());
-        assertEquals(String.valueOf(value), literalExpressionNode.tokenLiteral());
+        assertEquals(expectedValue, literalExpressionNode.value());
+        assertEquals(String.valueOf(expectedValue), literalExpressionNode.tokenLiteral());
     }
 
     private void checkParserErrors(Parser parser) {
