@@ -18,13 +18,11 @@ import dev.mvmo.sicklang.token.TokenType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 
 import java.util.List;
 import java.util.Map;
 
 @Getter
-@Accessors(fluent = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class Parser {
 

@@ -5,13 +5,11 @@ import dev.mvmo.sicklang.parser.ast.Node;
 import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-@Accessors(fluent = true)
 @RequiredArgsConstructor(staticName = "newInstance")
 public class ProgramNode implements Node {
 

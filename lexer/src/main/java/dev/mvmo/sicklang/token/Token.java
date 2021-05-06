@@ -3,13 +3,11 @@ package dev.mvmo.sicklang.token;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import java.util.Map;
 
 @Getter
 @ToString
-@Accessors(fluent = true)
 @AllArgsConstructor(staticName = "newInstance")
 public class Token {
 

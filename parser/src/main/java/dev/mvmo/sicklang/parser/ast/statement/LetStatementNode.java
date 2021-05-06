@@ -6,11 +6,9 @@ import dev.mvmo.sicklang.token.Token;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
 @Getter
 @Setter
-@Accessors(fluent = true)
 @RequiredArgsConstructor(staticName = "newInstance")
 public class LetStatementNode implements StatementNode {
 
