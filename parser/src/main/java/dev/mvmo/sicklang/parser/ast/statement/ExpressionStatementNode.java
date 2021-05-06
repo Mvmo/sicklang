@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(fluent = true)
 @RequiredArgsConstructor(staticName = "newInstance")
-public class ExpressionStatement implements StatementNode {
+public class ExpressionStatementNode implements StatementNode {
 
     private final Token token;
 
