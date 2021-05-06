@@ -135,18 +135,20 @@ public class ParserTest {
     @Test
     public void test$prefixExpressions() {
         @Value
-        class TestCase {
+        class TestCase<T> {
             String input;
             String operator;
-            int value;
+            T value;
         }
 
-        TestCase[] testCases = new TestCase[]{
-                new TestCase("!5", "!", 5),
-                new TestCase("-15;", "-", 15)
+        TestCase<?>[] testCases = new TestCase[]{
+                new TestCase<>("!5", "!", 5),
+                new TestCase<>("-15;", "-", 15),
+                new TestCase<>("!true", "!", true),
+                new TestCase<>("!false", "!", false)
         };
 
-        for (TestCase testCase : testCases) {
+        for (TestCase<?> testCase : testCases) {
             Lexer lexer = Lexer.newInstance(testCase.input);
             Parser parser = Parser.newInstance(lexer);
 
@@ -163,7 +165,7 @@ public class ParserTest {
             PrefixExpressionNode prefixExpressionNode = (PrefixExpressionNode) statementNode.expressionNode();
 
             assertEquals(testCase.operator, prefixExpressionNode.operator());
-            testIntegerLiteral(testCase.value, prefixExpressionNode.right());
+            testLiteralExpression(testCase.value, prefixExpressionNode.right());
         }
     }
 
