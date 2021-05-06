@@ -3,6 +3,7 @@ package dev.mvmo.sicklang.parser.test;
 import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.parser.Parser;
 import dev.mvmo.sicklang.parser.ast.expression.IdentifierExpressionNode;
+import dev.mvmo.sicklang.parser.ast.expression.IntegerLiteralExpressionNode;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 import dev.mvmo.sicklang.parser.ast.statement.ExpressionStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.LetStatementNode;
