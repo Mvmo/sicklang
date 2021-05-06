@@ -1,11 +1,18 @@
 package dev.mvmo.sicklang.parser;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import dev.mvmo.sicklang.Lexer;
+import dev.mvmo.sicklang.parser.ast.expression.ExpressionNode;
 import dev.mvmo.sicklang.parser.ast.expression.IdentifierExpressionNode;
+import dev.mvmo.sicklang.parser.ast.function.InfixParseFunction;
+import dev.mvmo.sicklang.parser.ast.function.PrefixParseFunction;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
+import dev.mvmo.sicklang.parser.ast.statement.ExpressionStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.LetStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.ReturnStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
+import dev.mvmo.sicklang.parser.precedence.Precedence;
 import dev.mvmo.sicklang.token.Token;
 import dev.mvmo.sicklang.token.TokenType;
 import lombok.AccessLevel;
@@ -14,7 +21,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Accessors(fluent = true)
@@ -23,13 +32,18 @@ public class Parser {
 
     private final Lexer lexer;
 
+    private final Map<TokenType, PrefixParseFunction> prefixParseFunctionMap;
+    private final Map<TokenType, InfixParseFunction> infixParseFunctionMap;
+
     private final List<String> errorMessages;
 
     private Token currentToken;
     private Token peekToken;
 
     public static Parser newInstance(Lexer lexer) {
-        Parser parser = new Parser(lexer, new ArrayList<>());
+        Parser parser = new Parser(lexer, Maps.newHashMap(), Maps.newHashMap(), Lists.newArrayList());
+
+        parser.prefixParseFunctionMap.put(TokenType.IDENTIFIER, parser::parseIdentifier);
 
         parser.nextToken();
         parser.nextToken();
@@ -63,7 +77,7 @@ public class Parser {
             case RETURN:
                 return parseReturnStatement();
             default:
-                return null;
+                return parseExpressionStatement();
         }
     }
 
@@ -96,6 +110,31 @@ public class Parser {
             nextToken();
 
         return statementNode;
+    }
+
+    public ExpressionStatementNode parseExpressionStatement() {
+        ExpressionStatementNode statementNode = ExpressionStatementNode.newInstance(currentToken);
+
+        statementNode.expressionNode(parseExpression(Precedence.LOWEST));
+
+        if (peekTokenIs(TokenType.SEMICOLON))
+            nextToken();
+
+        return statementNode;
+    }
+
+    public ExpressionNode parseExpression(Precedence precedence) {
+        PrefixParseFunction prefixParseFunction = prefixParseFunctionMap.get(currentToken.type());
+        if (prefixParseFunction == null)
+            return null;
+
+        ExpressionNode leftExpression = prefixParseFunction.parse();
+
+        return leftExpression;
+    }
+
+    private IdentifierExpressionNode parseIdentifier() {
+        return IdentifierExpressionNode.newInstance(currentToken, currentToken.literal());
     }
 
     private boolean currentTokenIs(TokenType tokenType) {
