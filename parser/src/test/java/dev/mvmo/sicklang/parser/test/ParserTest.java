@@ -110,6 +110,29 @@ public class ParserTest {
     }
 
     @Test
+    public void test$booleanExpression() {
+        String input = "true;";
+
+        Lexer lexer = Lexer.newInstance(input);
+        Parser parser = Parser.newInstance(lexer);
+
+        ProgramNode programNode = parser.parseProgram();
+        checkParserErrors(parser);
+
+        assertEquals(1, programNode.statementNodes().size());
+        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+        assertTrue(statementNode.expressionNode() instanceof BooleanExpressionNode);
+
+        BooleanExpressionNode booleanExpressionNode = (BooleanExpressionNode) statementNode.expressionNode();
+
+        assertTrue(booleanExpressionNode.value());
+        assertEquals("true", booleanExpressionNode.tokenLiteral());
+    }
+
+    @Test
     public void test$prefixExpressions() {
         @Value
         class TestCase {
@@ -147,25 +170,28 @@ public class ParserTest {
     @Test
     public void test$infixExpressions() {
         @Value
-        class TestCase {
+        class TestCase<T> {
             String input;
-            int leftValue;
+            T leftValue;
             String operator;
-            int rightValue;
+            T rightValue;
         }
 
-        TestCase[] testCases = new TestCase[]{
-                new TestCase("5 + 5;", 5, "+", 5), // +
-                new TestCase("5 - 5;", 5, "-", 5), // -
-                new TestCase("5 * 5;", 5, "*", 5), // *
-                new TestCase("5 / 5;", 5, "/", 5), // /
-                new TestCase("5 > 5;", 5, ">", 5), // >
-                new TestCase("5 < 5;", 5, "<", 5), // <
-                new TestCase("5 == 5;", 5, "==", 5), // ==
-                new TestCase("5 != 5;", 5, "!=", 5)// !=
+        TestCase<?>[] testCases = new TestCase[]{
+                new TestCase<>("5 + 5;", 5, "+", 5), // +
+                new TestCase<>("5 - 5;", 5, "-", 5), // -
+                new TestCase<>("5 * 5;", 5, "*", 5), // *
+                new TestCase<>("5 / 5;", 5, "/", 5), // /
+                new TestCase<>("5 > 5;", 5, ">", 5), // >
+                new TestCase<>("5 < 5;", 5, "<", 5), // <
+                new TestCase<>("5 == 5;", 5, "==", 5), // ==
+                new TestCase<>("5 != 5;", 5, "!=", 5), // !=
+                new TestCase<>("true == true;", true, "==", true),
+                new TestCase<>("true != false;", true, "!=", false),
+                new TestCase<>("false == false", false, "==", false)
         };
 
-        for (TestCase testCase : testCases) {
+        for (TestCase<?> testCase : testCases) {
             Lexer lexer = Lexer.newInstance(testCase.input);
             Parser parser = Parser.newInstance(lexer);
 
@@ -181,11 +207,9 @@ public class ParserTest {
 
             InfixExpressionNode infixExpressionNode = (InfixExpressionNode) statementNode.expressionNode();
 
-            testIntegerLiteral(testCase.leftValue, infixExpressionNode.left());
-
+            testLiteralExpression(testCase.leftValue, infixExpressionNode.left());
             assertEquals(testCase.operator, infixExpressionNode.operator());
-
-            testIntegerLiteral(testCase.rightValue, infixExpressionNode.right());
+            testLiteralExpression(testCase.rightValue, infixExpressionNode.right());
         }
     }
 
@@ -237,13 +261,26 @@ public class ParserTest {
         assertEquals(name, letStatement.identifier().tokenLiteral());
     }
 
-    private void testIntegerLiteral(int expectedValue, ExpressionNode expressionNode) {
+    private IntegerLiteralExpressionNode testIntegerLiteral(int expectedValue, ExpressionNode expressionNode) {
         assertTrue(expressionNode instanceof IntegerLiteralExpressionNode);
 
         IntegerLiteralExpressionNode literalExpressionNode = (IntegerLiteralExpressionNode) expressionNode;
 
         assertEquals(expectedValue, literalExpressionNode.value());
         assertEquals(String.valueOf(expectedValue), literalExpressionNode.tokenLiteral());
+
+        return literalExpressionNode;
+    }
+
+    private BooleanExpressionNode testBooleanLiteral(boolean expectedValue, ExpressionNode expressionNode) {
+        assertTrue(expressionNode instanceof BooleanExpressionNode);
+
+        BooleanExpressionNode booleanExpressionNode = (BooleanExpressionNode) expressionNode;
+
+        assertEquals(expectedValue, booleanExpressionNode.value());
+        assertEquals(String.valueOf(expectedValue), booleanExpressionNode.tokenLiteral());
+
+        return booleanExpressionNode;
     }
 
     private IdentifierExpressionNode testIdentifier(String expectedValue, ExpressionNode expressionNode) {
@@ -253,6 +290,18 @@ public class ParserTest {
         assertEquals(expectedValue, identifierExpressionNode.tokenLiteral());
 
         return identifierExpressionNode;
+    }
+
+    private ExpressionNode testLiteralExpression(Object expectedValue, ExpressionNode expressionNode) {
+        return switch (expectedValue.getClass().getSimpleName()) {
+            case "Integer" -> testIntegerLiteral((Integer) expectedValue, expressionNode);
+            case "String" -> testIdentifier((String) expectedValue, expressionNode);
+            case "Boolean" -> testBooleanLiteral((Boolean) expectedValue, expressionNode);
+            default -> () -> {
+                fail();
+                return null;
+            };
+        };
     }
 
     private void checkParserErrors(Parser parser) {
