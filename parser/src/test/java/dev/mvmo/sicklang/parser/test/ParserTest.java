@@ -242,6 +242,15 @@ public class ParserTest {
         assertEquals(String.valueOf(expectedValue), literalExpressionNode.tokenLiteral());
     }
 
+    private IdentifierExpressionNode testIdentifier(String expectedValue, ExpressionNode expressionNode) {
+        assertTrue(expressionNode instanceof IdentifierExpressionNode);
+        IdentifierExpressionNode identifierExpressionNode = (IdentifierExpressionNode) expressionNode;
+        assertEquals(expectedValue, identifierExpressionNode.value());
+        assertEquals(expectedValue, identifierExpressionNode.tokenLiteral());
+
+        return identifierExpressionNode;
+    }
+
     private void checkParserErrors(Parser parser) {
         if (parser.errorMessages().size() == 0)
             return;
