@@ -1,15 +1,22 @@
 package dev.mvmo.sicklang.parser.test;
 
+import com.google.common.collect.Lists;
 import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.parser.Parser;
+import dev.mvmo.sicklang.parser.ast.expression.ExpressionNode;
 import dev.mvmo.sicklang.parser.ast.expression.IdentifierExpressionNode;
 import dev.mvmo.sicklang.parser.ast.expression.IntegerLiteralExpressionNode;
+import dev.mvmo.sicklang.parser.ast.expression.PrefixExpressionNode;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 import dev.mvmo.sicklang.parser.ast.statement.ExpressionStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.LetStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.ReturnStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
+import lombok.AllArgsConstructor;
+import lombok.Value;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -109,6 +116,42 @@ public class ParserTest {
         assertEquals("5", literalExpressionNode.tokenLiteral());
     }
 
+    @Test
+    public void test$prefixExpressions() {
+        @Value
+        @AllArgsConstructor(staticName = "newInstance")
+        class Expected {
+            String input;
+            String operator;
+            int value;
+        }
+
+        List<Expected> expectedList = Lists.newArrayList(
+                Expected.newInstance("!5", "!", 5),
+                Expected.newInstance("-15;", "-", 15)
+        );
+
+        for (Expected expected : expectedList) {
+            Lexer lexer = Lexer.newInstance(expected.input);
+            Parser parser = Parser.newInstance(lexer);
+
+            ProgramNode programNode = parser.parseProgram();
+            checkParserErrors(parser);
+
+            assertEquals(1, programNode.statementNodes().size());
+            assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+            ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+            assertTrue(statementNode.expressionNode() instanceof PrefixExpressionNode);
+
+            PrefixExpressionNode prefixExpressionNode = (PrefixExpressionNode) statementNode.expressionNode();
+
+            assertEquals(expected.operator, prefixExpressionNode.operator());
+            testIntegerLiteral(prefixExpressionNode.right(), expected.value);
+        }
+    }
+
     private void testLetStatement(StatementNode statement, String name) {
         assertEquals("let", statement.tokenLiteral());
         assertTrue("Statement is not instanceof LetStatementNode", statement instanceof LetStatementNode);
@@ -117,6 +160,15 @@ public class ParserTest {
 
         assertEquals(name, letStatement.identifier().value());
         assertEquals(name, letStatement.identifier().tokenLiteral());
+    }
+
+    private void testIntegerLiteral(ExpressionNode expressionNode, int value) {
+        assertTrue(expressionNode instanceof IntegerLiteralExpressionNode);
+
+        IntegerLiteralExpressionNode literalExpressionNode = (IntegerLiteralExpressionNode) expressionNode;
+
+        assertEquals(value, literalExpressionNode.value());
+        assertEquals(String.valueOf(value), literalExpressionNode.tokenLiteral());
     }
 
     private void checkParserErrors(Parser parser) {
