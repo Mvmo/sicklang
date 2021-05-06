@@ -44,6 +44,7 @@ public class Parser {
         parser.prefixParseFunctionMap.put(TokenType.MINUS, parser::parsePrefixExpression);
         parser.prefixParseFunctionMap.put(TokenType.TRUE, parser::parseBooleanExpression);
         parser.prefixParseFunctionMap.put(TokenType.FALSE, parser::parseBooleanExpression);
+        parser.prefixParseFunctionMap.put(TokenType.LEFT_PAREN, parser::parseGroupedExpression);
 
         parser.infixParseFunctionMap.put(TokenType.PLUS, parser::parseInfixExpression);
         parser.infixParseFunctionMap.put(TokenType.MINUS, parser::parseInfixExpression);
@@ -198,6 +199,17 @@ public class Parser {
 
     public BooleanExpressionNode parseBooleanExpression() {
         return BooleanExpressionNode.newInstance(currentToken, currentTokenIs(TokenType.TRUE));
+    }
+
+    public ExpressionNode parseGroupedExpression() {
+        nextToken();
+
+        ExpressionNode expressionNode = parseExpression(Precedence.LOWEST);
+
+        if (!expectPeek(TokenType.RIGHT_PAREN))
+            return null;
+
+        return expressionNode;
     }
 
     private boolean currentTokenIs(TokenType tokenType) {
