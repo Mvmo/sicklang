@@ -74,7 +74,7 @@ public class ParserTest {
         checkParserErrors(parser);
 
         assertEquals(1, programNode.statementNodes().size());
-        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionNode);
+        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
 
         ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
 
