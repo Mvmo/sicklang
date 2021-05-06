@@ -2,7 +2,10 @@ package dev.mvmo.sicklang.parser.test;
 
 import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.parser.Parser;
+import dev.mvmo.sicklang.parser.ast.expression.ExpressionNode;
+import dev.mvmo.sicklang.parser.ast.expression.IdentifierExpressionNode;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
+import dev.mvmo.sicklang.parser.ast.statement.ExpressionStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.LetStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.ReturnStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
@@ -58,6 +61,29 @@ public class ParserTest {
             assertTrue(statementNode instanceof ReturnStatementNode);
             assertEquals("return", statementNode.tokenLiteral());
         }
+    }
+
+    @Test
+    public void test$identifierExpression() {
+        String input = "foobar;";
+
+        Lexer lexer = Lexer.newInstance(input);
+        Parser parser = Parser.newInstance(lexer);
+
+        ProgramNode programNode = parser.parseProgram();
+        checkParserErrors(parser);
+
+        assertEquals(1, programNode.statementNodes().size());
+        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionNode);
+
+        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+        assertTrue(statementNode.expressionNode() instanceof IdentifierExpressionNode);
+
+        IdentifierExpressionNode identifierNode = (IdentifierExpressionNode) statementNode.expressionNode();
+
+        assertEquals("foobar", identifierNode.value());
+        assertEquals("foobar", identifierNode.tokenLiteral());
     }
 
     private void testLetStatement(StatementNode statement, String name) {
