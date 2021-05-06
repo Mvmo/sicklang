@@ -1,6 +1,8 @@
 package dev.mvmo.sicklang.repl;
 
 import dev.mvmo.sicklang.Lexer;
+import dev.mvmo.sicklang.parser.Parser;
+import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 import dev.mvmo.sicklang.token.Token;
 import dev.mvmo.sicklang.token.TokenType;
 
@@ -18,6 +20,9 @@ public class SicklangReplApplication {
             String scannedLine = scanner.nextLine();
 
             Lexer lexer = Lexer.newInstance(scannedLine);
+            Parser parser = Parser.newInstance(lexer);
+
+            ProgramNode programNode = parser.parseProgram();
 
             while (true) {
                 Token token = lexer.nextToken();
@@ -28,6 +33,9 @@ public class SicklangReplApplication {
 
                 System.out.println(token);
             }
+
+            System.out.println("Parser: ");
+            System.out.println(programNode.toString());
         }
     }
 
