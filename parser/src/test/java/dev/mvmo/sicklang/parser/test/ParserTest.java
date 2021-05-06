@@ -192,6 +192,40 @@ public class ParserTest {
         }
     }
 
+    @Test
+    public void test$operatorPrecedence() {
+        @Value
+        class Expected {
+            String input;
+            String expected;
+        }
+
+        List<Expected> expectedList = Lists.newArrayList(
+                new Expected("-a * b", "((-a) * b)"),
+                new Expected("!-a", "(!(-a))"),
+                new Expected("a + b + c", "((a + b) + c)"),
+                new Expected("a + b - c", "((a + b) - c)"),
+                new Expected("a * b * c", "((a * b) * c)"),
+                new Expected("a * b / c", "((a * b) / c)"),
+                new Expected("a + b / c", "(a + (b / c))"),
+                new Expected("a + b * c + d / e - f", "(((a + (b * c)) + (d / e)) - f)"),
+                new Expected("3 + 4; -5 * 5", "(3 + 4)((-5) * 5)"),
+                new Expected("5 > 4 == 3 < 4", "((5 > 4) == (3 < 4))"),
+                new Expected("5 < 4 != 3 > 4", "((5 < 4) != (3 > 4))"),
+                new Expected("3 + 4 * 5 == 3  * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))")
+        );
+
+        for (Expected expected : expectedList) {
+            Lexer lexer = Lexer.newInstance(expected.input);
+            Parser parser = Parser.newInstance(lexer);
+
+            ProgramNode programNode = parser.parseProgram();
+            checkParserErrors(parser);
+
+            assertEquals(expected.expected, programNode.toString());
+        }
+    }
+
     private void testLetStatement(StatementNode statement, String name) {
         assertEquals("let", statement.tokenLiteral());
         assertTrue("Statement is not instanceof LetStatementNode", statement instanceof LetStatementNode);
