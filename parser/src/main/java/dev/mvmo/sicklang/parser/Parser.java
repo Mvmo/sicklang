@@ -228,6 +228,15 @@ public class Parser {
 
         expressionNode.consequence(parseBlockStatement());
 
+        if (peekTokenIs(TokenType.ELSE)) {
+            nextToken();
+
+            if (!expectPeek(TokenType.LEFT_BRACE))
+                return null;
+
+            expressionNode.alternative(parseBlockStatement());
+        }
+
         return expressionNode;
     }
 
