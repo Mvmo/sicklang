@@ -11,7 +11,7 @@ import lombok.Setter;
 public class PrefixExpressionNode implements ExpressionNode {
 
     private final Token token;
-    private String operator;
+    private final String operator;
     private ExpressionNode right;
 
     @Override

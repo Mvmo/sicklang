@@ -119,7 +119,6 @@ public class ParserTest {
     @Test
     public void test$prefixExpressions() {
         @Value
-        @AllArgsConstructor(staticName = "newInstance")
         class Expected {
             String input;
             String operator;
@@ -127,8 +126,8 @@ public class ParserTest {
         }
 
         List<Expected> expectedList = Lists.newArrayList(
-                Expected.newInstance("!5", "!", 5),
-                Expected.newInstance("-15;", "-", 15)
+                new Expected("!5", "!", 5),
+                new Expected("-15;", "-", 15)
         );
 
         for (Expected expected : expectedList) {

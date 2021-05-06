@@ -6,6 +6,7 @@ import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.parser.ast.expression.ExpressionNode;
 import dev.mvmo.sicklang.parser.ast.expression.IdentifierExpressionNode;
 import dev.mvmo.sicklang.parser.ast.expression.IntegerLiteralExpressionNode;
+import dev.mvmo.sicklang.parser.ast.expression.PrefixExpressionNode;
 import dev.mvmo.sicklang.parser.ast.function.InfixParseFunction;
 import dev.mvmo.sicklang.parser.ast.function.PrefixParseFunction;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
@@ -19,6 +20,7 @@ import dev.mvmo.sicklang.token.TokenType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.Prefix;
 
 import java.util.List;
 import java.util.Map;
@@ -42,6 +44,8 @@ public class Parser {
 
         parser.prefixParseFunctionMap.put(TokenType.IDENTIFIER, parser::parseIdentifier);
         parser.prefixParseFunctionMap.put(TokenType.INTEGER, parser::parseIntegerLiteral);
+        parser.prefixParseFunctionMap.put(TokenType.BANG, parser::parsePrefixExpression);
+        parser.prefixParseFunctionMap.put(TokenType.MINUS, parser::parsePrefixExpression);
 
         parser.nextToken();
         parser.nextToken();
@@ -151,6 +155,16 @@ public class Parser {
         return literalExpressionNode;
     }
 
+    public ExpressionNode parsePrefixExpression() {
+        PrefixExpressionNode prefixExpressionNode = PrefixExpressionNode.newInstance(currentToken, currentToken.literal());
+
+        nextToken();
+
+        prefixExpressionNode.right(parseExpression(Precedence.PREFIX));
+
+        return prefixExpressionNode;
+    }
+
     private boolean currentTokenIs(TokenType tokenType) {
         return currentToken.type().equals(tokenType);
     }
@@ -167,6 +181,11 @@ public class Parser {
             peekError(tokenType);
             return false;
         }
+    }
+
+    private void noPrefixParseFunctionError(TokenType type) {
+        String message = String.format("no prefix parse function found for type %s", type.name());
+        errorMessages.add(message);
     }
 
     private void peekError(TokenType tokenType) {
