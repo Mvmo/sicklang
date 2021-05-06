@@ -244,7 +244,7 @@ public class ParserTest {
                 new TestCase("(5 + 5) * 2", "((5 + 5) * 2)"),
                 new TestCase("2 / (5 + 5)", "(2 / (5 + 5))"),
                 new TestCase("-(5 + 5)", "(-(5 + 5))"),
-                new TestCase("!(true == true)", "(!(true == true))")
+                new TestCase("!(true == true)", "(!(true == true))"),
         };
 
         for (TestCase testCase : testCases) {
