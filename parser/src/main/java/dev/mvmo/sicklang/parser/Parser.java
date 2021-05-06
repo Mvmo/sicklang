@@ -7,10 +7,7 @@ import dev.mvmo.sicklang.parser.ast.expression.*;
 import dev.mvmo.sicklang.parser.ast.function.InfixParseFunction;
 import dev.mvmo.sicklang.parser.ast.function.PrefixParseFunction;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
-import dev.mvmo.sicklang.parser.ast.statement.ExpressionStatementNode;
-import dev.mvmo.sicklang.parser.ast.statement.LetStatementNode;
-import dev.mvmo.sicklang.parser.ast.statement.ReturnStatementNode;
-import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
+import dev.mvmo.sicklang.parser.ast.statement.*;
 import dev.mvmo.sicklang.parser.precedence.Precedence;
 import dev.mvmo.sicklang.token.Token;
 import dev.mvmo.sicklang.token.TokenType;
@@ -45,6 +42,7 @@ public class Parser {
         parser.prefixParseFunctionMap.put(TokenType.TRUE, parser::parseBooleanExpression);
         parser.prefixParseFunctionMap.put(TokenType.FALSE, parser::parseBooleanExpression);
         parser.prefixParseFunctionMap.put(TokenType.LEFT_PAREN, parser::parseGroupedExpression);
+        parser.prefixParseFunctionMap.put(TokenType.IF, parser::parseIfExpression);
 
         parser.infixParseFunctionMap.put(TokenType.PLUS, parser::parseInfixExpression);
         parser.infixParseFunctionMap.put(TokenType.MINUS, parser::parseInfixExpression);
@@ -210,6 +208,44 @@ public class Parser {
             return null;
 
         return expressionNode;
+    }
+
+    public ExpressionNode parseIfExpression() {
+        IfExpressionNode expressionNode = IfExpressionNode.newInstance(currentToken);
+
+        if (!expectPeek(TokenType.LEFT_PAREN))
+            return null;
+
+        nextToken();
+
+        expressionNode.conditionalExpressionNode(parseExpression(Precedence.LOWEST));
+
+        if (!expectPeek(TokenType.RIGHT_PAREN))
+            return null;
+
+        if (!expectPeek(TokenType.LEFT_BRACE))
+            return null;
+
+        expressionNode.consequence(parseBlockStatement());
+
+        return expressionNode;
+    }
+
+    public BlockStatementNode parseBlockStatement() {
+        BlockStatementNode blockStatementNode = BlockStatementNode.newInstance(currentToken);
+        blockStatementNode.statementNodes(Lists.newArrayList());
+
+        nextToken();
+
+        while (!currentTokenIs(TokenType.RIGHT_BRACE) && !currentTokenIs(TokenType.EOF)) {
+            StatementNode statement = parseStatement();
+            if (statement != null)
+                blockStatementNode.statementNodes().add(statement);
+
+            nextToken();
+        }
+
+        return blockStatementNode;
     }
 
     private boolean currentTokenIs(TokenType tokenType) {
