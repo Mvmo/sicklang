@@ -85,6 +85,29 @@ public class ParserTest {
         assertEquals("foobar", identifierNode.tokenLiteral());
     }
 
+    @Test
+    public void test$integerLiteralExpression() {
+        String input = "5;";
+
+        Lexer lexer = Lexer.newInstance(input);
+        Parser parser = Parser.newInstance(lexer);
+
+        ProgramNode programNode = parser.parseProgram();
+        checkParserErrors(parser);
+
+        assertEquals(1, programNode.statementNodes().size());
+        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+        assertTrue(statementNode.expressionNode() instanceof IntegerLiteralExpressionNode);
+
+        IntegerLiteralExpressionNode literalExpressionNode = (IntegerLiteralExpressionNode) statementNode.expressionNode();
+
+        assertEquals("5", literalExpressionNode.value());
+        assertEquals("5", literalExpressionNode.tokenLiteral());
+    }
+
     private void testLetStatement(StatementNode statement, String name) {
         assertEquals("let", statement.tokenLiteral());
         assertTrue("Statement is not instanceof LetStatementNode", statement instanceof LetStatementNode);
