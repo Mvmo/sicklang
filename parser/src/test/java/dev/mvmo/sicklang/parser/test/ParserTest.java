@@ -105,7 +105,7 @@ public class ParserTest {
 
         IntegerLiteralExpressionNode literalExpressionNode = (IntegerLiteralExpressionNode) statementNode.expressionNode();
 
-        assertEquals("5", literalExpressionNode.value());
+        assertEquals(5, literalExpressionNode.value());
         assertEquals("5", literalExpressionNode.tokenLiteral());
     }
 
