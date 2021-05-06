@@ -115,19 +115,19 @@ public class ParserTest {
     @Test
     public void test$prefixExpressions() {
         @Value
-        class Expected {
+        class TestCase {
             String input;
             String operator;
             int value;
         }
 
-        List<Expected> expectedList = Lists.newArrayList(
-                new Expected("!5", "!", 5),
-                new Expected("-15;", "-", 15)
+        List<TestCase> testCaseList = Lists.newArrayList(
+                new TestCase("!5", "!", 5),
+                new TestCase("-15;", "-", 15)
         );
 
-        for (Expected expected : expectedList) {
-            Lexer lexer = Lexer.newInstance(expected.input);
+        for (TestCase testCase : testCaseList) {
+            Lexer lexer = Lexer.newInstance(testCase.input);
             Parser parser = Parser.newInstance(lexer);
 
             ProgramNode programNode = parser.parseProgram();
@@ -142,34 +142,34 @@ public class ParserTest {
 
             PrefixExpressionNode prefixExpressionNode = (PrefixExpressionNode) statementNode.expressionNode();
 
-            assertEquals(expected.operator, prefixExpressionNode.operator());
-            testIntegerLiteral(expected.value, prefixExpressionNode.right());
+            assertEquals(testCase.operator, prefixExpressionNode.operator());
+            testIntegerLiteral(testCase.value, prefixExpressionNode.right());
         }
     }
 
     @Test
     public void test$infixExpressions() {
         @Value
-        class Expected {
+        class TestCase {
             String input;
             int leftValue;
             String operator;
             int rightValue;
         }
 
-        List<Expected> expectedList = Lists.newArrayList(
-            new Expected("5 + 5;", 5, "+", 5), // +
-            new Expected("5 - 5;", 5, "-", 5), // -
-            new Expected("5 * 5;", 5, "*", 5), // *
-            new Expected("5 / 5;", 5, "/", 5), // /
-            new Expected("5 > 5;", 5, ">", 5), // >
-            new Expected("5 < 5;", 5, "<", 5), // <
-            new Expected("5 == 5;", 5, "==", 5), // ==
-            new Expected("5 != 5;", 5, "!=", 5)// !=
+        List<TestCase> testCaseList = Lists.newArrayList(
+            new TestCase("5 + 5;", 5, "+", 5), // +
+            new TestCase("5 - 5;", 5, "-", 5), // -
+            new TestCase("5 * 5;", 5, "*", 5), // *
+            new TestCase("5 / 5;", 5, "/", 5), // /
+            new TestCase("5 > 5;", 5, ">", 5), // >
+            new TestCase("5 < 5;", 5, "<", 5), // <
+            new TestCase("5 == 5;", 5, "==", 5), // ==
+            new TestCase("5 != 5;", 5, "!=", 5)// !=
         );
 
-        for (Expected expected : expectedList) {
-            Lexer lexer = Lexer.newInstance(expected.input);
+        for (TestCase testCase : testCaseList) {
+            Lexer lexer = Lexer.newInstance(testCase.input);
             Parser parser = Parser.newInstance(lexer);
 
             ProgramNode programNode = parser.parseProgram();
@@ -184,45 +184,45 @@ public class ParserTest {
 
             InfixExpressionNode infixExpressionNode = (InfixExpressionNode) statementNode.expressionNode();
 
-            testIntegerLiteral(expected.leftValue, infixExpressionNode.left());
+            testIntegerLiteral(testCase.leftValue, infixExpressionNode.left());
 
-            assertEquals(expected.operator, infixExpressionNode.operator());
+            assertEquals(testCase.operator, infixExpressionNode.operator());
 
-            testIntegerLiteral(expected.rightValue, infixExpressionNode.right());
+            testIntegerLiteral(testCase.rightValue, infixExpressionNode.right());
         }
     }
 
     @Test
     public void test$operatorPrecedence() {
         @Value
-        class Expected {
+        class TestCase {
             String input;
             String expected;
         }
 
-        List<Expected> expectedList = Lists.newArrayList(
-                new Expected("-a * b", "((-a) * b)"),
-                new Expected("!-a", "(!(-a))"),
-                new Expected("a + b + c", "((a + b) + c)"),
-                new Expected("a + b - c", "((a + b) - c)"),
-                new Expected("a * b * c", "((a * b) * c)"),
-                new Expected("a * b / c", "((a * b) / c)"),
-                new Expected("a + b / c", "(a + (b / c))"),
-                new Expected("a + b * c + d / e - f", "(((a + (b * c)) + (d / e)) - f)"),
-                new Expected("3 + 4; -5 * 5", "(3 + 4)((-5) * 5)"),
-                new Expected("5 > 4 == 3 < 4", "((5 > 4) == (3 < 4))"),
-                new Expected("5 < 4 != 3 > 4", "((5 < 4) != (3 > 4))"),
-                new Expected("3 + 4 * 5 == 3  * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))")
+        List<TestCase> testCases = Lists.newArrayList(
+                new TestCase("-a * b", "((-a) * b)"),
+                new TestCase("!-a", "(!(-a))"),
+                new TestCase("a + b + c", "((a + b) + c)"),
+                new TestCase("a + b - c", "((a + b) - c)"),
+                new TestCase("a * b * c", "((a * b) * c)"),
+                new TestCase("a * b / c", "((a * b) / c)"),
+                new TestCase("a + b / c", "(a + (b / c))"),
+                new TestCase("a + b * c + d / e - f", "(((a + (b * c)) + (d / e)) - f)"),
+                new TestCase("3 + 4; -5 * 5", "(3 + 4)((-5) * 5)"),
+                new TestCase("5 > 4 == 3 < 4", "((5 > 4) == (3 < 4))"),
+                new TestCase("5 < 4 != 3 > 4", "((5 < 4) != (3 > 4))"),
+                new TestCase("3 + 4 * 5 == 3  * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))")
         );
 
-        for (Expected expected : expectedList) {
-            Lexer lexer = Lexer.newInstance(expected.input);
+        for (TestCase testCase : testCases) {
+            Lexer lexer = Lexer.newInstance(testCase.input);
             Parser parser = Parser.newInstance(lexer);
 
             ProgramNode programNode = parser.parseProgram();
             checkParserErrors(parser);
 
-            assertEquals(expected.expected, programNode.toString());
+            assertEquals(testCase.expected, programNode.toString());
         }
     }
 
