@@ -209,7 +209,11 @@ public class ParserTest {
                 new TestCase("3 + 4; -5 * 5", "(3 + 4)((-5) * 5)"),
                 new TestCase("5 > 4 == 3 < 4", "((5 > 4) == (3 < 4))"),
                 new TestCase("5 < 4 != 3 > 4", "((5 < 4) != (3 > 4))"),
-                new TestCase("3 + 4 * 5 == 3  * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))")
+                new TestCase("3 + 4 * 5 == 3  * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))"),
+                new TestCase("true", "true"),
+                new TestCase("false", "false"),
+                new TestCase("3 > 5 == false", "((3 > 5) == false)"),
+                new TestCase("3 < 5 == true", "((3 < 5) == true)")
         };
 
         for (TestCase testCase : testCases) {
