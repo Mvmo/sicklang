@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor(staticName = "newInstance")
-public class BooleanExpression implements ExpressionNode {
+public class BooleanExpressionNode implements ExpressionNode {
 
     private final Token token;
     private final boolean value;
