@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.parser.ast.expression.ExpressionNode;
 import dev.mvmo.sicklang.parser.ast.expression.IdentifierExpressionNode;
+import dev.mvmo.sicklang.parser.ast.expression.IntegerLiteralExpressionNode;
 import dev.mvmo.sicklang.parser.ast.function.InfixParseFunction;
 import dev.mvmo.sicklang.parser.ast.function.PrefixParseFunction;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
@@ -40,6 +41,7 @@ public class Parser {
         Parser parser = new Parser(lexer, Maps.newHashMap(), Maps.newHashMap(), Lists.newArrayList());
 
         parser.prefixParseFunctionMap.put(TokenType.IDENTIFIER, parser::parseIdentifier);
+        parser.prefixParseFunctionMap.put(TokenType.INTEGER, parser::parseIntegerLiteral);
 
         parser.nextToken();
         parser.nextToken();
@@ -129,8 +131,24 @@ public class Parser {
         return leftExpression;
     }
 
-    private IdentifierExpressionNode parseIdentifier() {
+    public IdentifierExpressionNode parseIdentifier() {
         return IdentifierExpressionNode.newInstance(currentToken, currentToken.literal());
+    }
+
+    public IntegerLiteralExpressionNode parseIntegerLiteral() {
+        IntegerLiteralExpressionNode literalExpressionNode = IntegerLiteralExpressionNode.newInstance(currentToken);
+
+        try {
+            int integer = Integer.parseInt(currentToken.literal());
+            literalExpressionNode.value(integer);
+        } catch (NumberFormatException exception) {
+            String errorMsg = String.format("could not parse %s as an integer", currentToken.literal());
+            errorMessages.add(errorMsg);
+
+            return null;
+        }
+
+        return literalExpressionNode;
     }
 
     private boolean currentTokenIs(TokenType tokenType) {
