@@ -1,6 +1,5 @@
 package dev.mvmo.sicklang.parser.test;
 
-import com.google.common.collect.Lists;
 import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.parser.Parser;
 import dev.mvmo.sicklang.parser.ast.expression.*;
@@ -11,8 +10,6 @@ import dev.mvmo.sicklang.parser.ast.statement.ReturnStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
 import lombok.Value;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -121,12 +118,12 @@ public class ParserTest {
             int value;
         }
 
-        List<TestCase> testCaseList = Lists.newArrayList(
+        TestCase[] testCases = new TestCase[]{
                 new TestCase("!5", "!", 5),
                 new TestCase("-15;", "-", 15)
-        );
+        };
 
-        for (TestCase testCase : testCaseList) {
+        for (TestCase testCase : testCases) {
             Lexer lexer = Lexer.newInstance(testCase.input);
             Parser parser = Parser.newInstance(lexer);
 
@@ -157,18 +154,18 @@ public class ParserTest {
             int rightValue;
         }
 
-        List<TestCase> testCaseList = Lists.newArrayList(
-            new TestCase("5 + 5;", 5, "+", 5), // +
-            new TestCase("5 - 5;", 5, "-", 5), // -
-            new TestCase("5 * 5;", 5, "*", 5), // *
-            new TestCase("5 / 5;", 5, "/", 5), // /
-            new TestCase("5 > 5;", 5, ">", 5), // >
-            new TestCase("5 < 5;", 5, "<", 5), // <
-            new TestCase("5 == 5;", 5, "==", 5), // ==
-            new TestCase("5 != 5;", 5, "!=", 5)// !=
-        );
+        TestCase[] testCases = new TestCase[]{
+                new TestCase("5 + 5;", 5, "+", 5), // +
+                new TestCase("5 - 5;", 5, "-", 5), // -
+                new TestCase("5 * 5;", 5, "*", 5), // *
+                new TestCase("5 / 5;", 5, "/", 5), // /
+                new TestCase("5 > 5;", 5, ">", 5), // >
+                new TestCase("5 < 5;", 5, "<", 5), // <
+                new TestCase("5 == 5;", 5, "==", 5), // ==
+                new TestCase("5 != 5;", 5, "!=", 5)// !=
+        };
 
-        for (TestCase testCase : testCaseList) {
+        for (TestCase testCase : testCases) {
             Lexer lexer = Lexer.newInstance(testCase.input);
             Parser parser = Parser.newInstance(lexer);
 
@@ -200,7 +197,7 @@ public class ParserTest {
             String expected;
         }
 
-        List<TestCase> testCases = Lists.newArrayList(
+        TestCase[] testCases = new TestCase[]{
                 new TestCase("-a * b", "((-a) * b)"),
                 new TestCase("!-a", "(!(-a))"),
                 new TestCase("a + b + c", "((a + b) + c)"),
@@ -213,7 +210,7 @@ public class ParserTest {
                 new TestCase("5 > 4 == 3 < 4", "((5 > 4) == (3 < 4))"),
                 new TestCase("5 < 4 != 3 > 4", "((5 < 4) != (3 > 4))"),
                 new TestCase("3 + 4 * 5 == 3  * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))")
-        );
+        };
 
         for (TestCase testCase : testCases) {
             Lexer lexer = Lexer.newInstance(testCase.input);
