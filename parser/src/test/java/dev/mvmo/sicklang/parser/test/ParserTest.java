@@ -12,7 +12,6 @@ import dev.mvmo.sicklang.parser.ast.statement.ExpressionStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.LetStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.ReturnStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
-import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.junit.Test;
 
