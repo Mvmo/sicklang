@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 public class IntegerLiteralExpressionNode implements ExpressionNode {
 
     private final Token token;
-    private String value;
+    private int value;
 
     @Override
     public String tokenLiteral() {
