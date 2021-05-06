@@ -11,8 +11,8 @@ import lombok.Setter;
 public class InfixExpressionNode implements ExpressionNode {
 
     private final Token token;
-    private ExpressionNode left;
-    private String operator;
+    private final ExpressionNode left;
+    private final String operator;
     private ExpressionNode right;
 
     @Override

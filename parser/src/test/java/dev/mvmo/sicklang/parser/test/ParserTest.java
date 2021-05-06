@@ -158,14 +158,14 @@ public class ParserTest {
         }
 
         List<Expected> expectedList = Lists.newArrayList(
-            new Expected("5 + 5", 5, "+", 5), // +
-            new Expected("5 - 5", 5, "-", 5), // -
-            new Expected("5 * 5", 5, "*", 5), // *
-            new Expected("5 / 5", 5, "/", 5), // /
-            new Expected("5 > 5", 5, ">", 5), // >
-            new Expected("5 < 5", 5, "<", 5), // <
-            new Expected("5 == 5", 5, "==", 5), // ==
-            new Expected("5 != 5", 5, "!=", 5)// !=
+            new Expected("5 + 5;", 5, "+", 5), // +
+            new Expected("5 - 5;", 5, "-", 5), // -
+            new Expected("5 * 5;", 5, "*", 5), // *
+            new Expected("5 / 5;", 5, "/", 5), // /
+            new Expected("5 > 5;", 5, ">", 5), // >
+            new Expected("5 < 5;", 5, "<", 5), // <
+            new Expected("5 == 5;", 5, "==", 5), // ==
+            new Expected("5 != 5;", 5, "!=", 5)// !=
         );
 
         for (Expected expected : expectedList) {

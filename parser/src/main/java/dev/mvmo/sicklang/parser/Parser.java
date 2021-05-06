@@ -3,10 +3,7 @@ package dev.mvmo.sicklang.parser;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import dev.mvmo.sicklang.Lexer;
-import dev.mvmo.sicklang.parser.ast.expression.ExpressionNode;
-import dev.mvmo.sicklang.parser.ast.expression.IdentifierExpressionNode;
-import dev.mvmo.sicklang.parser.ast.expression.IntegerLiteralExpressionNode;
-import dev.mvmo.sicklang.parser.ast.expression.PrefixExpressionNode;
+import dev.mvmo.sicklang.parser.ast.expression.*;
 import dev.mvmo.sicklang.parser.ast.function.InfixParseFunction;
 import dev.mvmo.sicklang.parser.ast.function.PrefixParseFunction;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
@@ -20,7 +17,6 @@ import dev.mvmo.sicklang.token.TokenType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.Prefix;
 
 import java.util.List;
 import java.util.Map;
@@ -46,6 +42,15 @@ public class Parser {
         parser.prefixParseFunctionMap.put(TokenType.INTEGER, parser::parseIntegerLiteral);
         parser.prefixParseFunctionMap.put(TokenType.BANG, parser::parsePrefixExpression);
         parser.prefixParseFunctionMap.put(TokenType.MINUS, parser::parsePrefixExpression);
+
+        parser.infixParseFunctionMap.put(TokenType.PLUS, parser::parseInfixExpression);
+        parser.infixParseFunctionMap.put(TokenType.MINUS, parser::parseInfixExpression);
+        parser.infixParseFunctionMap.put(TokenType.SLASH, parser::parseInfixExpression);
+        parser.infixParseFunctionMap.put(TokenType.ASTERISK, parser::parseInfixExpression);
+        parser.infixParseFunctionMap.put(TokenType.EQUALS, parser::parseInfixExpression);
+        parser.infixParseFunctionMap.put(TokenType.NOT_EQUALS, parser::parseInfixExpression);
+        parser.infixParseFunctionMap.put(TokenType.LESS_THAN, parser::parseInfixExpression);
+        parser.infixParseFunctionMap.put(TokenType.GREATER_THAN, parser::parseInfixExpression);
 
         parser.nextToken();
         parser.nextToken();
@@ -127,10 +132,23 @@ public class Parser {
 
     public ExpressionNode parseExpression(Precedence precedence) {
         PrefixParseFunction prefixParseFunction = prefixParseFunctionMap.get(currentToken.type());
-        if (prefixParseFunction == null)
+        if (prefixParseFunction == null) {
+            noPrefixParseFunctionError(currentToken.type());
             return null;
+        }
 
         ExpressionNode leftExpression = prefixParseFunction.parse();
+
+        while (!peekTokenIs(TokenType.SEMICOLON) && precedence.ordinal() < Precedence.findPrecedence(peekToken.type()).ordinal()) {
+            InfixParseFunction infixParseFunction = infixParseFunctionMap.get(peekToken.type());
+            if (infixParseFunction == null) {
+                return leftExpression;
+            }
+
+            nextToken();
+
+            leftExpression = infixParseFunction.parse(leftExpression);
+        }
 
         return leftExpression;
     }
@@ -163,6 +181,17 @@ public class Parser {
         prefixExpressionNode.right(parseExpression(Precedence.PREFIX));
 
         return prefixExpressionNode;
+    }
+
+    public ExpressionNode parseInfixExpression(ExpressionNode left) {
+        InfixExpressionNode infixExpressionNode = InfixExpressionNode.newInstance(currentToken, left, currentToken.literal());
+
+        Precedence precedence = Precedence.findPrecedence(currentToken.type());
+        nextToken();
+
+        infixExpressionNode.right(parseExpression(precedence));
+
+        return infixExpressionNode;
     }
 
     private boolean currentTokenIs(TokenType tokenType) {
