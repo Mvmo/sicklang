@@ -1,5 +1,6 @@
 package dev.mvmo.sicklang.parser.ast.statement;
 
+import com.google.common.collect.Lists;
 import dev.mvmo.sicklang.token.Token;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.List;
 public class BlockStatementNode implements StatementNode {
 
     private final Token token;
-    private List<StatementNode> statementNodes;
+    private final List<StatementNode> statementNodes = Lists.newArrayList();
 
     @Override
     public String tokenLiteral() {

@@ -242,7 +242,6 @@ public class Parser {
 
     public BlockStatementNode parseBlockStatement() {
         BlockStatementNode blockStatementNode = BlockStatementNode.newInstance(currentToken);
-        blockStatementNode.statementNodes(Lists.newArrayList());
 
         nextToken();
 
