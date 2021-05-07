@@ -239,6 +239,9 @@ public class ParserTest {
                 new TestCase("2 / (5 + 5)", "(2 / (5 + 5))"),
                 new TestCase("-(5 + 5)", "(-(5 + 5))"),
                 new TestCase("!(true == true)", "(!(true == true))"),
+                new TestCase("a + add(b * c) + d", "((a + add((b * c))) + d)"),
+                new TestCase("add(a, b, 1, 2 * 3, 4 + 5, add(6, 7 * 8))", "add(a, b, 1, (2 * 3), (4 + 5), add(6, (7 * 8)))"),
+                new TestCase("add(a + b + c * d / f + g)", "add((((a + b) + ((c * d) / f)) + g))")
         };
 
         for (TestCase testCase : testCases) {
