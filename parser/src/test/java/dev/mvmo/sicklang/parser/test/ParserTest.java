@@ -425,9 +425,9 @@ public class ParserTest {
         }
 
         TestCase[] testCases = new TestCase[]{
-                new TestCase("fn();", new String[0]),
-                new TestCase("fn(x);", new String[]{"x"}),
-                new TestCase("fn(x, y, z);", new String[]{"x", "y", "z"})
+                new TestCase("add();", new String[0]),
+                new TestCase("add(x);", new String[]{"x"}),
+                new TestCase("add(x, y, z);", new String[]{"x", "y", "z"})
         };
 
         for (TestCase testCase : testCases) {
