@@ -53,6 +53,7 @@ public class Parser {
         parser.infixParseFunctionMap.put(TokenType.NOT_EQUALS, parser::parseInfixExpression);
         parser.infixParseFunctionMap.put(TokenType.LESS_THAN, parser::parseInfixExpression);
         parser.infixParseFunctionMap.put(TokenType.GREATER_THAN, parser::parseInfixExpression);
+        parser.infixParseFunctionMap.put(TokenType.LEFT_PAREN, parser::parseCallExpression);
 
         parser.nextToken();
         parser.nextToken();
@@ -296,6 +297,38 @@ public class Parser {
             return null;
 
         return identifiers;
+    }
+
+    public ExpressionNode parseCallExpression(ExpressionNode function) {
+        CallExpressionNode callExpressionNode = CallExpressionNode.newInstance(currentToken, function);
+        callExpressionNode.arguments(parseCallArguments());
+
+        return callExpressionNode;
+    }
+
+    public List<ExpressionNode> parseCallArguments() {
+        List<ExpressionNode> argumentList = Lists.newArrayList();
+
+        if (peekTokenIs(TokenType.RIGHT_PAREN)) {
+            nextToken();
+            return argumentList;
+        }
+
+        nextToken();
+
+        argumentList.add(parseExpression(Precedence.LOWEST));
+
+        while (peekTokenIs(TokenType.COMMA)) {
+            nextToken();
+            nextToken();
+
+            argumentList.add(parseExpression(Precedence.LOWEST));
+        }
+
+        if (!expectPeek(TokenType.RIGHT_PAREN))
+            return null;
+
+        return argumentList;
     }
 
     private boolean currentTokenIs(TokenType tokenType) {
