@@ -319,6 +319,38 @@ public class ParserTest {
         testIdentifier("y", alternativeStatementNode.expressionNode());
     }
 
+    @Test
+    public void test$functionLiteral() {
+        String input = "fn(x, y) { x + y; }";
+
+        Lexer lexer = Lexer.newInstance(input);
+        Parser parser = Parser.newInstance(lexer);
+
+        ProgramNode programNode = parser.parseProgram();
+        checkParserErrors(parser);
+
+        assertEquals(1, programNode.statementNodes().size());
+        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+        assertTrue(statementNode.expressionNode() instanceof FunctionLiteralExpressionNode);
+
+        FunctionLiteralExpressionNode functionLiteralExpressionNode = (FunctionLiteralExpressionNode) statementNode.expressionNode();
+
+        assertEquals(2, functionLiteralExpressionNode.parameters().size());
+
+        testLiteralExpression("x", functionLiteralExpressionNode.parameters().get(0));
+        testLiteralExpression("y", functionLiteralExpressionNode.parameters().get(1));
+
+        assertEquals(1, functionLiteralExpressionNode.body().statementNodes().size());
+        assertTrue(functionLiteralExpressionNode.body().statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        ExpressionStatementNode bodyExpressionNode = (ExpressionStatementNode) functionLiteralExpressionNode.body().statementNodes().get(0);
+
+        testInfixExpression("x", "+", "y", bodyExpressionNode.expressionNode());
+    }
+
     private void testLetStatement(StatementNode statement, String name) {
         assertEquals("let", statement.tokenLiteral());
         assertTrue("Statement is not instanceof LetStatementNode", statement instanceof LetStatementNode);
