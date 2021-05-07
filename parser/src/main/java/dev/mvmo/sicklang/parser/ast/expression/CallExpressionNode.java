@@ -3,6 +3,7 @@ package dev.mvmo.sicklang.parser.ast.expression;
 import dev.mvmo.sicklang.token.Token;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -10,11 +11,11 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@AllArgsConstructor(staticName = "newInstance")
+@RequiredArgsConstructor(staticName = "newInstance")
 public class CallExpressionNode implements ExpressionNode {
 
     private final Token token;
-    private ExpressionNode function; // identifier or function
+    private final ExpressionNode function; // identifier or function
     private List<ExpressionNode> arguments;
 
     @Override
