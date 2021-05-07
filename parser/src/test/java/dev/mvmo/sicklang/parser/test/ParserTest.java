@@ -351,6 +351,43 @@ public class ParserTest {
         testInfixExpression("x", "+", "y", bodyExpressionNode.expressionNode());
     }
 
+    @Test
+    public void test$functionParameters() {
+        @Value
+        class TestCase {
+            String input;
+            String[] expectedParamIdentifiers;
+        }
+
+        TestCase[] testCases = new TestCase[]{
+                new TestCase("fn() {};", new String[0]),
+                new TestCase("fn(x) {};", new String[]{"x"}),
+                new TestCase("fn(x, y, z) {};", new String[]{"x", "y", "z"})
+        };
+
+        for (TestCase testCase : testCases) {
+            Lexer lexer = Lexer.newInstance(testCase.input);
+            Parser parser = Parser.newInstance(lexer);
+
+            ProgramNode programNode = parser.parseProgram();
+            checkParserErrors(parser);
+
+            assertTrue(programNode.statementNodes().size() >= 1);
+            assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+            ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+            assertTrue(statementNode.expressionNode() instanceof FunctionLiteralExpressionNode);
+
+            FunctionLiteralExpressionNode functionLiteralExpressionNode = (FunctionLiteralExpressionNode) statementNode.expressionNode();
+
+            assertEquals(testCase.expectedParamIdentifiers.length, functionLiteralExpressionNode.parameters().size());
+
+            for (int i = 0; i < testCase.expectedParamIdentifiers.length; i++)
+                testLiteralExpression(testCase.expectedParamIdentifiers[i], functionLiteralExpressionNode.parameters().get(i));
+        }
+    }
+
     private void testLetStatement(StatementNode statement, String name) {
         assertEquals("let", statement.tokenLiteral());
         assertTrue("Statement is not instanceof LetStatementNode", statement instanceof LetStatementNode);
