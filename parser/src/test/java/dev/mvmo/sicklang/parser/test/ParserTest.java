@@ -17,28 +17,32 @@ public class ParserTest {
 
     @Test
     public void test$letStatements() {
-        String input = "let x = 5;" +
-                "let y = 10;" +
-                "let foobar = 838383;";
+        @Value
+        class TestCase {
+            String input;
+            String expectedIdentifier;
+            Object expectedValue;
+        }
 
-        Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
-
-        ProgramNode programNode = parser.parseProgram();
-        checkParserErrors(parser);
-
-        assertNotNull(programNode);
-        assertEquals(3, programNode.statementNodes().size());
-
-        String[] expectedIdentifiers = new String[]{
-                "x",
-                "y",
-                "foobar"
+        TestCase[] testCases = new TestCase[]{
+                new TestCase("let x = 5;", "x", 5),
+                new TestCase("let y = true;", "y", true),
+                new TestCase("let foobar = y;", "foobar", "y"),
         };
 
-        for (int i = 0; i < expectedIdentifiers.length; i++) {
-            StatementNode statementNode = programNode.statementNodes().get(i);
-            testLetStatement(statementNode, expectedIdentifiers[i]);
+        for (TestCase testCase : testCases) {
+            Lexer lexer = Lexer.newInstance(testCase.input);
+            Parser parser = Parser.newInstance(lexer);
+
+            ProgramNode programNode = parser.parseProgram();
+            checkParserErrors(parser);
+
+            assertNotNull(programNode);
+            assertEquals(1, programNode.statementNodes().size());
+
+            LetStatementNode letStatement = testLetStatement(programNode.statementNodes().get(0), testCase.expectedIdentifier);
+
+            testLiteralExpression(testCase.expectedValue, letStatement.value());
         }
     }
 
@@ -456,7 +460,7 @@ public class ParserTest {
         }
     }
 
-    private void testLetStatement(StatementNode statement, String name) {
+    private LetStatementNode testLetStatement(StatementNode statement, String name) {
         assertEquals("let", statement.tokenLiteral());
         assertTrue("Statement is not instanceof LetStatementNode", statement instanceof LetStatementNode);
 
@@ -464,6 +468,8 @@ public class ParserTest {
 
         assertEquals(name, letStatement.identifier().value());
         assertEquals(name, letStatement.identifier().tokenLiteral());
+
+        return letStatement;
     }
 
     private IntegerLiteralExpressionNode testIntegerLiteral(int expectedValue, ExpressionNode expressionNode) {
