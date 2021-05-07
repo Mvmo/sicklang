@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class FunctionLiteralExpressionNode implements ExpressionNode {
 
     private final Token token;
-    private final List<IdentifierExpressionNode> parameters = Lists.newArrayList();
+    private List<IdentifierExpressionNode> parameters;
     private BlockStatementNode body;
 
     @Override

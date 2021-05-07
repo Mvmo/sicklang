@@ -43,6 +43,7 @@ public class Parser {
         parser.prefixParseFunctionMap.put(TokenType.FALSE, parser::parseBooleanExpression);
         parser.prefixParseFunctionMap.put(TokenType.LEFT_PAREN, parser::parseGroupedExpression);
         parser.prefixParseFunctionMap.put(TokenType.IF, parser::parseIfExpression);
+        parser.prefixParseFunctionMap.put(TokenType.FUNCTION, parser::parseFunctionExpression);
 
         parser.infixParseFunctionMap.put(TokenType.PLUS, parser::parseInfixExpression);
         parser.infixParseFunctionMap.put(TokenType.MINUS, parser::parseInfixExpression);
@@ -254,6 +255,47 @@ public class Parser {
         }
 
         return blockStatementNode;
+    }
+
+    public FunctionLiteralExpressionNode parseFunctionExpression() {
+        FunctionLiteralExpressionNode functionLiteralExpressionNode = FunctionLiteralExpressionNode.newInstance(currentToken);
+
+        if (!expectPeek(TokenType.LEFT_PAREN))
+            return null;
+
+        functionLiteralExpressionNode.parameters(parseFunctionParameters());
+
+        if (!expectPeek(TokenType.LEFT_BRACE))
+            return null;
+
+        functionLiteralExpressionNode.body(parseBlockStatement());
+
+        return functionLiteralExpressionNode;
+    }
+
+    public List<IdentifierExpressionNode> parseFunctionParameters() {
+        List<IdentifierExpressionNode> identifiers = Lists.newArrayList();
+
+        if (peekTokenIs(TokenType.RIGHT_PAREN)) {
+            nextToken();
+            return identifiers;
+        }
+
+        nextToken();
+
+        identifiers.add(IdentifierExpressionNode.newInstance(currentToken, currentToken.literal()));
+        // use do while
+        while (peekTokenIs(TokenType.COMMA)) {
+            nextToken();
+            nextToken();
+
+            identifiers.add(IdentifierExpressionNode.newInstance(currentToken, currentToken.literal()));
+        }
+
+        if (!expectPeek(TokenType.RIGHT_PAREN))
+            return null;
+
+        return identifiers;
     }
 
     private boolean currentTokenIs(TokenType tokenType) {
