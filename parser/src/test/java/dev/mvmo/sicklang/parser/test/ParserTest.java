@@ -388,6 +388,34 @@ public class ParserTest {
         }
     }
 
+    @Test
+    public void test$callExpression() {
+        String input = "add(1, 2 * 3, 4 + 5);";
+
+        Lexer lexer = Lexer.newInstance(input);
+        Parser parser = Parser.newInstance(lexer);
+
+        ProgramNode programNode = parser.parseProgram();
+        checkParserErrors(parser);
+
+        assertEquals(1, programNode.statementNodes().size());
+        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+        assertTrue(statementNode.expressionNode() instanceof CallExpressionNode);
+
+        CallExpressionNode callExpressionNode = (CallExpressionNode) statementNode.expressionNode();
+
+        testIdentifier("add", callExpressionNode.function());
+
+        assertEquals(3, callExpressionNode.arguments().size());
+
+        testLiteralExpression(1, callExpressionNode.arguments().get(0));
+        testInfixExpression(2, "*", 3, callExpressionNode.arguments().get(1));
+        testInfixExpression(4, "+", 5, callExpressionNode.arguments().get(2));
+    }
+
     private void testLetStatement(StatementNode statement, String name) {
         assertEquals("let", statement.tokenLiteral());
         assertTrue("Statement is not instanceof LetStatementNode", statement instanceof LetStatementNode);
