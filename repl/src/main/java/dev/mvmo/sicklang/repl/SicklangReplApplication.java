@@ -6,14 +6,23 @@ import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 import dev.mvmo.sicklang.token.Token;
 import dev.mvmo.sicklang.token.TokenType;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class SicklangReplApplication {
+
+    private static final String DONKEY_ASCII = "" +
+            "       _\\       \n" +
+            "       /`b  \n" +
+            "  /####J   \n" +
+            "   |\\ || ";
 
     private static final String PROMPT = "$ > ";
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+
+        boolean printLexer = args.length >= 2 && args[1].equals("--lexer");
 
         while (true) {
             System.out.print(PROMPT);
@@ -23,20 +32,42 @@ public class SicklangReplApplication {
             Parser parser = Parser.newInstance(lexer);
 
             ProgramNode programNode = parser.parseProgram();
+            if (parser.errorMessages().size() != 0) {
+                showParserErrors(parser);
+                return;
+            }
 
-            while (true) {
-                Token token = lexer.nextToken();
-                if (token.type().equals(TokenType.EOF)) {
-                    System.out.println(">> EOF <<");
-                    break;
+            if (printLexer) {
+                System.out.println("Lexer: ");
+
+                while (true) {
+                    Token token = lexer.nextToken();
+                    if (token.type().equals(TokenType.EOF)) {
+                        System.out.println("-- EOF --");
+                        break;
+                    }
+
+                    System.out.println(token.type());
                 }
 
-                System.out.println(token);
+                System.out.println();
             }
 
             System.out.println("Parser: ");
             System.out.println(programNode.toString());
         }
+    }
+
+    private static void showParserErrors(Parser parser) {
+        System.out.println(DONKEY_ASCII);
+        System.out.println("Oh bro, you got an error! Let's see");
+        System.out.println();
+
+        List<String> parserErrors = parser.errorMessages();
+
+        System.out.println(parserErrors.size() > 1 ? "Oh, you got a bunch of errors, get out of here" : "Only one error, that might be okay");
+        System.out.println();
+        parserErrors.forEach(System.out::println);
     }
 
 }
