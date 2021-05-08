@@ -93,20 +93,20 @@ public class Parser {
 
     public LetStatementNode parseLetStatement() {
         LetStatementNode statementNode = LetStatementNode.newInstance(currentToken);
-        if (!expectPeek(TokenType.IDENTIFIER)) {
+        if (!expectPeek(TokenType.IDENTIFIER))
             return null;
-        }
 
         statementNode.identifier(IdentifierExpressionNode.newInstance(currentToken, currentToken.literal()));
 
-        if (!expectPeek(TokenType.ASSIGN)) {
+        if (!expectPeek(TokenType.ASSIGN))
             return null;
-        }
 
-        // TODO: were' skipping the the expression until we encounter a semicolon
-        while (!currentTokenIs(TokenType.SEMICOLON)) {
+        nextToken();
+
+        statementNode.value(parseExpression(Precedence.LOWEST));
+
+        if (peekTokenIs(TokenType.SEMICOLON))
             nextToken();
-        }
 
         return statementNode;
     }
@@ -115,8 +115,9 @@ public class Parser {
         ReturnStatementNode statementNode = ReturnStatementNode.newInstance(currentToken);
         nextToken();
 
-        // TODO: were' skipping the the expression until we encounter a semicolon
-        while (!currentTokenIs(TokenType.SEMICOLON))
+        statementNode.returnValue(parseExpression(Precedence.LOWEST));
+
+        if (peekTokenIs(TokenType.SEMICOLON))
             nextToken();
 
         return statementNode;
