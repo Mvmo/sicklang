@@ -53,23 +53,23 @@ public class Lexer {
                     readChar();
 
                     String literal = "" + c + currentChar;
-                    token = Token.newInstance(TokenType.EQUALS, literal);
+                    token = new Token(TokenType.EQUALS, literal);
                     break;
                 }
 
-                token = Token.newInstance(TokenType.ASSIGN, "=");
+                token = new Token(TokenType.ASSIGN, "=");
                 break;
             case '+':
-                token = Token.newInstance(TokenType.PLUS, "+");
+                token = new Token(TokenType.PLUS, "+");
                 break;
             case '-':
-                token = Token.newInstance(TokenType.MINUS, "-");
+                token = new Token(TokenType.MINUS, "-");
                 break;
             case '*':
-                token = Token.newInstance(TokenType.ASTERISK, "*");
+                token = new Token(TokenType.ASTERISK, "*");
                 break;
             case '/':
-                token = Token.newInstance(TokenType.SLASH, "/");
+                token = new Token(TokenType.SLASH, "/");
                 break;
             case '!':
                 if (peekChar() == '=') {
@@ -77,58 +77,61 @@ public class Lexer {
                     readChar();
 
                     String literal = "" + c + currentChar;
-                    token = Token.newInstance(TokenType.NOT_EQUALS, literal);
+                    token = new Token(TokenType.NOT_EQUALS, literal);
                     break;
                 }
-                token = Token.newInstance(TokenType.BANG, "!");
+                token = new Token(TokenType.BANG, "!");
                 break;
             case '<':
-                token = Token.newInstance(TokenType.LESS_THAN, "<");
+                token = new Token(TokenType.LESS_THAN, "<");
                 break;
             case '>':
-                token = Token.newInstance(TokenType.GREATER_THAN, ">");
+                token = new Token(TokenType.GREATER_THAN, ">");
                 break;
             //</editor-fold>
             case ';':
-                token = Token.newInstance(TokenType.SEMICOLON, ";");
+                token = new Token(TokenType.SEMICOLON, ";");
                 break;
             case '(':
-                token = Token.newInstance(TokenType.LEFT_PAREN, "(");
+                token = new Token(TokenType.LEFT_PAREN, "(");
                 break;
             case ')':
-                token = Token.newInstance(TokenType.RIGHT_PAREN, ")");
+                token = new Token(TokenType.RIGHT_PAREN, ")");
                 break;
             case ',':
-                token = Token.newInstance(TokenType.COMMA, ",");
+                token = new Token(TokenType.COMMA, ",");
                 break;
             case '{':
-                token = Token.newInstance(TokenType.LEFT_BRACE, "{");
+                token = new Token(TokenType.LEFT_BRACE, "{");
                 break;
             case '}':
-                token = Token.newInstance(TokenType.RIGHT_BRACE, "}");
+                token = new Token(TokenType.RIGHT_BRACE, "}");
                 break;
             case 0:
-                token = Token.newInstance(TokenType.EOF, "");
+                token = new Token(TokenType.EOF, "");
                 break;
             default:
                 return findToken();
         }
 
         readChar();
+
         return token;
     }
 
     private Token findToken() {
         if (isLetter(currentChar)) {
             String literal = readIdentifier();
-            return Token.newInstance(Token.lookupIdentifier(literal), literal);
+            TokenType tokenType = Token.lookupIdentifier(literal);
+
+            return new Token(tokenType, literal);
         }
 
         if (isDigit(currentChar)) {
-            return Token.newInstance(TokenType.INTEGER, readNumber());
+            return new Token(TokenType.INTEGER, readNumber());
         }
 
-        return Token.newInstance(TokenType.ILLEGAL, String.valueOf(this.currentChar));
+        return new Token(TokenType.ILLEGAL, String.valueOf(this.currentChar));
     }
 
     private String readIdentifier() {
