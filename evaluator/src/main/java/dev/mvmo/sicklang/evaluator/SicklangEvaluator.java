@@ -89,6 +89,14 @@ public class SicklangEvaluator {
             return evalIntegerInfixExpression(operator, left, right);
         }
 
+        if (operator.equals("==")) {
+            return BooleanObject.fromNative(left == right);
+        }
+
+        if (operator.equals("!=")) {
+            return BooleanObject.fromNative(left != right);
+        }
+
         return NullObject.NULL;
     }
 
