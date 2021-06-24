@@ -20,7 +20,9 @@ public class EvaluatorTest {
 
         TestCase[] testCases = new TestCase[]{
                 new TestCase("5", 5),
-                new TestCase("10", 10)
+                new TestCase("10", 10),
+                new TestCase("-10", -10),
+                new TestCase("-5", -5)
         };
 
         for (TestCase testCase : testCases) {
