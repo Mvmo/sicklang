@@ -15,6 +15,7 @@
         <module>lexer</module>
         <module>repl</module>
         <module>parser</module>
+        <module>internal</module>
     </modules>
 
     <properties>
