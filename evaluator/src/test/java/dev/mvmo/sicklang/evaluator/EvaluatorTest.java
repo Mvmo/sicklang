@@ -45,6 +45,26 @@ public class EvaluatorTest {
         }
     }
 
+    @Test
+    public void test$evalBangOperator() {
+        record TestCase(String input, boolean expected) {
+        }
+
+        TestCase[] testCases = new TestCase[]{
+                new TestCase("!true", false),
+                new TestCase("!false", true),
+                new TestCase("!5", false),
+                new TestCase("!!true", true),
+                new TestCase("!!false", false),
+                new TestCase("!!5", true)
+        };
+
+        for (TestCase testCase : testCases) {
+            SickObject evaluated = testEval(testCase.input);
+            testBooleanObject(evaluated, testCase.expected);
+        }
+    }
+
     private SickObject testEval(String input) {
         Lexer lexer = Lexer.newInstance(input);
         Parser parser = Parser.newInstance(lexer);
