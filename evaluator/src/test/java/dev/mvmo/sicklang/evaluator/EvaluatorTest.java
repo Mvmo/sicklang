@@ -22,7 +22,18 @@ public class EvaluatorTest {
                 new TestCase("5", 5),
                 new TestCase("10", 10),
                 new TestCase("-10", -10),
-                new TestCase("-5", -5)
+                new TestCase("-5", -5),
+                new TestCase("5 + 5 + 5 + 5 - 10", 10),
+                new TestCase("2 * 2 * 2 * 2 * 2", 32),
+                new TestCase("-50 + 100 + -50", 0),
+                new TestCase("5 * 2 + 10", 20),
+                new TestCase("5 + 2 * 10", 25),
+                new TestCase("20 + 2 * -10", 0),
+                new TestCase("50 / 2 * 2 + 10", 60),
+                new TestCase("2 * (5 + 10)", 30),
+                new TestCase("3 * 3 * 3 + 10", 37),
+                new TestCase("3 * (3 * 3) + 10", 37),
+                new TestCase("(5 + 10 * 2 + 15 / 3) * 2 + -10", 50)
         };
 
         for (TestCase testCase : testCases) {
