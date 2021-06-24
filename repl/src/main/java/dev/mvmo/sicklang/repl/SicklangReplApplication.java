@@ -1,6 +1,8 @@
 package dev.mvmo.sicklang.repl;
 
 import dev.mvmo.sicklang.Lexer;
+import dev.mvmo.sicklang.evaluator.SicklangEvaluator;
+import dev.mvmo.sicklang.internal.object.SickObject;
 import dev.mvmo.sicklang.parser.Parser;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 import dev.mvmo.sicklang.token.Token;
@@ -37,24 +39,11 @@ public class SicklangReplApplication {
                 return;
             }
 
-            if (printLexer) {
-                System.out.println("Lexer: ");
+            SickObject evaluated = SicklangEvaluator.eval(programNode);
+            if (evaluated == null)
+                return;
 
-                while (true) {
-                    Token token = lexer.nextToken();
-                    if (token.type().equals(TokenType.EOF)) {
-                        System.out.println("-- EOF --");
-                        break;
-                    }
-
-                    System.out.println(token.type());
-                }
-
-                System.out.println();
-            }
-
-            System.out.println("Parser: ");
-            System.out.println(programNode.toString());
+            System.out.println(evaluated.inspect());
         }
     }
 
