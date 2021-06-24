@@ -57,7 +57,16 @@ public class EvaluatorTest {
                 new TestCase("1 == 1", true),
                 new TestCase("1 != 1", false),
                 new TestCase("1 == 2", false),
-                new TestCase("1 != 2", true)
+                new TestCase("1 != 2", true),
+                new TestCase("true == true", true),
+                new TestCase("false == false", true),
+                new TestCase("true == false", false),
+                new TestCase("true != false", true),
+                new TestCase("false != true", true),
+                new TestCase("(1 < 2) == true", true),
+                new TestCase("(1 < 2) == false", false),
+                new TestCase("(1 > 2) == true", false),
+                new TestCase("(1 > 2) == false", true)
         };
 
         for (TestCase testCase : testCases) {
