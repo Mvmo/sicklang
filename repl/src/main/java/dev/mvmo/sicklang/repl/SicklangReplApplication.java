@@ -13,11 +13,11 @@ import java.util.Scanner;
 
 public class SicklangReplApplication {
 
-    private static final String DONKEY_ASCII = "" +
-            "       _\\       \n" +
-            "       /`b  \n" +
-            "  /####J   \n" +
-            "   |\\ || ";
+    private static final String DONKEY_ASCII = """
+                 _\\      \s
+                 /`b \s
+            /####J  \s
+             |\\ ||\s""".indent(2);
 
     private static final String PROMPT = "$ > ";
 
