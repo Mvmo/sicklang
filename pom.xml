@@ -16,6 +16,7 @@
         <module>repl</module>
         <module>parser</module>
         <module>internal</module>
+        <module>evaluator</module>
     </modules>
 
     <properties>
