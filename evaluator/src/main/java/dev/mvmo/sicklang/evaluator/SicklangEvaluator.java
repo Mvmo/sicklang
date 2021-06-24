@@ -104,6 +104,12 @@ public class SicklangEvaluator {
             case "-" -> new IntegerObject(leftInt - rightInt);
             case "*" -> new IntegerObject(leftInt * rightInt);
             case "/" -> new IntegerObject(leftInt / rightInt);
+
+            case ">" -> BooleanObject.fromNative(leftInt > rightInt);
+            case "<" -> BooleanObject.fromNative(leftInt < rightInt);
+            case "==" -> BooleanObject.fromNative(leftInt == rightInt);
+            case "!=" -> BooleanObject.fromNative(leftInt != rightInt);
+
             default -> NullObject.NULL;
         };
     }
