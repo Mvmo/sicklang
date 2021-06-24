@@ -1,11 +1,13 @@
 package dev.mvmo.sicklang.evaluator;
 
+import dev.mvmo.sicklang.internal.object.NullObject;
 import dev.mvmo.sicklang.internal.object.SickObject;
 import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.parser.ast.Node;
 import dev.mvmo.sicklang.parser.ast.expression.BooleanExpressionNode;
 import dev.mvmo.sicklang.parser.ast.expression.IntegerLiteralExpressionNode;
+import dev.mvmo.sicklang.parser.ast.expression.PrefixExpressionNode;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 import dev.mvmo.sicklang.parser.ast.statement.ExpressionStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
@@ -31,6 +33,11 @@ public class SicklangEvaluator {
             return BooleanObject.fromNative(booleanExpressionNode.value());
         }
 
+        if (node instanceof PrefixExpressionNode prefixExpressionNode) {
+            SickObject right = eval(prefixExpressionNode.right());
+            return evalPrefixExpression(prefixExpressionNode.operator(), right);
+        }
+
         return null;
     }
 
@@ -42,6 +49,19 @@ public class SicklangEvaluator {
         }
 
         return result;
+    }
+
+    private static SickObject evalPrefixExpression(String operator, SickObject right) {
+        return switch (operator) {
+            case "!" -> evalBangOperatorExpression(right);
+            default -> NullObject.NULL;
+        };
+    }
+
+    private static SickObject evalBangOperatorExpression(SickObject right) {
+        if (BooleanObject.FALSE.equals(right) || NullObject.NULL.equals(right))
+            return BooleanObject.TRUE;
+        return BooleanObject.FALSE;
     }
 
 }
