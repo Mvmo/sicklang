@@ -1,5 +1,6 @@
 package dev.mvmo.sicklang.evaluator;
 
+import com.google.common.base.Preconditions;
 import dev.mvmo.sicklang.internal.object.NullObject;
 import dev.mvmo.sicklang.internal.object.ObjectType;
 import dev.mvmo.sicklang.internal.object.SickObject;
@@ -7,6 +8,7 @@ import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.parser.ast.Node;
 import dev.mvmo.sicklang.parser.ast.expression.BooleanExpressionNode;
+import dev.mvmo.sicklang.parser.ast.expression.InfixExpressionNode;
 import dev.mvmo.sicklang.parser.ast.expression.IntegerLiteralExpressionNode;
 import dev.mvmo.sicklang.parser.ast.expression.PrefixExpressionNode;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
@@ -37,6 +39,13 @@ public class SicklangEvaluator {
         if (node instanceof PrefixExpressionNode prefixExpressionNode) {
             SickObject right = eval(prefixExpressionNode.right());
             return evalPrefixExpression(prefixExpressionNode.operator(), right);
+        }
+
+        if (node instanceof InfixExpressionNode infixExpressionNode) {
+            SickObject left = eval(infixExpressionNode.left());
+            SickObject right = eval(infixExpressionNode.right());
+
+            return evalInfixExpression(infixExpressionNode.operator(), left, right);
         }
 
         return null;
@@ -73,6 +82,30 @@ public class SicklangEvaluator {
         IntegerObject integerObject = (IntegerObject) right;
 
         return new IntegerObject(-integerObject.value());
+    }
+
+    private static SickObject evalInfixExpression(String operator, SickObject left, SickObject right) {
+        if (left.objectType().equals(ObjectType.INTEGER) && right.objectType().equals(ObjectType.INTEGER)) {
+            return evalIntegerInfixExpression(operator, left, right);
+        }
+
+        return NullObject.NULL;
+    }
+
+    private static SickObject evalIntegerInfixExpression(String operator, SickObject left, SickObject right) {
+        Preconditions.checkArgument(left instanceof IntegerObject);
+        Preconditions.checkArgument(right instanceof IntegerObject);
+
+        int leftInt = ((IntegerObject) left).value();
+        int rightInt = ((IntegerObject) right).value();
+
+        return switch (operator) {
+            case "+" -> new IntegerObject(leftInt + rightInt);
+            case "-" -> new IntegerObject(leftInt - rightInt);
+            case "*" -> new IntegerObject(leftInt * rightInt);
+            case "/" -> new IntegerObject(leftInt / rightInt);
+            default -> NullObject.NULL;
+        };
     }
 
 }
