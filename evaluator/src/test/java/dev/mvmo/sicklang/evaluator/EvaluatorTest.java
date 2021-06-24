@@ -49,7 +49,15 @@ public class EvaluatorTest {
 
         TestCase[] testCases = new TestCase[]{
                 new TestCase("true", true),
-                new TestCase("false", false)
+                new TestCase("false", false),
+                new TestCase(" 1 < 2", true),
+                new TestCase("1 > 2", false),
+                new TestCase("1 < 1", false),
+                new TestCase("1 > 1", false),
+                new TestCase("1 == 1", true),
+                new TestCase("1 != 1", false),
+                new TestCase("1 == 2", false),
+                new TestCase("1 != 2", true)
         };
 
         for (TestCase testCase : testCases) {
