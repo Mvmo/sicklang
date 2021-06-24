@@ -24,8 +24,6 @@ public class SicklangReplApplication {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        boolean printLexer = args.length >= 2 && args[1].equals("--lexer");
-
         while (true) {
             System.out.print(PROMPT);
             String scannedLine = scanner.nextLine();
