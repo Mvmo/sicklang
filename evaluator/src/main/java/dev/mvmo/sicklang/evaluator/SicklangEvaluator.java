@@ -28,7 +28,7 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof BooleanExpressionNode booleanExpressionNode) {
-            return new BooleanObject(booleanExpressionNode.value());
+            return BooleanObject.fromNative(booleanExpressionNode.value());
         }
 
         return null;
