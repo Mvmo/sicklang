@@ -1,6 +1,7 @@
 package dev.mvmo.sicklang.evaluator;
 
 import dev.mvmo.sicklang.internal.object.NullObject;
+import dev.mvmo.sicklang.internal.object.ObjectType;
 import dev.mvmo.sicklang.internal.object.SickObject;
 import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
@@ -54,6 +55,7 @@ public class SicklangEvaluator {
     private static SickObject evalPrefixExpression(String operator, SickObject right) {
         return switch (operator) {
             case "!" -> evalBangOperatorExpression(right);
+            case "-" -> evalMinusPrefixOperatorExpression(right);
             default -> NullObject.NULL;
         };
     }
@@ -62,6 +64,15 @@ public class SicklangEvaluator {
         if (BooleanObject.FALSE.equals(right) || NullObject.NULL.equals(right))
             return BooleanObject.TRUE;
         return BooleanObject.FALSE;
+    }
+
+    private static SickObject evalMinusPrefixOperatorExpression(SickObject right) {
+        if (!right.objectType().equals(ObjectType.INTEGER)) // @TODO: maybe we could just do a instanceof check here - maybe also remove the objectType thingy??
+            return NullObject.NULL;
+
+        IntegerObject integerObject = (IntegerObject) right;
+
+        return new IntegerObject(-integerObject.value());
     }
 
 }
