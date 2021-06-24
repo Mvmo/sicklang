@@ -5,8 +5,6 @@ import dev.mvmo.sicklang.evaluator.SicklangEvaluator;
 import dev.mvmo.sicklang.internal.object.SickObject;
 import dev.mvmo.sicklang.parser.Parser;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
-import dev.mvmo.sicklang.token.Token;
-import dev.mvmo.sicklang.token.TokenType;
 
 import java.util.List;
 import java.util.Scanner;
