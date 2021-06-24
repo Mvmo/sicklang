@@ -2,6 +2,7 @@ package dev.mvmo.sicklang.evaluator;
 
 import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.internal.object.SickObject;
+import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.parser.Parser;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
@@ -28,6 +29,22 @@ public class EvaluatorTest {
         }
     }
 
+    @Test
+    public void test$evalBooleanExpressions() {
+        record TestCase(String input, boolean expected) {
+        }
+
+        TestCase[] testCases = new TestCase[]{
+                new TestCase("true", true),
+                new TestCase("false", false)
+        };
+
+        for (TestCase testCase : testCases) {
+            SickObject evaluated = testEval(testCase.input);
+            testBooleanObject(evaluated, testCase.expected);
+        }
+    }
+
     private SickObject testEval(String input) {
         Lexer lexer = Lexer.newInstance(input);
         Parser parser = Parser.newInstance(lexer);
@@ -37,11 +54,18 @@ public class EvaluatorTest {
         return SicklangEvaluator.eval(programNode);
     }
 
-    public void testIntegerObject(SickObject object, int expected) {
+    private void testIntegerObject(SickObject object, int expected) {
         assertTrue(object instanceof IntegerObject);
 
         IntegerObject integerObject = (IntegerObject) object;
-        assertEquals(integerObject.value(), expected);
+        assertEquals(expected, integerObject.value());
+    }
+
+    private void testBooleanObject(SickObject object, boolean expected) {
+        assertTrue(object instanceof BooleanObject);
+
+        BooleanObject booleanObject = (BooleanObject) object;
+        assertEquals(expected, booleanObject.value());
     }
 
 }
