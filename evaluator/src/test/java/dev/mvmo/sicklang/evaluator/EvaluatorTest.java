@@ -184,7 +184,8 @@ public class EvaluatorTest {
                             }
                             return 1;
                         }
-                        """,  "unknown operator: BOOLEAN + BOOLEAN")
+                        """,  "unknown operator: BOOLEAN + BOOLEAN"),
+                new TestCase("foobar;", "identifier not found: foobar")
         };
 
         for (TestCase testCase : testCases) {
