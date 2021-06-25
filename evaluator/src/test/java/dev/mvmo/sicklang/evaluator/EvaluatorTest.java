@@ -4,6 +4,7 @@ import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.internal.object.NullObject;
 import dev.mvmo.sicklang.internal.object.SickObject;
 import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
+import dev.mvmo.sicklang.internal.object.error.ErrorObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.parser.Parser;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
@@ -126,7 +127,7 @@ public class EvaluatorTest {
         record TestCase(String input, int expected) {
         }
 
-        TestCase[] testCases = new TestCase[] {
+        TestCase[] testCases = new TestCase[]{
                 new TestCase("return 10;", 10),
                 new TestCase("return 10; 9;", 10),
                 new TestCase("return 2 * 5; 9;", 10),
@@ -144,6 +145,36 @@ public class EvaluatorTest {
         for (TestCase testCase : testCases) {
             SickObject evaluated = testEval(testCase.input);
             testIntegerObject(evaluated, testCase.expected);
+        }
+    }
+
+    @Test
+    public void test$errorHandling() {
+        record TestCase(String input, String expected) {
+        }
+
+        TestCase[] testCases = new TestCase[]{
+                new TestCase("5 + true;", "type mismatch: INTEGER + BOOLEAN"),
+                new TestCase("5 + true; 5;", "type mismatch: INTEGER + BOOLEAN"),
+                new TestCase("-true", "unknown operator: -BOOLEAN"),
+                new TestCase("true + false;", "unknown operator: BOOLEAN + BOOLEAN"),
+                new TestCase("5; true + false; 5", "unknown operator: BOOLEAN + BOOLEAN"),
+                new TestCase("if (10 > 1) { true + false; }", "unknown operator: BOOLEAN + BOOLEAN"),
+                new TestCase("""
+                        if (10 > 1) {
+                            if (10 > 1) {
+                                return true + false;
+                            }
+                            return 1;
+                        }
+                        """,  "unknown operator: BOOLEAN + BOOLEAN")
+        };
+
+        for (TestCase testCase : testCases) {
+            SickObject evaluated = testEval(testCase.input);
+            assertTrue(evaluated instanceof ErrorObject);
+            ErrorObject errorObject = (ErrorObject) evaluated;
+            assertEquals(testCase.expected, errorObject.message());
         }
     }
 
