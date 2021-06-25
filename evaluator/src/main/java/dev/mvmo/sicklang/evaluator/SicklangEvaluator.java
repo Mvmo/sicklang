@@ -39,12 +39,19 @@ public class SicklangEvaluator {
 
         if (node instanceof PrefixExpressionNode prefixExpressionNode) {
             SickObject right = eval(prefixExpressionNode.right());
+            if (error(right))
+                return right;
             return evalPrefixExpression(prefixExpressionNode.operator(), right);
         }
 
         if (node instanceof InfixExpressionNode infixExpressionNode) {
             SickObject left = eval(infixExpressionNode.left());
+            if (error(left))
+                return left;
+
             SickObject right = eval(infixExpressionNode.right());
+            if (error(right))
+                return right;
 
             return evalInfixExpression(infixExpressionNode.operator(), left, right);
         }
@@ -59,6 +66,8 @@ public class SicklangEvaluator {
 
         if (node instanceof ReturnStatementNode returnStatementNode) {
             SickObject val = eval(returnStatementNode.returnValue());
+            if (error(val))
+                return val;
             return new ReturnValueObject(val);
         }
 
@@ -159,6 +168,8 @@ public class SicklangEvaluator {
 
     private static SickObject evalIfExpression(IfExpressionNode ifExpressionNode) {
         SickObject condition = eval(ifExpressionNode.conditionalExpressionNode());
+        if (error(condition))
+            return condition;
 
         if (truthy(condition)) {
             return eval(ifExpressionNode.consequence());
@@ -173,6 +184,12 @@ public class SicklangEvaluator {
         if (object == BooleanObject.TRUE)
             return true;
         return object != BooleanObject.FALSE && object != NullObject.NULL;
+    }
+
+    private static boolean error(SickObject object) {
+        if (object != null)
+            return object.objectType().equals(ObjectType.ERROR);
+        return false;
     }
 
 }
