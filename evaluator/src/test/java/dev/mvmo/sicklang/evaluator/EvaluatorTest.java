@@ -96,7 +96,7 @@ public class EvaluatorTest {
     }
 
     @Test
-    public void test$ifElseExpressions() {
+    public void test$evalIfElseExpressions() {
         record TestCase<T>(String input, T expected) {}
 
         TestCase<?>[] testCases = new TestCase[] {
