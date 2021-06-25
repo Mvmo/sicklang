@@ -4,6 +4,7 @@ public enum ObjectType {
 
     INTEGER,
     BOOLEAN,
+    RETURN_VALUE,
     NULL
 
 }
