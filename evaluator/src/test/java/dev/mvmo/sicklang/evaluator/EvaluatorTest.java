@@ -97,9 +97,10 @@ public class EvaluatorTest {
 
     @Test
     public void test$evalIfElseExpressions() {
-        record TestCase<T>(String input, T expected) {}
+        record TestCase<T>(String input, T expected) {
+        }
 
-        TestCase<?>[] testCases = new TestCase[] {
+        TestCase<?>[] testCases = new TestCase[]{
                 new TestCase<>("if (true) { 10 }", 10),
                 new TestCase<>("if (false) { 10 }", null),
                 new TestCase<>("if (1) { 10 }", 10),
@@ -111,12 +112,30 @@ public class EvaluatorTest {
 
         for (TestCase<?> testCase : testCases) {
             SickObject evaluated = testEval(testCase.input);
-            
+
             if (testCase.expected instanceof Integer i) {
                 testIntegerObject(evaluated, i);
             } else {
                 testNullObject(evaluated);
             }
+        }
+    }
+
+    @Test
+    public void test$evaluateReturnStatement() {
+        record TestCase(String input, int expected) {
+        }
+
+        TestCase[] testCases = new TestCase[] {
+                new TestCase("return 10;", 10),
+                new TestCase("return 10; 9;", 10),
+                new TestCase("return 2 * 5; 9;", 10),
+                new TestCase("9; return 2 * 5; 9", 10)
+        };
+
+        for (TestCase testCase : testCases) {
+            SickObject evaluated = testEval(testCase.input);
+            testIntegerObject(evaluated, testCase.expected);
         }
     }
 
