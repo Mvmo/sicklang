@@ -7,11 +7,9 @@ import dev.mvmo.sicklang.internal.object.SickObject;
 import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.parser.ast.Node;
-import dev.mvmo.sicklang.parser.ast.expression.BooleanExpressionNode;
-import dev.mvmo.sicklang.parser.ast.expression.InfixExpressionNode;
-import dev.mvmo.sicklang.parser.ast.expression.IntegerLiteralExpressionNode;
-import dev.mvmo.sicklang.parser.ast.expression.PrefixExpressionNode;
+import dev.mvmo.sicklang.parser.ast.expression.*;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
+import dev.mvmo.sicklang.parser.ast.statement.BlockStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.ExpressionStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
 
@@ -46,6 +44,14 @@ public class SicklangEvaluator {
             SickObject right = eval(infixExpressionNode.right());
 
             return evalInfixExpression(infixExpressionNode.operator(), left, right);
+        }
+
+        if (node instanceof BlockStatementNode blockStatementNode) {
+            return evalStatements(blockStatementNode.statementNodes());
+        }
+
+        if (node instanceof IfExpressionNode ifExpressionNode) {
+            return evalIfExpression(ifExpressionNode);
         }
 
         return null;
@@ -120,6 +126,24 @@ public class SicklangEvaluator {
 
             default -> NullObject.NULL;
         };
+    }
+
+    private static SickObject evalIfExpression(IfExpressionNode ifExpressionNode) {
+        SickObject condition = eval(ifExpressionNode.conditionalExpressionNode());
+
+        if (truthy(condition)) {
+            return eval(ifExpressionNode.consequence());
+        } else if (ifExpressionNode.alternative() != null) {
+            return eval(ifExpressionNode.alternative());
+        } else {
+            return NullObject.NULL;
+        }
+    }
+
+    private static boolean truthy(SickObject object) {
+        if (object == BooleanObject.TRUE)
+            return true;
+        return object != BooleanObject.FALSE && object != NullObject.NULL;
     }
 
 }

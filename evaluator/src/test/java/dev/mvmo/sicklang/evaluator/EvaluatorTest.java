@@ -111,6 +111,7 @@ public class EvaluatorTest {
 
         for (TestCase<?> testCase : testCases) {
             SickObject evaluated = testEval(testCase.input);
+            
             if (testCase.expected instanceof Integer i) {
                 testIntegerObject(evaluated, i);
             } else {
