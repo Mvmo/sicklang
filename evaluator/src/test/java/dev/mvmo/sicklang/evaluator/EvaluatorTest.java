@@ -130,7 +130,15 @@ public class EvaluatorTest {
                 new TestCase("return 10;", 10),
                 new TestCase("return 10; 9;", 10),
                 new TestCase("return 2 * 5; 9;", 10),
-                new TestCase("9; return 2 * 5; 9", 10)
+                new TestCase("9; return 2 * 5; 9", 10),
+                new TestCase("""
+                        if (10 > 1) {
+                            if (10 > 1) {
+                                return 10;
+                            }
+                            return 1;
+                        }
+                        """, 10)
         };
 
         for (TestCase testCase : testCases) {
