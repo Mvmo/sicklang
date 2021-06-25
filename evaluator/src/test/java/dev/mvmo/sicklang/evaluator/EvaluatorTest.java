@@ -149,6 +149,23 @@ public class EvaluatorTest {
     }
 
     @Test
+    public void test$evalLetStatement() {
+        record TestCase(String input, int expected) {}
+
+        TestCase[] testCases = new TestCase[] {
+                new TestCase("let a = 5; a;", 5),
+                new TestCase("let a = 5 * 5; a;", 25),
+                new TestCase("let a = 5; let b = a; b", 5),
+                new TestCase("let a = 5; let b = a; let c = a + b; c;", 15)
+        };
+
+        for (TestCase testCase : testCases) {
+            SickObject evaluated = testEval(testCase.input);
+            testIntegerObject(evaluated, testCase.expected);
+        }
+    }
+
+    @Test
     public void test$errorHandling() {
         record TestCase(String input, String expected) {
         }
