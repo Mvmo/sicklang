@@ -1,6 +1,7 @@
 package dev.mvmo.sicklang.evaluator;
 
 import dev.mvmo.sicklang.Lexer;
+import dev.mvmo.sicklang.internal.object.NullObject;
 import dev.mvmo.sicklang.internal.object.SickObject;
 import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
@@ -8,13 +9,12 @@ import dev.mvmo.sicklang.parser.Parser;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class EvaluatorTest {
 
     @Test
-    public void test$evalIntegerExpression() {
+    public void test$evalIntegerExpressions() {
         record TestCase(String input, int expected) {
         }
 
@@ -95,6 +95,30 @@ public class EvaluatorTest {
         }
     }
 
+    @Test
+    public void test$ifElseExpressions() {
+        record TestCase<T>(String input, T expected) {}
+
+        TestCase<?>[] testCases = new TestCase[] {
+                new TestCase<>("if (true) { 10 }", 10),
+                new TestCase<>("if (false) { 10 }", null),
+                new TestCase<>("if (1) { 10 }", 10),
+                new TestCase<>("if (1 < 2) { 10 }", 10),
+                new TestCase<>("if (1 > 2) { 10 }", null),
+                new TestCase<>("if (1 > 2) { 10 } else { 20 }", 20),
+                new TestCase<>("if (1 < 2) { 10 } else { 20 }", 10)
+        };
+
+        for (TestCase<?> testCase : testCases) {
+            SickObject evaluated = testEval(testCase.input);
+            if (testCase.expected instanceof Integer i) {
+                testIntegerObject(evaluated, i);
+            } else {
+                testNullObject(evaluated);
+            }
+        }
+    }
+
     private SickObject testEval(String input) {
         Lexer lexer = Lexer.newInstance(input);
         Parser parser = Parser.newInstance(lexer);
@@ -116,6 +140,11 @@ public class EvaluatorTest {
 
         BooleanObject booleanObject = (BooleanObject) object;
         assertEquals(expected, booleanObject.value());
+    }
+
+    private void testNullObject(SickObject object) {
+        if (object != NullObject.NULL)
+            fail("Object is not null");
     }
 
 }
