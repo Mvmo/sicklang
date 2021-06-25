@@ -5,6 +5,7 @@ import dev.mvmo.sicklang.internal.object.NullObject;
 import dev.mvmo.sicklang.internal.object.ObjectType;
 import dev.mvmo.sicklang.internal.object.SickObject;
 import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
+import dev.mvmo.sicklang.internal.object.error.ErrorObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.internal.object.ret.ReturnValueObject;
 import dev.mvmo.sicklang.parser.ast.Node;
@@ -71,6 +72,8 @@ public class SicklangEvaluator {
             result = eval(statementNode);
             if (result instanceof ReturnValueObject returnValueObject)
                 return returnValueObject.value();
+            if (result instanceof ErrorObject)
+                return result;
         }
 
         return result;
@@ -81,8 +84,9 @@ public class SicklangEvaluator {
 
         for (StatementNode statementNode : blockStatementNode.statementNodes()) {
             result = eval(statementNode);
-            if (result instanceof ReturnValueObject)
+            if (result instanceof ReturnValueObject || result instanceof ErrorObject) {
                 return result;
+            }
         }
 
         return result;
@@ -92,7 +96,7 @@ public class SicklangEvaluator {
         return switch (operator) {
             case "!" -> evalBangOperatorExpression(right);
             case "-" -> evalMinusPrefixOperatorExpression(right);
-            default -> NullObject.NULL;
+            default -> ErrorObject.newError("unknown operator: %s%s", operator, right.objectType());
         };
     }
 
@@ -104,7 +108,7 @@ public class SicklangEvaluator {
 
     private static SickObject evalMinusPrefixOperatorExpression(SickObject right) {
         if (!right.objectType().equals(ObjectType.INTEGER)) // @TODO: maybe we could just do a instanceof check here - maybe also remove the objectType thingy??
-            return NullObject.NULL;
+            return ErrorObject.newError("unknown operator: -%s", right.objectType());
 
         IntegerObject integerObject = (IntegerObject) right;
 
@@ -112,6 +116,10 @@ public class SicklangEvaluator {
     }
 
     private static SickObject evalInfixExpression(String operator, SickObject left, SickObject right) {
+        if (!left.objectType().equals(right.objectType())) {
+            return ErrorObject.newError("type mismatch: %s %s %s", left.objectType(), operator, right.objectType());
+        }
+
         if (left.objectType().equals(ObjectType.INTEGER) && right.objectType().equals(ObjectType.INTEGER)) {
             return evalIntegerInfixExpression(operator, left, right);
         }
@@ -124,7 +132,7 @@ public class SicklangEvaluator {
             return BooleanObject.fromNative(left != right);
         }
 
-        return NullObject.NULL;
+        return ErrorObject.newError("unknown operator: %s %s %s", left.objectType(), operator, right.objectType());
     }
 
     private static SickObject evalIntegerInfixExpression(String operator, SickObject left, SickObject right) {
@@ -145,7 +153,7 @@ public class SicklangEvaluator {
             case "==" -> BooleanObject.fromNative(leftInt == rightInt);
             case "!=" -> BooleanObject.fromNative(leftInt != rightInt);
 
-            default -> NullObject.NULL;
+            default -> ErrorObject.newError("unknown operator: %s %s %s", left.objectType(), operator, right.objectType());
         };
     }
 
