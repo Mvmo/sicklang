@@ -21,7 +21,7 @@ public class SicklangEvaluator {
 
     public static SickObject eval(Node node) {
         if (node instanceof ProgramNode programNode) {
-            return evalStatements(programNode.statementNodes());
+            return evalProgram(programNode);
         }
 
         if (node instanceof ExpressionStatementNode expressionStatementNode) {
@@ -49,7 +49,7 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof BlockStatementNode blockStatementNode) {
-            return evalStatements(blockStatementNode.statementNodes());
+            return evalBlockStatement(blockStatementNode);
         }
 
         if (node instanceof IfExpressionNode ifExpressionNode) {
@@ -64,13 +64,25 @@ public class SicklangEvaluator {
         return null;
     }
 
-    private static SickObject evalStatements(List<StatementNode> statementNodes) {
+    private static SickObject evalProgram(ProgramNode programNode) {
         SickObject result = null;
 
-        for (StatementNode statementNode : statementNodes) {
+        for (StatementNode statementNode : programNode.statementNodes()) {
             result = eval(statementNode);
             if (result instanceof ReturnValueObject returnValueObject)
                 return returnValueObject.value();
+        }
+
+        return result;
+    }
+
+    private static SickObject evalBlockStatement(BlockStatementNode blockStatementNode) {
+        SickObject result = null;
+
+        for (StatementNode statementNode : blockStatementNode.statementNodes()) {
+            result = eval(statementNode);
+            if (result instanceof ReturnValueObject)
+                return result;
         }
 
         return result;
