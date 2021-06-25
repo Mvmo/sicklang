@@ -6,11 +6,13 @@ import dev.mvmo.sicklang.internal.object.ObjectType;
 import dev.mvmo.sicklang.internal.object.SickObject;
 import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
+import dev.mvmo.sicklang.internal.object.ret.ReturnValueObject;
 import dev.mvmo.sicklang.parser.ast.Node;
 import dev.mvmo.sicklang.parser.ast.expression.*;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 import dev.mvmo.sicklang.parser.ast.statement.BlockStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.ExpressionStatementNode;
+import dev.mvmo.sicklang.parser.ast.statement.ReturnStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
 
 import java.util.List;
@@ -54,6 +56,11 @@ public class SicklangEvaluator {
             return evalIfExpression(ifExpressionNode);
         }
 
+        if (node instanceof ReturnStatementNode returnStatementNode) {
+            SickObject val = eval(returnStatementNode.returnValue());
+            return new ReturnValueObject(val);
+        }
+
         return null;
     }
 
@@ -62,6 +69,8 @@ public class SicklangEvaluator {
 
         for (StatementNode statementNode : statementNodes) {
             result = eval(statementNode);
+            if (result instanceof ReturnValueObject returnValueObject)
+                return returnValueObject.value();
         }
 
         return result;
