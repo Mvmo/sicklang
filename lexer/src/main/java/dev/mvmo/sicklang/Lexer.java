@@ -17,7 +17,7 @@ public class Lexer {
     private char currentChar; // current char under examination
 
     public static Lexer newInstance(String input) {
-        Lexer lexer = new Lexer(input);
+        var lexer = new Lexer(input);
         lexer.readChar();
 
         return lexer;
@@ -52,7 +52,8 @@ public class Lexer {
                     char c = currentChar;
                     readChar();
 
-                    String literal = "" + c + currentChar;
+                    var literal = "" + c + currentChar;
+
                     token = new Token(TokenType.EQUALS, literal);
                     break;
                 }
@@ -76,7 +77,8 @@ public class Lexer {
                     char c = currentChar;
                     readChar();
 
-                    String literal = "" + c + currentChar;
+                    var literal = "" + c + currentChar;
+
                     token = new Token(TokenType.NOT_EQUALS, literal);
                     break;
                 }
@@ -120,14 +122,14 @@ public class Lexer {
     }
 
     private Token findToken() {
-        if (isLetter(currentChar)) {
-            String literal = readIdentifier();
-            TokenType tokenType = Token.lookupIdentifier(literal);
+        if (letter(currentChar)) {
+            var literal = readIdentifier();
+            var tokenType = Token.lookupIdentifier(literal);
 
             return new Token(tokenType, literal);
         }
 
-        if (isDigit(currentChar)) {
+        if (digit(currentChar)) {
             return new Token(TokenType.INTEGER, readNumber());
         }
 
@@ -136,7 +138,7 @@ public class Lexer {
 
     private String readIdentifier() {
         int startPosition = this.position;
-        while (isLetter(currentChar))
+        while (letter(currentChar))
             readChar();
 
         return this.input.substring(startPosition, this.position);
@@ -144,7 +146,7 @@ public class Lexer {
 
     private String readNumber() {
         int startPosition = this.position;
-        while (isDigit(currentChar))
+        while (digit(currentChar))
             readChar();
 
         return this.input.substring(startPosition, this.position);
@@ -155,11 +157,11 @@ public class Lexer {
             readChar();
     }
 
-    private boolean isLetter(char c) {
+    private boolean letter(char c) {
         return Character.isLetter(c);
     }
 
-    private boolean isDigit(char c) {
+    private boolean digit(char c) {
         return Character.isDigit(c);
     }
 
