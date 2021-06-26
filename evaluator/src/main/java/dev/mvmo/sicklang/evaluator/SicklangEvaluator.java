@@ -16,8 +16,6 @@ import dev.mvmo.sicklang.parser.ast.statement.ExpressionStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.ReturnStatementNode;
 import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
 
-import java.util.List;
-
 public class SicklangEvaluator {
 
     public static SickObject eval(Node node) {
