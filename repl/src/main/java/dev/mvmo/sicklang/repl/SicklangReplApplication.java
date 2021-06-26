@@ -2,11 +2,8 @@ package dev.mvmo.sicklang.repl;
 
 import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.evaluator.SicklangEvaluator;
-import dev.mvmo.sicklang.internal.object.SickObject;
 import dev.mvmo.sicklang.parser.Parser;
-import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class SicklangReplApplication {
