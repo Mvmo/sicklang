@@ -10,129 +10,110 @@ import dev.mvmo.sicklang.parser.Parser;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 import org.junit.Test;
 
+import java.util.stream.Stream;
+
 import static org.junit.Assert.*;
 
 public class EvaluatorTest {
 
+    private static record SimpleTestCase<E>(String input, E expected) {
+    }
+
     @Test
     public void test$evalIntegerExpressions() {
-        record TestCase(String input, int expected) {
-        }
-
-        TestCase[] testCases = new TestCase[]{
-                new TestCase("5", 5),
-                new TestCase("10", 10),
-                new TestCase("-10", -10),
-                new TestCase("-5", -5),
-                new TestCase("5 + 5 + 5 + 5 - 10", 10),
-                new TestCase("2 * 2 * 2 * 2 * 2", 32),
-                new TestCase("-50 + 100 + -50", 0),
-                new TestCase("5 * 2 + 10", 20),
-                new TestCase("5 + 2 * 10", 25),
-                new TestCase("20 + 2 * -10", 0),
-                new TestCase("50 / 2 * 2 + 10", 60),
-                new TestCase("2 * (5 + 10)", 30),
-                new TestCase("3 * 3 * 3 + 10", 37),
-                new TestCase("3 * (3 * 3) + 10", 37),
-                new TestCase("(5 + 10 * 2 + 15 / 3) * 2 + -10", 50)
-        };
-
-        for (TestCase testCase : testCases) {
-            SickObject evaluated = testEval(testCase.input);
+        Stream.of(
+                new SimpleTestCase<>("5", 5),
+                new SimpleTestCase<>("10", 10),
+                new SimpleTestCase<>("-10", -10),
+                new SimpleTestCase<>("-5", -5),
+                new SimpleTestCase<>("5 + 5 + 5 + 5 - 10", 10),
+                new SimpleTestCase<>("2 * 2 * 2 * 2 * 2", 32),
+                new SimpleTestCase<>("-50 + 100 + -50", 0),
+                new SimpleTestCase<>("5 * 2 + 10", 20),
+                new SimpleTestCase<>("5 + 2 * 10", 25),
+                new SimpleTestCase<>("20 + 2 * -10", 0),
+                new SimpleTestCase<>("50 / 2 * 2 + 10", 60),
+                new SimpleTestCase<>("2 * (5 + 10)", 30),
+                new SimpleTestCase<>("3 * 3 * 3 + 10", 37),
+                new SimpleTestCase<>("3 * (3 * 3) + 10", 37),
+                new SimpleTestCase<>("(5 + 10 * 2 + 15 / 3) * 2 + -10", 50)
+        ).forEach(testCase -> {
+            var evaluated = testEval(testCase.input);
             testIntegerObject(evaluated, testCase.expected);
-        }
+        });
     }
 
     @Test
     public void test$evalBooleanExpressions() {
-        record TestCase(String input, boolean expected) {
-        }
-
-        TestCase[] testCases = new TestCase[]{
-                new TestCase("true", true),
-                new TestCase("false", false),
-                new TestCase(" 1 < 2", true),
-                new TestCase("1 > 2", false),
-                new TestCase("1 < 1", false),
-                new TestCase("1 > 1", false),
-                new TestCase("1 == 1", true),
-                new TestCase("1 != 1", false),
-                new TestCase("1 == 2", false),
-                new TestCase("1 != 2", true),
-                new TestCase("true == true", true),
-                new TestCase("false == false", true),
-                new TestCase("true == false", false),
-                new TestCase("true != false", true),
-                new TestCase("false != true", true),
-                new TestCase("(1 < 2) == true", true),
-                new TestCase("(1 < 2) == false", false),
-                new TestCase("(1 > 2) == true", false),
-                new TestCase("(1 > 2) == false", true)
-        };
-
-        for (TestCase testCase : testCases) {
-            SickObject evaluated = testEval(testCase.input);
+        Stream.of(
+                new SimpleTestCase<>("true", true),
+                new SimpleTestCase<>("false", false),
+                new SimpleTestCase<>(" 1 < 2", true),
+                new SimpleTestCase<>("1 > 2", false),
+                new SimpleTestCase<>("1 < 1", false),
+                new SimpleTestCase<>("1 > 1", false),
+                new SimpleTestCase<>("1 == 1", true),
+                new SimpleTestCase<>("1 != 1", false),
+                new SimpleTestCase<>("1 == 2", false),
+                new SimpleTestCase<>("1 != 2", true),
+                new SimpleTestCase<>("true == true", true),
+                new SimpleTestCase<>("false == false", true),
+                new SimpleTestCase<>("true == false", false),
+                new SimpleTestCase<>("true != false", true),
+                new SimpleTestCase<>("false != true", true),
+                new SimpleTestCase<>("(1 < 2) == true", true),
+                new SimpleTestCase<>("(1 < 2) == false", false),
+                new SimpleTestCase<>("(1 > 2) == true", false),
+                new SimpleTestCase<>("(1 > 2) == false", true)
+        ).forEach(testCase -> {
+            var evaluated = testEval(testCase.input);
             testBooleanObject(evaluated, testCase.expected);
-        }
+        });
     }
 
     @Test
     public void test$evalBangOperator() {
-        record TestCase(String input, boolean expected) {
-        }
-
-        TestCase[] testCases = new TestCase[]{
-                new TestCase("!true", false),
-                new TestCase("!false", true),
-                new TestCase("!5", false),
-                new TestCase("!!true", true),
-                new TestCase("!!false", false),
-                new TestCase("!!5", true)
-        };
-
-        for (TestCase testCase : testCases) {
-            SickObject evaluated = testEval(testCase.input);
+        Stream.of(
+                new SimpleTestCase<>("!true", false),
+                new SimpleTestCase<>("!false", true),
+                new SimpleTestCase<>("!5", false),
+                new SimpleTestCase<>("!!true", true),
+                new SimpleTestCase<>("!!false", false),
+                new SimpleTestCase<>("!!5", true)
+        ).forEach(testCase -> {
+            var evaluated = testEval(testCase.input);
             testBooleanObject(evaluated, testCase.expected);
-        }
+        });
     }
 
     @Test
     public void test$evalIfElseExpressions() {
-        record TestCase<T>(String input, T expected) {
-        }
+        Stream.of(
+                new SimpleTestCase<>("if (true) { 10 }", 10),
+                new SimpleTestCase<>("if (false) { 10 }", null),
+                new SimpleTestCase<>("if (1) { 10 }", 10),
+                new SimpleTestCase<>("if (1 < 2) { 10 }", 10),
+                new SimpleTestCase<>("if (1 > 2) { 10 }", null),
+                new SimpleTestCase<>("ifa(1 > 2) { 10 } else { 20 }", 20),
+                new SimpleTestCase<>("if (1 < 2) { 10 } else { 20 }", 10)
+        ).forEach(testCase -> {
+            var evaluated = testEval(testCase.input);
 
-        TestCase<?>[] testCases = new TestCase[]{
-                new TestCase<>("if (true) { 10 }", 10),
-                new TestCase<>("if (false) { 10 }", null),
-                new TestCase<>("if (1) { 10 }", 10),
-                new TestCase<>("if (1 < 2) { 10 }", 10),
-                new TestCase<>("if (1 > 2) { 10 }", null),
-                new TestCase<>("if (1 > 2) { 10 } else { 20 }", 20),
-                new TestCase<>("if (1 < 2) { 10 } else { 20 }", 10)
-        };
-
-        for (TestCase<?> testCase : testCases) {
-            SickObject evaluated = testEval(testCase.input);
-
-            if (testCase.expected instanceof Integer i) {
+            if (testCase.expected instanceof Integer i)
                 testIntegerObject(evaluated, i);
-            } else {
+            else
                 testNullObject(evaluated);
-            }
-        }
+        });
     }
 
     @Test
     public void test$evaluateReturnStatement() {
-        record TestCase(String input, int expected) {
-        }
-
-        TestCase[] testCases = new TestCase[]{
-                new TestCase("return 10;", 10),
-                new TestCase("return 10; 9;", 10),
-                new TestCase("return 2 * 5; 9;", 10),
-                new TestCase("9; return 2 * 5; 9", 10),
-                new TestCase("""
+        Stream.of(
+                new SimpleTestCase<>("return 10;", 10),
+                new SimpleTestCase<>("return 10; 9;", 10),
+                new SimpleTestCase<>("return 2 * 5; 9;", 10),
+                new SimpleTestCase<>("9; return 2 * 5; 9", 10),
+                new SimpleTestCase<>("""
                         if (10 > 1) {
                             if (10 > 1) {
                                 return 10;
@@ -140,67 +121,56 @@ public class EvaluatorTest {
                             return 1;
                         }
                         """, 10)
-        };
-
-        for (TestCase testCase : testCases) {
-            SickObject evaluated = testEval(testCase.input);
+        ).forEach(testCase -> {
+            var evaluated = testEval(testCase.input);
             testIntegerObject(evaluated, testCase.expected);
-        }
+        });
     }
 
     @Test
     public void test$evalLetStatement() {
-        record TestCase(String input, int expected) {}
-
-        TestCase[] testCases = new TestCase[] {
-                new TestCase("let a = 5; a;", 5),
-                new TestCase("let a = 5 * 5; a;", 25),
-                new TestCase("let a = 5; let b = a; b", 5),
-                new TestCase("let a = 5; let b = a; let c = a + b; c;", 15)
-        };
-
-        for (TestCase testCase : testCases) {
-            SickObject evaluated = testEval(testCase.input);
+        Stream.of(
+                new SimpleTestCase<>("let a = 5; a;", 5),
+                new SimpleTestCase<>("let a = 5 * 5; a;", 25),
+                new SimpleTestCase<>("let a = 5; let b = a; b", 5),
+                new SimpleTestCase<>("let a = 5; let b = a; let c = a + b; c;", 15)
+        ).forEach(testCase -> {
+            var evaluated = testEval(testCase.input);
             testIntegerObject(evaluated, testCase.expected);
-        }
+        });
     }
 
     @Test
     public void test$errorHandling() {
-        record TestCase(String input, String expected) {
-        }
-
-        TestCase[] testCases = new TestCase[]{
-                new TestCase("5 + true;", "type mismatch: INTEGER + BOOLEAN"),
-                new TestCase("5 + true; 5;", "type mismatch: INTEGER + BOOLEAN"),
-                new TestCase("-true", "unknown operator: -BOOLEAN"),
-                new TestCase("true + false;", "unknown operator: BOOLEAN + BOOLEAN"),
-                new TestCase("5; true + false; 5", "unknown operator: BOOLEAN + BOOLEAN"),
-                new TestCase("if (10 > 1) { true + false; }", "unknown operator: BOOLEAN + BOOLEAN"),
-                new TestCase("""
+        Stream.of(
+                new SimpleTestCase<>("5 + true;", "type mismatch: INTEGER + BOOLEAN"),
+                new SimpleTestCase<>("5 + true; 5;", "type mismatch: INTEGER + BOOLEAN"),
+                new SimpleTestCase<>("-true", "unknown operator: -BOOLEAN"),
+                new SimpleTestCase<>("true + false;", "unknown operator: BOOLEAN + BOOLEAN"),
+                new SimpleTestCase<>("5; true + false; 5", "unknown operator: BOOLEAN + BOOLEAN"),
+                new SimpleTestCase<>("if (10 > 1) { true + false; }", "unknown operator: BOOLEAN + BOOLEAN"),
+                new SimpleTestCase<>("""
                         if (10 > 1) {
                             if (10 > 1) {
                                 return true + false;
                             }
                             return 1;
                         }
-                        """,  "unknown operator: BOOLEAN + BOOLEAN"),
-                new TestCase("foobar;", "identifier not found: foobar")
-        };
-
-        for (TestCase testCase : testCases) {
-            SickObject evaluated = testEval(testCase.input);
+                        """, "unknown operator: BOOLEAN + BOOLEAN"),
+                new SimpleTestCase<>("foobar;", "identifier not found: foobar")
+        ).forEach(testCase -> {
+            var evaluated = testEval(testCase.input);
             assertTrue(evaluated instanceof ErrorObject);
-            ErrorObject errorObject = (ErrorObject) evaluated;
+            var errorObject = (ErrorObject) evaluated;
             assertEquals(testCase.expected, errorObject.message());
-        }
+        });
     }
 
     private SickObject testEval(String input) {
-        Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
+        var lexer = Lexer.newInstance(input);
+        var parser = Parser.newInstance(lexer);
 
-        ProgramNode programNode = parser.parseProgram();
+        var programNode = parser.parseProgram();
 
         return SicklangEvaluator.eval(programNode);
     }
@@ -208,14 +178,14 @@ public class EvaluatorTest {
     private void testIntegerObject(SickObject object, int expected) {
         assertTrue(object instanceof IntegerObject);
 
-        IntegerObject integerObject = (IntegerObject) object;
+        var integerObject = (IntegerObject) object;
         assertEquals(expected, integerObject.value());
     }
 
     private void testBooleanObject(SickObject object, boolean expected) {
         assertTrue(object instanceof BooleanObject);
 
-        BooleanObject booleanObject = (BooleanObject) object;
+        var booleanObject = (BooleanObject) object;
         assertEquals(expected, booleanObject.value());
     }
 
