@@ -1,6 +1,5 @@
 package dev.mvmo.sicklang.parser.ast.expression;
 
-import com.google.common.collect.Lists;
 import dev.mvmo.sicklang.parser.ast.statement.BlockStatementNode;
 import dev.mvmo.sicklang.token.Token;
 import lombok.Getter;

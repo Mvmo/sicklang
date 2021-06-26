@@ -33,7 +33,7 @@ public class Parser {
     private Token peekToken;
 
     public static Parser newInstance(Lexer lexer) {
-        Parser parser = new Parser(lexer, Maps.newHashMap(), Maps.newHashMap(), Lists.newArrayList());
+        var parser = new Parser(lexer, Maps.newHashMap(), Maps.newHashMap(), Lists.newArrayList());
 
         parser.prefixParseFunctionMap.put(TokenType.IDENTIFIER, parser::parseIdentifier);
         parser.prefixParseFunctionMap.put(TokenType.INTEGER, parser::parseIntegerLiteral);
@@ -67,10 +67,10 @@ public class Parser {
     }
 
     public ProgramNode parseProgram() {
-        ProgramNode programNode = ProgramNode.newInstance();
+        var programNode = ProgramNode.newInstance();
 
         while (!currentTokenIs(TokenType.EOF)) {
-            StatementNode statementNode = parseStatement();
+            var statementNode = parseStatement();
             if (statementNode != null)
                 programNode.statementNodes().add(statementNode);
 
@@ -81,18 +81,15 @@ public class Parser {
     }
 
     private StatementNode parseStatement() {
-        switch (currentToken.type()) {
-            case LET:
-                return parseLetStatement();
-            case RETURN:
-                return parseReturnStatement();
-            default:
-                return parseExpressionStatement();
-        }
+        return switch (currentToken.type()) {
+            case LET -> parseLetStatement();
+            case RETURN -> parseReturnStatement();
+            default -> parseExpressionStatement();
+        };
     }
 
     public LetStatementNode parseLetStatement() {
-        LetStatementNode statementNode = LetStatementNode.newInstance(currentToken);
+        var statementNode = LetStatementNode.newInstance(currentToken);
         if (!expectPeek(TokenType.IDENTIFIER))
             return null;
 
@@ -112,7 +109,7 @@ public class Parser {
     }
 
     public ReturnStatementNode parseReturnStatement() {
-        ReturnStatementNode statementNode = ReturnStatementNode.newInstance(currentToken);
+        var statementNode = ReturnStatementNode.newInstance(currentToken);
         nextToken();
 
         statementNode.returnValue(parseExpression(Precedence.LOWEST));
@@ -124,7 +121,7 @@ public class Parser {
     }
 
     public ExpressionStatementNode parseExpressionStatement() {
-        ExpressionStatementNode statementNode = ExpressionStatementNode.newInstance(currentToken);
+        var statementNode = ExpressionStatementNode.newInstance(currentToken);
 
         statementNode.expressionNode(parseExpression(Precedence.LOWEST));
 
@@ -135,16 +132,16 @@ public class Parser {
     }
 
     public ExpressionNode parseExpression(Precedence precedence) {
-        PrefixParseFunction prefixParseFunction = prefixParseFunctionMap.get(currentToken.type());
+        var prefixParseFunction = prefixParseFunctionMap.get(currentToken.type());
         if (prefixParseFunction == null) {
             noPrefixParseFunctionError(currentToken.type());
             return null;
         }
 
-        ExpressionNode leftExpression = prefixParseFunction.parse();
+        var leftExpression = prefixParseFunction.parse();
 
         while (!peekTokenIs(TokenType.SEMICOLON) && precedence.ordinal() < Precedence.findPrecedence(peekToken.type()).ordinal()) {
-            InfixParseFunction infixParseFunction = infixParseFunctionMap.get(peekToken.type());
+            var infixParseFunction = infixParseFunctionMap.get(peekToken.type());
             if (infixParseFunction == null) {
                 return leftExpression;
             }
@@ -162,13 +159,13 @@ public class Parser {
     }
 
     public IntegerLiteralExpressionNode parseIntegerLiteral() {
-        IntegerLiteralExpressionNode literalExpressionNode = IntegerLiteralExpressionNode.newInstance(currentToken);
+        var literalExpressionNode = IntegerLiteralExpressionNode.newInstance(currentToken);
 
         try {
             int integer = Integer.parseInt(currentToken.literal());
             literalExpressionNode.value(integer);
         } catch (NumberFormatException exception) {
-            String errorMsg = String.format("could not parse %s as an integer", currentToken.literal());
+            var errorMsg = String.format("could not parse %s as an integer", currentToken.literal());
             errorMessages.add(errorMsg);
 
             return null;
@@ -178,7 +175,7 @@ public class Parser {
     }
 
     public ExpressionNode parsePrefixExpression() {
-        PrefixExpressionNode prefixExpressionNode = PrefixExpressionNode.newInstance(currentToken, currentToken.literal());
+        var prefixExpressionNode = PrefixExpressionNode.newInstance(currentToken, currentToken.literal());
 
         nextToken();
 
@@ -188,9 +185,9 @@ public class Parser {
     }
 
     public ExpressionNode parseInfixExpression(ExpressionNode left) {
-        InfixExpressionNode infixExpressionNode = InfixExpressionNode.newInstance(currentToken, left, currentToken.literal());
+        var infixExpressionNode = InfixExpressionNode.newInstance(currentToken, left, currentToken.literal());
+        var precedence = Precedence.findPrecedence(currentToken.type());
 
-        Precedence precedence = Precedence.findPrecedence(currentToken.type());
         nextToken();
 
         infixExpressionNode.right(parseExpression(precedence));
@@ -205,7 +202,7 @@ public class Parser {
     public ExpressionNode parseGroupedExpression() {
         nextToken();
 
-        ExpressionNode expressionNode = parseExpression(Precedence.LOWEST);
+        var expressionNode = parseExpression(Precedence.LOWEST);
 
         if (!expectPeek(TokenType.RIGHT_PAREN))
             return null;
@@ -214,7 +211,7 @@ public class Parser {
     }
 
     public ExpressionNode parseIfExpression() {
-        IfExpressionNode expressionNode = IfExpressionNode.newInstance(currentToken);
+        var expressionNode = IfExpressionNode.newInstance(currentToken);
 
         if (!expectPeek(TokenType.LEFT_PAREN))
             return null;
@@ -244,12 +241,12 @@ public class Parser {
     }
 
     public BlockStatementNode parseBlockStatement() {
-        BlockStatementNode blockStatementNode = BlockStatementNode.newInstance(currentToken);
+        var blockStatementNode = BlockStatementNode.newInstance(currentToken);
 
         nextToken();
 
         while (!currentTokenIs(TokenType.RIGHT_BRACE) && !currentTokenIs(TokenType.EOF)) {
-            StatementNode statement = parseStatement();
+            var statement = parseStatement();
             if (statement != null)
                 blockStatementNode.statementNodes().add(statement);
 
@@ -260,7 +257,7 @@ public class Parser {
     }
 
     public FunctionLiteralExpressionNode parseFunctionExpression() {
-        FunctionLiteralExpressionNode functionLiteralExpressionNode = FunctionLiteralExpressionNode.newInstance(currentToken);
+        var functionLiteralExpressionNode = FunctionLiteralExpressionNode.newInstance(currentToken);
 
         if (!expectPeek(TokenType.LEFT_PAREN))
             return null;
@@ -301,7 +298,7 @@ public class Parser {
     }
 
     public ExpressionNode parseCallExpression(ExpressionNode function) {
-        CallExpressionNode callExpressionNode = CallExpressionNode.newInstance(currentToken, function);
+        var callExpressionNode = CallExpressionNode.newInstance(currentToken, function);
         callExpressionNode.arguments(parseCallArguments());
 
         return callExpressionNode;
