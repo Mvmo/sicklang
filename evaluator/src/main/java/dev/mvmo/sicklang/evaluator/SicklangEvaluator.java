@@ -36,18 +36,18 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof PrefixExpressionNode prefixExpressionNode) {
-            SickObject right = eval(prefixExpressionNode.right());
+            var right = eval(prefixExpressionNode.right());
             if (error(right))
                 return right;
             return evalPrefixExpression(prefixExpressionNode.operator(), right);
         }
 
         if (node instanceof InfixExpressionNode infixExpressionNode) {
-            SickObject left = eval(infixExpressionNode.left());
+            var left = eval(infixExpressionNode.left());
             if (error(left))
                 return left;
 
-            SickObject right = eval(infixExpressionNode.right());
+            var right = eval(infixExpressionNode.right());
             if (error(right))
                 return right;
 
@@ -63,7 +63,7 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof ReturnStatementNode returnStatementNode) {
-            SickObject val = eval(returnStatementNode.returnValue());
+            var val = eval(returnStatementNode.returnValue());
             if (error(val))
                 return val;
             return new ReturnValueObject(val);
@@ -117,7 +117,7 @@ public class SicklangEvaluator {
         if (!right.objectType().equals(ObjectType.INTEGER)) // @TODO: maybe we could just do a instanceof check here - maybe also remove the objectType thingy??
             return ErrorObject.newError("unknown operator: -%s", right.objectType());
 
-        IntegerObject integerObject = (IntegerObject) right;
+        var integerObject = (IntegerObject) right;
 
         return new IntegerObject(-integerObject.value());
     }
@@ -165,7 +165,7 @@ public class SicklangEvaluator {
     }
 
     private static SickObject evalIfExpression(IfExpressionNode ifExpressionNode) {
-        SickObject condition = eval(ifExpressionNode.conditionalExpressionNode());
+        var condition = eval(ifExpressionNode.conditionalExpressionNode());
         if (error(condition))
             return condition;
 
