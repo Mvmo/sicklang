@@ -94,7 +94,7 @@ public class EvaluatorTest {
                 new SimpleTestCase<>("if (1) { 10 }", 10),
                 new SimpleTestCase<>("if (1 < 2) { 10 }", 10),
                 new SimpleTestCase<>("if (1 > 2) { 10 }", null),
-                new SimpleTestCase<>("ifa(1 > 2) { 10 } else { 20 }", 20),
+                new SimpleTestCase<>("if (1 > 2) { 10 } else { 20 }", 20),
                 new SimpleTestCase<>("if (1 < 2) { 10 } else { 20 }", 10)
         ).forEach(testCase -> {
             var evaluated = testEval(testCase.input);
@@ -133,7 +133,7 @@ public class EvaluatorTest {
                 new SimpleTestCase<>("let a = 5; a;", 5),
                 new SimpleTestCase<>("let a = 5 * 5; a;", 25),
                 new SimpleTestCase<>("let a = 5; let b = a; b", 5),
-                new SimpleTestCase<>("let a = 5; let b = a; let c = a + b; c;", 15)
+                new SimpleTestCase<>("let a = 5; let b = a; let c = a + b; c;", 10)
         ).forEach(testCase -> {
             var evaluated = testEval(testCase.input);
             testIntegerObject(evaluated, testCase.expected);
