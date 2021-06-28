@@ -1,13 +1,13 @@
 package dev.mvmo.sicklang.evaluator;
 
 import dev.mvmo.sicklang.Lexer;
+import dev.mvmo.sicklang.internal.env.SickEnvironment;
 import dev.mvmo.sicklang.internal.object.NullObject;
 import dev.mvmo.sicklang.internal.object.SickObject;
 import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.error.ErrorObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.parser.Parser;
-import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 import org.junit.Test;
 
 import java.util.stream.Stream;
@@ -169,10 +169,10 @@ public class EvaluatorTest {
     private SickObject testEval(String input) {
         var lexer = Lexer.newInstance(input);
         var parser = Parser.newInstance(lexer);
-
         var programNode = parser.parseProgram();
+        var environment = SickEnvironment.newInstance();
 
-        return SicklangEvaluator.eval(programNode);
+        return SicklangEvaluator.eval(programNode, environment);
     }
 
     private void testIntegerObject(SickObject object, int expected) {

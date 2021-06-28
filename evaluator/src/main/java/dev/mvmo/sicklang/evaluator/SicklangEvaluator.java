@@ -1,6 +1,7 @@
 package dev.mvmo.sicklang.evaluator;
 
 import com.google.common.base.Preconditions;
+import dev.mvmo.sicklang.internal.env.SickEnvironment;
 import dev.mvmo.sicklang.internal.object.NullObject;
 import dev.mvmo.sicklang.internal.object.ObjectType;
 import dev.mvmo.sicklang.internal.object.SickObject;
@@ -18,13 +19,13 @@ import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
 
 public class SicklangEvaluator {
 
-    public static SickObject eval(Node node) {
+    public static SickObject eval(Node node, SickEnvironment environment) {
         if (node instanceof ProgramNode programNode) {
-            return evalProgram(programNode);
+            return evalProgram(programNode, environment);
         }
 
         if (node instanceof ExpressionStatementNode expressionStatementNode) {
-            return eval(expressionStatementNode.expressionNode());
+            return eval(expressionStatementNode.expressionNode(), environment);
         }
 
         if (node instanceof IntegerLiteralExpressionNode integerNode) {
@@ -36,18 +37,18 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof PrefixExpressionNode prefixExpressionNode) {
-            var right = eval(prefixExpressionNode.right());
+            var right = eval(prefixExpressionNode.right(), environment);
             if (error(right))
                 return right;
             return evalPrefixExpression(prefixExpressionNode.operator(), right);
         }
 
         if (node instanceof InfixExpressionNode infixExpressionNode) {
-            var left = eval(infixExpressionNode.left());
+            var left = eval(infixExpressionNode.left(), environment);
             if (error(left))
                 return left;
 
-            var right = eval(infixExpressionNode.right());
+            var right = eval(infixExpressionNode.right(), environment);
             if (error(right))
                 return right;
 
@@ -55,15 +56,15 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof BlockStatementNode blockStatementNode) {
-            return evalBlockStatement(blockStatementNode);
+            return evalBlockStatement(blockStatementNode, environment);
         }
 
         if (node instanceof IfExpressionNode ifExpressionNode) {
-            return evalIfExpression(ifExpressionNode);
+            return evalIfExpression(ifExpressionNode, environment);
         }
 
         if (node instanceof ReturnStatementNode returnStatementNode) {
-            var val = eval(returnStatementNode.returnValue());
+            var val = eval(returnStatementNode.returnValue(), environment);
             if (error(val))
                 return val;
             return new ReturnValueObject(val);
@@ -72,11 +73,11 @@ public class SicklangEvaluator {
         return null;
     }
 
-    private static SickObject evalProgram(ProgramNode programNode) {
+    private static SickObject evalProgram(ProgramNode programNode, SickEnvironment environment) {
         SickObject result = null;
 
         for (StatementNode statementNode : programNode.statementNodes()) {
-            result = eval(statementNode);
+            result = eval(statementNode, environment);
             if (result instanceof ReturnValueObject returnValueObject)
                 return returnValueObject.value();
             if (result instanceof ErrorObject)
@@ -86,11 +87,11 @@ public class SicklangEvaluator {
         return result;
     }
 
-    private static SickObject evalBlockStatement(BlockStatementNode blockStatementNode) {
+    private static SickObject evalBlockStatement(BlockStatementNode blockStatementNode, SickEnvironment environment) {
         SickObject result = null;
 
         for (StatementNode statementNode : blockStatementNode.statementNodes()) {
-            result = eval(statementNode);
+            result = eval(statementNode, environment);
             if (result instanceof ReturnValueObject || result instanceof ErrorObject) {
                 return result;
             }
@@ -164,15 +165,15 @@ public class SicklangEvaluator {
         };
     }
 
-    private static SickObject evalIfExpression(IfExpressionNode ifExpressionNode) {
-        var condition = eval(ifExpressionNode.conditionalExpressionNode());
+    private static SickObject evalIfExpression(IfExpressionNode ifExpressionNode, SickEnvironment environment) {
+        var condition = eval(ifExpressionNode.conditionalExpressionNode(), environment);
         if (error(condition))
             return condition;
 
         if (truthy(condition)) {
-            return eval(ifExpressionNode.consequence());
+            return eval(ifExpressionNode.consequence(), environment);
         } else if (ifExpressionNode.alternative() != null) {
-            return eval(ifExpressionNode.alternative());
+            return eval(ifExpressionNode.alternative(), environment);
         } else {
             return NullObject.NULL;
         }

@@ -2,6 +2,7 @@ package dev.mvmo.sicklang.repl;
 
 import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.evaluator.SicklangEvaluator;
+import dev.mvmo.sicklang.internal.env.SickEnvironment;
 import dev.mvmo.sicklang.parser.Parser;
 
 import java.util.Scanner;
@@ -32,7 +33,9 @@ public class SicklangReplApplication {
                 return;
             }
 
-            var evaluated = SicklangEvaluator.eval(programNode);
+            var environment = SickEnvironment.newInstance();
+
+            var evaluated = SicklangEvaluator.eval(programNode, environment);
             if (evaluated == null)
                 return;
 
