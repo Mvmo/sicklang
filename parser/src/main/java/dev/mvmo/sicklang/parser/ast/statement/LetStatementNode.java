@@ -13,7 +13,7 @@ import lombok.Setter;
 public class LetStatementNode implements StatementNode {
 
     private final Token token;
-    private IdentifierExpressionNode identifier;
+    private IdentifierExpressionNode identifier; // name
     private ExpressionNode value;
 
     @Override
