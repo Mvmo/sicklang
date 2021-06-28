@@ -15,7 +15,7 @@ public record ErrorObject(String message) implements SickObject {
         return ObjectType.ERROR;
     }
 
-    public static ErrorObject newError(String message, Object... args) {
+    public static ErrorObject newInstance(String message, Object... args) {
         return new ErrorObject(String.format(message, args));
     }
 
