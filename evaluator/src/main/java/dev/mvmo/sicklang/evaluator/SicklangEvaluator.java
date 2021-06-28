@@ -12,10 +12,7 @@ import dev.mvmo.sicklang.internal.object.ret.ReturnValueObject;
 import dev.mvmo.sicklang.parser.ast.Node;
 import dev.mvmo.sicklang.parser.ast.expression.*;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
-import dev.mvmo.sicklang.parser.ast.statement.BlockStatementNode;
-import dev.mvmo.sicklang.parser.ast.statement.ExpressionStatementNode;
-import dev.mvmo.sicklang.parser.ast.statement.ReturnStatementNode;
-import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
+import dev.mvmo.sicklang.parser.ast.statement.*;
 
 public class SicklangEvaluator {
 
@@ -70,6 +67,18 @@ public class SicklangEvaluator {
             return new ReturnValueObject(val);
         }
 
+        if (node instanceof LetStatementNode letStatementNode) {
+            var val = eval(letStatementNode.value(), environment);
+            if (error(val))
+                return val;
+
+            environment.set(letStatementNode.identifier().value(), val);
+        }
+
+        if (node instanceof IdentifierExpressionNode identifierExpressionNode) {
+            return evalIdentifier(identifierExpressionNode, environment);
+        }
+
         return null;
     }
 
@@ -104,7 +113,7 @@ public class SicklangEvaluator {
         return switch (operator) {
             case "!" -> evalBangOperatorExpression(right);
             case "-" -> evalMinusPrefixOperatorExpression(right);
-            default -> ErrorObject.newError("unknown operator: %s%s", operator, right.objectType());
+            default -> ErrorObject.newInstance("unknown operator: %s%s", operator, right.objectType());
         };
     }
 
@@ -116,7 +125,7 @@ public class SicklangEvaluator {
 
     private static SickObject evalMinusPrefixOperatorExpression(SickObject right) {
         if (!right.objectType().equals(ObjectType.INTEGER)) // @TODO: maybe we could just do a instanceof check here - maybe also remove the objectType thingy??
-            return ErrorObject.newError("unknown operator: -%s", right.objectType());
+            return ErrorObject.newInstance("unknown operator: -%s", right.objectType());
 
         var integerObject = (IntegerObject) right;
 
@@ -125,7 +134,7 @@ public class SicklangEvaluator {
 
     private static SickObject evalInfixExpression(String operator, SickObject left, SickObject right) {
         if (!left.objectType().equals(right.objectType())) {
-            return ErrorObject.newError("type mismatch: %s %s %s", left.objectType(), operator, right.objectType());
+            return ErrorObject.newInstance("type mismatch: %s %s %s", left.objectType(), operator, right.objectType());
         }
 
         if (left.objectType().equals(ObjectType.INTEGER) && right.objectType().equals(ObjectType.INTEGER)) {
@@ -140,7 +149,7 @@ public class SicklangEvaluator {
             return BooleanObject.fromNative(left != right);
         }
 
-        return ErrorObject.newError("unknown operator: %s %s %s", left.objectType(), operator, right.objectType());
+        return ErrorObject.newInstance("unknown operator: %s %s %s", left.objectType(), operator, right.objectType());
     }
 
     private static SickObject evalIntegerInfixExpression(String operator, SickObject left, SickObject right) {
@@ -161,7 +170,7 @@ public class SicklangEvaluator {
             case "==" -> BooleanObject.fromNative(leftInt == rightInt);
             case "!=" -> BooleanObject.fromNative(leftInt != rightInt);
 
-            default -> ErrorObject.newError("unknown operator: %s %s %s", left.objectType(), operator, right.objectType());
+            default -> ErrorObject.newInstance("unknown operator: %s %s %s", left.objectType(), operator, right.objectType());
         };
     }
 
@@ -177,6 +186,12 @@ public class SicklangEvaluator {
         } else {
             return NullObject.NULL;
         }
+    }
+
+    private static SickObject evalIdentifier(IdentifierExpressionNode node, SickEnvironment environment) {
+        if (environment.hasKey(node.value()))
+            return environment.get(node.value());
+        return ErrorObject.newInstance("identifier not found: " + node.value());
     }
 
     private static boolean truthy(SickObject object) {
