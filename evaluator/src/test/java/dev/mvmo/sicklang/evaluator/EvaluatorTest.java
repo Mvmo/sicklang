@@ -193,6 +193,16 @@ public class EvaluatorTest {
         ).forEach(testCase -> testIntegerObject(testEval(testCase.input), testCase.expected));
     }
 
+   @Test
+   public void test$closures() {
+        var input = "let a = fn(b) { fn (c) { b + c }; }; let d = a(2); d(2)";
+
+        var evaluated = testEval(input);
+        int expected = 4;
+
+        testIntegerObject(evaluated, expected);
+   }
+
     private SickObject testEval(String input) {
         var lexer = Lexer.newInstance(input);
         var parser = Parser.newInstance(lexer);
