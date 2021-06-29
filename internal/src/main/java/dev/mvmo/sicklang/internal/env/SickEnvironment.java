@@ -11,7 +11,7 @@ import java.util.Map;
 public class SickEnvironment {
 
     private final Map<String, SickObject> storageMap;
-    private final SickEnvironment enclosed;
+    private final SickEnvironment parent;
 
     public SickEnvironment set(String key, SickObject value) {
         this.storageMap.put(key, value);
