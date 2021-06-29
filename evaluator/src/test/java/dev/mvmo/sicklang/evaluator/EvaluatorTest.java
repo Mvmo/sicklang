@@ -6,6 +6,7 @@ import dev.mvmo.sicklang.internal.object.NullObject;
 import dev.mvmo.sicklang.internal.object.SickObject;
 import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.error.ErrorObject;
+import dev.mvmo.sicklang.internal.object.function.FunctionObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.parser.Parser;
 import org.junit.Test;
@@ -164,6 +165,20 @@ public class EvaluatorTest {
             var errorObject = (ErrorObject) evaluated;
             assertEquals(testCase.expected, errorObject.message());
         });
+    }
+
+    @Test
+    public void test$evalFunction() {
+        String input = "fn(x) { x + 2; };";
+
+        var evaluated = testEval(input);
+        assertTrue(evaluated instanceof FunctionObject);
+
+        var functionObject = (FunctionObject) evaluated;
+
+        assertEquals(1, functionObject.parameters().size());
+        assertEquals("x", functionObject.parameters().get(0).toString());
+        assertEquals("(x + 2)", functionObject.body().toString());
     }
 
     private SickObject testEval(String input) {
