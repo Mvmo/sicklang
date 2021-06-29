@@ -24,7 +24,11 @@ public class SickEnvironment {
     }
 
     public SickObject get(String key) {
-        return storageMap.get(key);
+        var val = storageMap.get(key);
+        if (val == null && parent != null)
+            return parent.get(key);
+
+        return val;
     }
 
     public SickObject getOrDefault(String key, SickObject defaultValue) {
@@ -34,7 +38,11 @@ public class SickEnvironment {
     }
 
     public boolean hasKey(String key) {
-        return storageMap.containsKey(key);
+        boolean contains = storageMap.containsKey(key);
+        if (!contains && parent != null)
+            return parent.hasKey(key);
+
+        return contains;
     }
 
     public static SickEnvironment newEnclosedInstance(SickEnvironment environment) {
