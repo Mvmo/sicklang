@@ -1,6 +1,7 @@
 package dev.mvmo.sicklang.evaluator;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import dev.mvmo.sicklang.internal.env.SickEnvironment;
 import dev.mvmo.sicklang.internal.object.NullObject;
 import dev.mvmo.sicklang.internal.object.ObjectType;
@@ -14,6 +15,8 @@ import dev.mvmo.sicklang.parser.ast.Node;
 import dev.mvmo.sicklang.parser.ast.expression.*;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 import dev.mvmo.sicklang.parser.ast.statement.*;
+
+import java.util.List;
 
 public class SicklangEvaluator {
 
@@ -85,6 +88,18 @@ public class SicklangEvaluator {
             var body = functionLiteralExpressionNode.body();
 
             return new FunctionObject(params, body, environment);
+        }
+
+        if (node instanceof CallExpressionNode callExpressionNode) {
+            var function = eval(callExpressionNode.function(), environment);
+            if (error(function))
+                return function;
+
+            var args = evalExpressions(callExpressionNode.arguments(), environment);
+            if (args.size() == 1 && error(args.get(0)))
+                return args.get(0);
+
+            return applyFunction(function, args);
         }
 
         return NullObject.NULL;
@@ -200,6 +215,49 @@ public class SicklangEvaluator {
         if (environment.hasKey(node.value()))
             return environment.get(node.value());
         return ErrorObject.newInstance("identifier not found: " + node.value());
+    }
+
+    private static List<SickObject> evalExpressions(List<ExpressionNode> expressions, SickEnvironment environment) {
+        List<SickObject> result = Lists.newArrayListWithExpectedSize(expressions.size());
+
+        for (ExpressionNode expression : expressions) {
+            var evaluated = eval(expression, environment);
+            if (error(evaluated))
+                return Lists.newArrayList(evaluated);
+
+            result.add(evaluated);
+        }
+
+        return result;
+    }
+
+    private static SickObject applyFunction(SickObject object, List<SickObject> args) {
+        if (!(object instanceof FunctionObject functionObject))
+            return ErrorObject.newInstance("not a function: %s", object.objectType());
+
+        var extendedEnvironment = extendFunctionEnvironment(functionObject, args);
+        var evaluated = eval(functionObject.body(), extendedEnvironment);
+
+        return unwrapReturnValue(evaluated);
+    }
+
+    private static SickEnvironment extendFunctionEnvironment(FunctionObject functionObject, List<SickObject> args) {
+        var environment = SickEnvironment.newEnclosedInstance(functionObject.environment());
+
+        for (int i = 0; i < functionObject.parameters().size(); i++) {
+            var identifier = functionObject.parameters().get(i);
+            var value = args.get(i);
+
+            environment.set(identifier.value(), value);
+        }
+
+        return environment;
+    }
+
+    private static SickObject unwrapReturnValue(SickObject sickObject) {
+        if (sickObject instanceof ReturnValueObject returnValueObject)
+            return returnValueObject.value();
+        return sickObject;
     }
 
     private static boolean truthy(SickObject object) {
