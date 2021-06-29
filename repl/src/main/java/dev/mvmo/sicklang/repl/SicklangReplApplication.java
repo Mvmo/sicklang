@@ -20,6 +20,7 @@ public class SicklangReplApplication {
     public static void main(String[] args) {
         var scanner = new Scanner(System.in);
 
+        var environment = SickEnvironment.newInstance();
         while (true) {
             System.out.print(PROMPT);
             var scannedLine = scanner.nextLine();
@@ -32,8 +33,6 @@ public class SicklangReplApplication {
                 showParserErrors(parser);
                 return;
             }
-
-            var environment = SickEnvironment.newInstance();
 
             var evaluated = SicklangEvaluator.eval(programNode, environment);
             if (evaluated == null)
