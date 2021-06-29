@@ -79,7 +79,7 @@ public class SicklangEvaluator {
             return evalIdentifier(identifierExpressionNode, environment);
         }
 
-        return null;
+        return NullObject.NULL;
     }
 
     private static SickObject evalProgram(ProgramNode programNode, SickEnvironment environment) {
