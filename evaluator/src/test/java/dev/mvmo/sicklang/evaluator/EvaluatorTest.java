@@ -181,6 +181,18 @@ public class EvaluatorTest {
         assertEquals("(x + 2)", functionObject.body().toString());
     }
 
+    @Test
+    public void test$evalFunction() {
+        Stream.of(
+                new SimpleTestCase<>("let identity = fn(x) { x; }; identity(5);", 5),
+                new SimpleTestCase<>("let identity = fn(x) { return x; }; identity(5);", 5),
+                new SimpleTestCase<>("let double = fn(x) { x * 2; }; double(5);", 10),
+                new SimpleTestCase<>("let add = fn(x, y) { x + y; }; add(5, 5);", 10),
+                new SimpleTestCase<>("let add = fn(x, y) { x + y; }; add(5 + 5, add(5, 5));", 20),
+                new SimpleTestCase<>("fn(x) { x; }(5)", 5)
+        ).forEach(testCase -> testIntegerObject(testEval(testCase.input), testCase.expected));
+    }
+
     private SickObject testEval(String input) {
         var lexer = Lexer.newInstance(input);
         var parser = Parser.newInstance(lexer);
