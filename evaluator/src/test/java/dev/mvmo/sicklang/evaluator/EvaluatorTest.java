@@ -168,7 +168,7 @@ public class EvaluatorTest {
     }
 
     @Test
-    public void test$evalFunction() {
+    public void test$functionObject() {
         String input = "fn(x) { x + 2; };";
 
         var evaluated = testEval(input);
