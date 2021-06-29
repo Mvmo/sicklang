@@ -11,6 +11,7 @@ import java.util.Map;
 public class SickEnvironment {
 
     private final Map<String, SickObject> storageMap;
+    private final SickEnvironment enclosed;
 
     public SickEnvironment set(String key, SickObject value) {
         this.storageMap.put(key, value);
@@ -36,8 +37,12 @@ public class SickEnvironment {
         return storageMap.containsKey(key);
     }
 
+    public static SickEnvironment newEnclosedInstance(SickEnvironment environment) {
+        return new SickEnvironment(Maps.newHashMap(), environment);
+    }
+
     public static SickEnvironment newInstance() {
-        return new SickEnvironment(Maps.newHashMap());
+        return new SickEnvironment(Maps.newHashMap(), null);
     }
 
 }
