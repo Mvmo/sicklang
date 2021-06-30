@@ -230,8 +230,8 @@ public class EvaluatorTest {
                 new SimpleTestCase<>("len(\"\")", 0),
                 new SimpleTestCase<>("len(\"four\")", 4),
                 new SimpleTestCase<>("len(\"hello world\")", 11),
-                new SimpleTestCase<>("len(1)", "argument to `len` not supported, got INTEGER"),
-                new SimpleTestCase<>("len(\"one\", \"two\")", "wrong number of arguments, got=2, want=1")
+                new SimpleTestCase<>("len(1)", "argument to `len` not supported. got INTEGER"),
+                new SimpleTestCase<>("len(\"one\", \"two\")", "wrong number of arguments. got=2, want=1")
         ).forEach(testCase -> {
             var evaluated = testEval(testCase.input);
 
