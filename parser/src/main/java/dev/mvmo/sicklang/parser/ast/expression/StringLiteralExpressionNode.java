@@ -4,7 +4,7 @@ import dev.mvmo.sicklang.token.Token;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(staticName = "newInstance")
-public class StringLiteralExpression implements ExpressionNode {
+public class StringLiteralExpressionNode implements ExpressionNode {
 
     private final Token token;
     private final String value;

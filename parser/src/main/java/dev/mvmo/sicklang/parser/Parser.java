@@ -331,8 +331,8 @@ public class Parser {
     }
 
     // TODO: private access
-    public StringLiteralExpression parseStringLiteralExpression() {
-        return StringLiteralExpression.newInstance(currentToken, currentToken.literal());
+    public StringLiteralExpressionNode parseStringLiteralExpression() {
+        return StringLiteralExpressionNode.newInstance(currentToken, currentToken.literal());
     }
 
     private boolean currentTokenIs(TokenType tokenType) {

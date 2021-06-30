@@ -496,9 +496,9 @@ public class ParserTest {
 
         var statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
 
-        assertTrue(statementNode.expressionNode() instanceof StringLiteralExpression);
+        assertTrue(statementNode.expressionNode() instanceof StringLiteralExpressionNode);
 
-        var stringExpression = (StringLiteralExpression) statementNode.expressionNode();
+        var stringExpression = (StringLiteralExpressionNode) statementNode.expressionNode();
 
         assertEquals("hello world", stringExpression.tokenLiteral());
     }
