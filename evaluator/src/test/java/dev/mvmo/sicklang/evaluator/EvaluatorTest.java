@@ -195,33 +195,57 @@ public class EvaluatorTest {
         ).forEach(testCase -> testIntegerObject(testEval(testCase.input), testCase.expected));
     }
 
-   @Test
-   public void test$closures() {
+    @Test
+    public void test$closures() {
         var input = "let a = fn(b) { fn (c) { b + c }; }; let d = a(2); d(2)";
 
         var evaluated = testEval(input);
         int expected = 4;
 
         testIntegerObject(evaluated, expected);
-   }
+    }
 
-   @Test
-   public void test$stringLiterals() {
+    @Test
+    public void test$stringLiterals() {
         var input = "\"Hello, World!\"";
 
         var evaluated = testEval(input);
         assertTrue(evaluated instanceof StringObject);
         assertEquals("Hello, World!", ((StringObject) evaluated).value());
-   }
+    }
 
-   @Test
-   public void test$stringConcatenation() {
+    @Test
+    public void test$stringConcatenation() {
         var input = "\"Hello\" + \",\" +  \" \" + \"World!\"";
 
         var evaluated = testEval(input);
         assertTrue(evaluated instanceof StringObject);
         assertEquals("Hello, World!", ((StringObject) evaluated).value());
-   }
+    }
+
+    // TODO fix order of params rofl
+    @Test
+    public void test$builtinFunctions() {
+        Stream.of(
+                new SimpleTestCase<>("len(\"\")", 0),
+                new SimpleTestCase<>("len(\"four\")", 4),
+                new SimpleTestCase<>("len(\"hello world\")", 11),
+                new SimpleTestCase<>("len(1)", "argument to `len` not supported, got INTEGER"),
+                new SimpleTestCase<>("len(\"one\", \"two\")", "wrong number of arguments, got=2, want=1")
+        ).forEach(testCase -> {
+            var evaluated = testEval(testCase.input);
+
+            if (testCase.expected instanceof Integer expectedInt) {
+                testIntegerObject(evaluated, expectedInt);
+                return;
+            }
+
+            if (testCase.expected instanceof String expectedString) {
+                assertTrue(evaluated instanceof ErrorObject);
+                assertEquals(expectedString, ((ErrorObject) evaluated).message());
+            }
+        });
+    }
 
     private SickObject testEval(String input) {
         var lexer = Lexer.newInstance(input);
