@@ -1,12 +1,19 @@
 package dev.mvmo.sicklang.internal.object;
 
 import dev.mvmo.sicklang.internal.builtin.BuiltinFunction;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-public record BuiltinFunctionObject(BuiltinFunction function) implements SickObject {
+@Getter
+@RequiredArgsConstructor
+public class BuiltinFunctionObject implements SickObject {
+
+    private final String name;
+    private final BuiltinFunction function;
 
     @Override
     public String inspect() {
-        return "builtin function";
+        return name;
     }
 
     @Override

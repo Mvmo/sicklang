@@ -2,7 +2,10 @@ package dev.mvmo.sicklang.evaluator;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import dev.mvmo.sicklang.internal.builtin.function.LenFunction;
 import dev.mvmo.sicklang.internal.env.SickEnvironment;
+import dev.mvmo.sicklang.internal.object.BuiltinFunctionObject;
 import dev.mvmo.sicklang.internal.object.NullObject;
 import dev.mvmo.sicklang.internal.object.ObjectType;
 import dev.mvmo.sicklang.internal.object.SickObject;
@@ -18,8 +21,15 @@ import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
 import dev.mvmo.sicklang.parser.ast.statement.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public class SicklangEvaluator {
+
+    private static final Set<BuiltinFunctionObject> builtinFunctions = Sets.newHashSet(
+            new LenFunction()
+    );
 
     public static SickObject eval(Node node, SickEnvironment environment) {
         if (node instanceof ProgramNode programNode) {
@@ -236,6 +246,14 @@ public class SicklangEvaluator {
     private static SickObject evalIdentifier(IdentifierExpressionNode node, SickEnvironment environment) {
         if (environment.hasKey(node.value()))
             return environment.get(node.value());
+
+        Optional<BuiltinFunctionObject> builtinOptional = builtinFunctions.stream()
+                .filter(function -> function.name().equals(node.value()))
+                .findFirst();
+
+        if (builtinOptional.isPresent())
+            return builtinOptional.get();
+
         return ErrorObject.newInstance("identifier not found: " + node.value());
     }
 
@@ -254,13 +272,18 @@ public class SicklangEvaluator {
     }
 
     private static SickObject applyFunction(SickObject object, List<SickObject> args) {
-        if (!(object instanceof FunctionObject functionObject))
-            return ErrorObject.newInstance("not a function: %s", object.objectType());
+        if (object instanceof FunctionObject functionObject) {
+            var extendedEnvironment = extendFunctionEnvironment(functionObject, args);
+            var evaluated = eval(functionObject.body(), extendedEnvironment);
 
-        var extendedEnvironment = extendFunctionEnvironment(functionObject, args);
-        var evaluated = eval(functionObject.body(), extendedEnvironment);
+            return unwrapReturnValue(evaluated);
+        }
 
-        return unwrapReturnValue(evaluated);
+        if (object instanceof BuiltinFunctionObject builtinFunctionObject) {
+            return builtinFunctionObject.function().call(args);
+        }
+
+        return ErrorObject.newInstance("not a function: %s", object.objectType());
     }
 
     private static SickEnvironment extendFunctionEnvironment(FunctionObject functionObject, List<SickObject> args) {
