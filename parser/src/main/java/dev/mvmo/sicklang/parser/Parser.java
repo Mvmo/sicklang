@@ -44,6 +44,7 @@ public class Parser {
         parser.prefixParseFunctionMap.put(TokenType.LEFT_PAREN, parser::parseGroupedExpression);
         parser.prefixParseFunctionMap.put(TokenType.IF, parser::parseIfExpression);
         parser.prefixParseFunctionMap.put(TokenType.FUNCTION, parser::parseFunctionExpression);
+        parser.prefixParseFunctionMap.put(TokenType.STRING, parser::parseStringLiteralExpression);
 
         parser.infixParseFunctionMap.put(TokenType.PLUS, parser::parseInfixExpression);
         parser.infixParseFunctionMap.put(TokenType.MINUS, parser::parseInfixExpression);
@@ -327,6 +328,11 @@ public class Parser {
             return null;
 
         return argumentList;
+    }
+
+    // TODO: private access
+    public StringLiteralExpression parseStringLiteralExpression() {
+        return StringLiteralExpression.newInstance(currentToken, currentToken.literal());
     }
 
     private boolean currentTokenIs(TokenType tokenType) {
