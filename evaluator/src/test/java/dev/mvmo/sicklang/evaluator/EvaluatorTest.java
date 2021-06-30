@@ -159,7 +159,8 @@ public class EvaluatorTest {
                             return 1;
                         }
                         """, "unknown operator: BOOLEAN + BOOLEAN"),
-                new SimpleTestCase<>("foobar;", "identifier not found: foobar")
+                new SimpleTestCase<>("foobar;", "identifier not found: foobar"),
+                new SimpleTestCase<>("\"Hello\" - \"World\"", "unknown operator: STRING - STRING")
         ).forEach(testCase -> {
             var evaluated = testEval(testCase.input);
             assertTrue(evaluated instanceof ErrorObject);
@@ -207,6 +208,15 @@ public class EvaluatorTest {
    @Test
    public void test$stringLiterals() {
         var input = "\"Hello, World!\"";
+
+        var evaluated = testEval(input);
+        assertTrue(evaluated instanceof StringObject);
+        assertEquals("Hello, World!", ((StringObject) evaluated).value());
+   }
+
+   @Test
+   public void test$stringConcatenation() {
+        var input = "\"Hello\" + \",\" +  \" \" + \"World!\"";
 
         var evaluated = testEval(input);
         assertTrue(evaluated instanceof StringObject);

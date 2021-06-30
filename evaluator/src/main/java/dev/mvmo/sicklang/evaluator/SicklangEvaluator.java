@@ -169,6 +169,10 @@ public class SicklangEvaluator {
             return evalIntegerInfixExpression(operator, left, right);
         }
 
+        if (left.objectType().equals(ObjectType.STRING) && right.objectType().equals(ObjectType.STRING)) {
+            return evalStringInfixExpression(operator, left, right);
+        }
+
         if (operator.equals("==")) {
             return BooleanObject.fromNative(left == right);
         }
@@ -200,6 +204,19 @@ public class SicklangEvaluator {
 
             default -> ErrorObject.newInstance("unknown operator: %s %s %s", left.objectType(), operator, right.objectType());
         };
+    }
+
+    private static SickObject evalStringInfixExpression(String operator, SickObject left, SickObject right) {
+        Preconditions.checkArgument(left instanceof StringObject);
+        Preconditions.checkArgument(right instanceof StringObject);
+
+        if (!operator.equals("+"))
+            return ErrorObject.newInstance("unknown operator: %s %s %s", left.objectType(), operator, right.objectType());
+
+        var leftValue = ((StringObject) left).value();
+        var rightValue = ((StringObject) right).value();
+
+        return new StringObject(leftValue + rightValue);
     }
 
     private static SickObject evalIfExpression(IfExpressionNode ifExpressionNode, SickEnvironment environment) {
