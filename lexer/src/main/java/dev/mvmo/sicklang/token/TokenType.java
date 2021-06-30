@@ -10,6 +10,7 @@ public enum TokenType {
 
     IDENTIFIER("IDENT"),
     INTEGER("INT"),
+    STRING("STRING"),
 
     // Operators
     ASSIGN("="),
