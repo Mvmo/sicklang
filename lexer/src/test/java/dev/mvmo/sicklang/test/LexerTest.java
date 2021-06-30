@@ -12,23 +12,25 @@ public class LexerTest {
 
     @Test
     public void test$nextToken() {
-        String input = "let five = 5;" +
-                " let ten = 10;" +
-                " let add = fn(x, y) {" +
-                "    x + y;" +
-                " };" +
-                " let result = add(five , ten);" +
-                " !-/*5;" +
-                " 5 < 10 > 5;" +
-                " if (5 < 10) {" +
-                "    return true;" +
-                " } else {" +
-                "    return false;" +
-                " }" +
-                "10 == 10;" +
-                "10 != 9;" +
-                "\"foobar\"" +
-                "\"foo bar\"";
+        String input = """
+                let five = 5;
+                let ten = 10;
+                let add = fn(x, y) {
+                    x + y;
+                };
+                let result = add(five , ten);
+                !-/*5;
+                5 < 10 > 5;
+                if (5 < 10) {
+                    return true;
+                } else {
+                    return false;
+                }
+                10 == 10;
+                10 != 9;
+                "foobar"
+                "foo bar"
+                """;
 
         Token[] expectedTokens = new Token[]{
                 new Token(TokenType.LET, "let"),
