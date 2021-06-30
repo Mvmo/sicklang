@@ -26,7 +26,9 @@ public class LexerTest {
                 "    return false;" +
                 " }" +
                 "10 == 10;" +
-                "10 != 9;";
+                "10 != 9;" +
+                "\"foobar\"" +
+                "\"foo bar\"";
 
         Token[] expectedTokens = new Token[]{
                 new Token(TokenType.LET, "let"),
