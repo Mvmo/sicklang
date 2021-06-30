@@ -481,7 +481,7 @@ public class ParserTest {
         }
     }
 
-    private LetStatementNode testLetStatement(StatementNode statement, String name) {
+    private void testLetStatement(StatementNode statement, String name) {
         assertEquals("let", statement.tokenLiteral());
         assertTrue("Statement is not instanceof LetStatementNode", statement instanceof LetStatementNode);
 
@@ -489,22 +489,18 @@ public class ParserTest {
 
         assertEquals(name, letStatement.identifier().value());
         assertEquals(name, letStatement.identifier().tokenLiteral());
-
-        return letStatement;
     }
 
-    private IntegerLiteralExpressionNode testIntegerLiteral(int expectedValue, ExpressionNode expressionNode) {
+    private void testIntegerLiteral(int expectedValue, ExpressionNode expressionNode) {
         assertTrue(expressionNode instanceof IntegerLiteralExpressionNode);
 
         IntegerLiteralExpressionNode literalExpressionNode = (IntegerLiteralExpressionNode) expressionNode;
 
         assertEquals(expectedValue, literalExpressionNode.value());
         assertEquals(String.valueOf(expectedValue), literalExpressionNode.tokenLiteral());
-
-        return literalExpressionNode;
     }
 
-    private InfixExpressionNode testInfixExpression(Object expectedLeft, String expectedOperator, Object expectedRight, ExpressionNode expressionNode) {
+    private void testInfixExpression(Object expectedLeft, String expectedOperator, Object expectedRight, ExpressionNode expressionNode) {
         assertTrue(expressionNode instanceof InfixExpressionNode);
 
         InfixExpressionNode infixExpressionNode = (InfixExpressionNode) expressionNode;
@@ -512,41 +508,33 @@ public class ParserTest {
         testLiteralExpression(expectedLeft, infixExpressionNode.left());
         assertEquals(expectedOperator, infixExpressionNode.operator());
         testLiteralExpression(expectedRight, infixExpressionNode.right());
-
-        return infixExpressionNode;
     }
 
-    private BooleanExpressionNode testBooleanLiteral(boolean expectedValue, ExpressionNode expressionNode) {
+    private void testBooleanLiteral(boolean expectedValue, ExpressionNode expressionNode) {
         assertTrue(expressionNode instanceof BooleanExpressionNode);
 
         BooleanExpressionNode booleanExpressionNode = (BooleanExpressionNode) expressionNode;
 
         assertEquals(expectedValue, booleanExpressionNode.value());
         assertEquals(String.valueOf(expectedValue), booleanExpressionNode.tokenLiteral());
-
-        return booleanExpressionNode;
     }
 
-    private IdentifierExpressionNode testIdentifier(String expectedValue, ExpressionNode expressionNode) {
+    private void testIdentifier(String expectedValue, ExpressionNode expressionNode) {
         assertTrue(expressionNode instanceof IdentifierExpressionNode);
         IdentifierExpressionNode identifierExpressionNode = (IdentifierExpressionNode) expressionNode;
         assertEquals(expectedValue, identifierExpressionNode.value());
         assertEquals(expectedValue, identifierExpressionNode.tokenLiteral());
-
-        return identifierExpressionNode;
     }
 
-    private ExpressionNode testLiteralExpression(Object expectedValue, ExpressionNode expressionNode) {
-        System.out.println(expectedValue.getClass().getSimpleName());
-        return switch (expectedValue.getClass().getSimpleName()) {
+
+
+    private void testLiteralExpression(Object expectedValue, ExpressionNode expressionNode) {
+        switch (expectedValue.getClass().getSimpleName()) {
             case "Integer" -> testIntegerLiteral((Integer) expectedValue, expressionNode);
             case "String" -> testIdentifier((String) expectedValue, expressionNode);
             case "Boolean" -> testBooleanLiteral((Boolean) expectedValue, expressionNode);
-            default -> () -> {
-                fail();
-                return null;
-            };
-        };
+            default -> fail();
+        }
     }
 
     private void checkParserErrors(Parser parser) {
