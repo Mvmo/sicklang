@@ -206,7 +206,7 @@ public class EvaluatorTest {
 
    @Test
    public void test$stringLiterals() {
-        var input = "\"Hello World!\"";
+        var input = "\"Hello, World!\"";
 
         var evaluated = testEval(input);
         assertTrue(evaluated instanceof StringObject);
