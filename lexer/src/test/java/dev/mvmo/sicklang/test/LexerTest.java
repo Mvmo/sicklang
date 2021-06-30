@@ -104,6 +104,8 @@ public class LexerTest {
                 new Token(TokenType.NOT_EQUALS, "!="),
                 new Token(TokenType.INTEGER, "9"),
                 new Token(TokenType.SEMICOLON, ";"),
+                new Token(TokenType.STRING, "foobar"),
+                new Token(TokenType.STRING, "foo bar"),
                 new Token(TokenType.EOF, "")
         };
 
