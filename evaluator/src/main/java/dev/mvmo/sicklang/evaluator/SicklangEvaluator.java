@@ -11,6 +11,7 @@ import dev.mvmo.sicklang.internal.object.error.ErrorObject;
 import dev.mvmo.sicklang.internal.object.function.FunctionObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.internal.object.ret.ReturnValueObject;
+import dev.mvmo.sicklang.internal.object.string.StringObject;
 import dev.mvmo.sicklang.parser.ast.Node;
 import dev.mvmo.sicklang.parser.ast.expression.*;
 import dev.mvmo.sicklang.parser.ast.program.ProgramNode;
@@ -100,6 +101,10 @@ public class SicklangEvaluator {
                 return args.get(0);
 
             return applyFunction(function, args);
+        }
+
+        if (node instanceof StringLiteralExpressionNode stringLiteralExpressionNode) {
+            return new StringObject(stringLiteralExpressionNode.value());
         }
 
         return NullObject.NULL;
