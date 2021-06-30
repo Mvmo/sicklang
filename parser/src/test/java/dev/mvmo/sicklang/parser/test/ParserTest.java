@@ -481,6 +481,28 @@ public class ParserTest {
         }
     }
 
+    @Test
+    public void test$stringLiteralExpression() {
+        var input = "\"hello world\"";
+
+        var lexer = Lexer.newInstance(input);
+        var parser = Parser.newInstance(lexer);
+        var programNode = parser.parseProgram();
+
+        checkParserErrors(parser);
+
+        assertEquals(1, programNode.statementNodes().size());
+        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        var statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+        assertTrue(statementNode.expressionNode() instanceof StringLiteralExpression);
+
+        var stringExpression = (StringLiteralExpression) statementNode.expressionNode();
+
+        assertEquals("hello world", stringExpression.tokenLiteral());
+    }
+
     private void testLetStatement(StatementNode statement, String name) {
         assertEquals("let", statement.tokenLiteral());
         assertTrue("Statement is not instanceof LetStatementNode", statement instanceof LetStatementNode);
