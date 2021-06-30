@@ -155,6 +155,7 @@ public class Lexer {
         return this.input.substring(startPosition, this.position);
     }
 
+    // TODO: Add support for escaped strings "\t\n\s"
     private String readString() {
         int startPosition = this.position + 1;
         do {
