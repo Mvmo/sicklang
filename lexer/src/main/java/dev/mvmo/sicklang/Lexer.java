@@ -109,6 +109,9 @@ public class Lexer {
             case '}':
                 token = new Token(TokenType.RIGHT_BRACE, "}");
                 break;
+            case '"':
+                token = new Token(TokenType.STRING, readString());
+                break;
             case 0:
                 token = new Token(TokenType.EOF, "");
                 break;
@@ -148,6 +151,15 @@ public class Lexer {
         int startPosition = this.position;
         while (digit(currentChar))
             readChar();
+
+        return this.input.substring(startPosition, this.position);
+    }
+
+    private String readString() {
+        int startPosition = this.position + 1;
+        do {
+            readChar();
+        } while (this.currentChar != '"' && this.currentChar != 0);
 
         return this.input.substring(startPosition, this.position);
     }
