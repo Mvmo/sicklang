@@ -8,6 +8,7 @@ import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.error.ErrorObject;
 import dev.mvmo.sicklang.internal.object.function.FunctionObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
+import dev.mvmo.sicklang.internal.object.string.StringObject;
 import dev.mvmo.sicklang.parser.Parser;
 import org.junit.Test;
 
@@ -201,6 +202,15 @@ public class EvaluatorTest {
         int expected = 4;
 
         testIntegerObject(evaluated, expected);
+   }
+
+   @Test
+   public void test$stringLiterals() {
+        var input = "\"Hello World!\"";
+
+        var evaluated = testEval(input);
+        assertTrue(evaluated instanceof StringObject);
+        assertEquals("Hello, World!", ((StringObject) evaluated).value());
    }
 
     private SickObject testEval(String input) {
