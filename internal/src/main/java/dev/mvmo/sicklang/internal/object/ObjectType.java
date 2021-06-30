@@ -8,6 +8,7 @@ public enum ObjectType {
     STRING,
     RETURN_VALUE,
     ERROR,
-    NULL
+    NULL,
+    BUILTIN
 
 }
