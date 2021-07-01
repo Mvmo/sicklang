@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(staticName = "newInstance")
 public class ArrayLiteralExpressionNode implements ExpressionNode {
 
-    private Token startToken; // [
-    private List<ExpressionNode> elements;
+    private final Token startToken; // [
+    private final List<ExpressionNode> elements;
 
     @Override
     public String tokenLiteral() {
