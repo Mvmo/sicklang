@@ -45,6 +45,7 @@ public class Parser {
         parser.prefixParseFunctionMap.put(TokenType.IF, parser::parseIfExpression);
         parser.prefixParseFunctionMap.put(TokenType.FUNCTION, parser::parseFunctionExpression);
         parser.prefixParseFunctionMap.put(TokenType.STRING, parser::parseStringLiteralExpression);
+        parser.prefixParseFunctionMap.put(TokenType.LEFT_BRACKET, parser::parseArrayLiteralExpression);
 
         parser.infixParseFunctionMap.put(TokenType.PLUS, parser::parseInfixExpression);
         parser.infixParseFunctionMap.put(TokenType.MINUS, parser::parseInfixExpression);
@@ -300,39 +301,42 @@ public class Parser {
 
     public ExpressionNode parseCallExpression(ExpressionNode function) {
         var callExpressionNode = CallExpressionNode.newInstance(currentToken, function);
-        callExpressionNode.arguments(parseCallArguments());
+        callExpressionNode.arguments(parseExpressionList(TokenType.RIGHT_PAREN));
 
         return callExpressionNode;
-    }
-
-    public List<ExpressionNode> parseCallArguments() {
-        List<ExpressionNode> argumentList = Lists.newArrayList();
-
-        if (peekTokenIs(TokenType.RIGHT_PAREN)) {
-            nextToken();
-            return argumentList;
-        }
-
-        nextToken();
-
-        argumentList.add(parseExpression(Precedence.LOWEST));
-
-        while (peekTokenIs(TokenType.COMMA)) {
-            nextToken();
-            nextToken();
-
-            argumentList.add(parseExpression(Precedence.LOWEST));
-        }
-
-        if (!expectPeek(TokenType.RIGHT_PAREN))
-            return null;
-
-        return argumentList;
     }
 
     // TODO: private access
     public StringLiteralExpressionNode parseStringLiteralExpression() {
         return StringLiteralExpressionNode.newInstance(currentToken, currentToken.literal());
+    }
+
+    public ArrayLiteralExpressionNode parseArrayLiteralExpression() {
+        return ArrayLiteralExpressionNode.newInstance(currentToken, parseExpressionList(TokenType.RIGHT_BRACKET));
+    }
+
+    public List<ExpressionNode> parseExpressionList(TokenType till) {
+        List<ExpressionNode> list = Lists.newArrayList();
+
+        if (peekTokenIs(till)) {
+            nextToken();
+            return list;
+        }
+
+        nextToken();
+        list.add(parseExpression(Precedence.LOWEST)); // TODO DO-WHILE?
+
+        while (peekTokenIs(TokenType.COMMA)) {
+            nextToken();
+            nextToken();
+
+            list.add(parseExpression(Precedence.LOWEST));
+        }
+
+        if (!expectPeek(till))
+            return null;
+
+        return list;
     }
 
     private boolean currentTokenIs(TokenType tokenType) {
