@@ -33,6 +33,9 @@ public enum TokenType {
     LEFT_BRACE("{"),
     RIGHT_BRACE("}"),
 
+    LEFT_BRACKET("["),
+    RIGHT_BRACKET("]"),
+
     // Keywords
     FUNCTION("FUNCTION"),
     LET("LET"),
