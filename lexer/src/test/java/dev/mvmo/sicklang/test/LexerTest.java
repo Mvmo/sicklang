@@ -30,6 +30,7 @@ public class LexerTest {
                 10 != 9;
                 "foobar"
                 "foo bar"
+                [1, 2];
                 """;
 
         Token[] expectedTokens = new Token[]{
@@ -108,6 +109,12 @@ public class LexerTest {
                 new Token(TokenType.SEMICOLON, ";"),
                 new Token(TokenType.STRING, "foobar"),
                 new Token(TokenType.STRING, "foo bar"),
+                new Token(TokenType.LEFT_BRACKET, "["),
+                new Token(TokenType.INTEGER, "1"),
+                new Token(TokenType.COMMA, ","),
+                new Token(TokenType.INTEGER, "2"),
+                new Token(TokenType.RIGHT_BRACKET, "]"),
+                new Token(TokenType.SEMICOLON, ";"),
                 new Token(TokenType.EOF, "")
         };
 
