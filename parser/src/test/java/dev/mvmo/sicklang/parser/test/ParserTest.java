@@ -503,6 +503,32 @@ public class ParserTest {
         assertEquals("hello world", stringExpression.tokenLiteral());
     }
 
+    @Test
+    public void test$arrayLiteralExpressions() {
+        var input = "[1, 2 * 2, 3 + 3]";
+
+        var lexer = Lexer.newInstance(input);
+        var parser = Parser.newInstance(lexer);
+        var programNode = parser.parseProgram();
+
+        checkParserErrors(parser);
+
+        assertEquals(1, programNode.statementNodes().size());
+        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        var statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+        assertTrue(statementNode.expressionNode() instanceof ArrayLiteralExpressionNode);
+
+        var arrayExpression = (ArrayLiteralExpressionNode) statementNode.expressionNode();
+
+        assertEquals(3, arrayExpression.elements().size());
+
+        testIntegerLiteral(1, arrayExpression.elements().get(0));
+        testInfixExpression(2, "*", 2, arrayExpression.elements().get(1));
+        testInfixExpression(3, "+", 3, arrayExpression.elements().get(2));
+    }
+
     private void testLetStatement(StatementNode statement, String name) {
         assertEquals("let", statement.tokenLiteral());
         assertTrue("Statement is not instanceof LetStatementNode", statement instanceof LetStatementNode);
@@ -547,7 +573,6 @@ public class ParserTest {
         assertEquals(expectedValue, identifierExpressionNode.value());
         assertEquals(expectedValue, identifierExpressionNode.tokenLiteral());
     }
-
 
 
     private void testLiteralExpression(Object expectedValue, ExpressionNode expressionNode) {
