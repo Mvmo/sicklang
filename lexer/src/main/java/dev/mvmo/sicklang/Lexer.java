@@ -109,6 +109,12 @@ public class Lexer {
             case '}':
                 token = new Token(TokenType.RIGHT_BRACE, "}");
                 break;
+            case '[':
+                token = new Token(TokenType.LEFT_BRACKET, "[");
+                break;
+            case ']':
+                token = new Token(TokenType.RIGHT_BRACKET, "]");
+                break;
             case '"':
                 token = new Token(TokenType.STRING, readString());
                 break;
