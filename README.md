@@ -37,5 +37,8 @@ z(fn(l) {
     l * 2;
 });
 
+let world = "world";
+let helloWorld = "hello" + "," + " " + world;
+
 let result = get(5); // "hello"
 ```
