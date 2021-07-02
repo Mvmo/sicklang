@@ -25,5 +25,17 @@ let get = fn(x) {
     }
 }
 
+let rss = fn(x, y) {
+    x * y
+}(4, 5);
+
+let z = fn(k, h) {
+    return k(h);
+};
+
+z(fn(l) {
+    l * 2;
+});
+
 let result = get(5); // "hello"
 ```
