@@ -4,6 +4,9 @@
 
 I'm trying to do daily work on this project except Sundays
 
+- functions are first-class citizens
+- implicit returns
+
 # Builtin functions
 - len(string) -> int
 ```
