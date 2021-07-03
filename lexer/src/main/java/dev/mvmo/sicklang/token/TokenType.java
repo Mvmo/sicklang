@@ -25,6 +25,7 @@ public enum TokenType {
     NOT_EQUALS("!="),
 
     COMMA(","),
+    COLON(":"),
     SEMICOLON(";"),
 
     LEFT_PAREN("("),
