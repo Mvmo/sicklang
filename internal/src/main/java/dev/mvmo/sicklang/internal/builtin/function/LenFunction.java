@@ -1,6 +1,7 @@
 package dev.mvmo.sicklang.internal.builtin.function;
 
 import dev.mvmo.sicklang.internal.object.BuiltinFunctionObject;
+import dev.mvmo.sicklang.internal.object.array.ArrayObject;
 import dev.mvmo.sicklang.internal.object.error.ErrorObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.internal.object.string.StringObject;
@@ -13,9 +14,10 @@ public class LenFunction extends BuiltinFunctionObject {
                 return ErrorObject.newInstance("wrong number of arguments. got=%d, want=%d", args.size(), 1);
 
             var arg = args.get(0);
-            if (arg instanceof StringObject) {
-                return new IntegerObject(((StringObject) arg).value().length());
-            }
+            if (arg instanceof StringObject stringObject)
+                return new IntegerObject(stringObject.value().length());
+            else if (arg instanceof ArrayObject arrayObject)
+                return new IntegerObject(arrayObject.elements().size());
 
             return ErrorObject.newInstance("argument to `len` not supported. got %s", arg.objectType());
         });
