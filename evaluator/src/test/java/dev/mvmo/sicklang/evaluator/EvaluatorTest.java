@@ -238,7 +238,13 @@ public class EvaluatorTest {
                 new SimpleTestCase<>("first(\"\")", "argument to `first` must be ARRAY, got STRING"),
                 new SimpleTestCase<>("first([], [])", "wrong number of arguments. got=2, want=1"),
                 new SimpleTestCase<>("first([1, 2, 3])", 1),
-                new SimpleTestCase<>("let x = [1, 2, 3]; first(x)", 1)
+                new SimpleTestCase<>("let x = [1, 2, 3]; first(x)", 1),
+
+                new SimpleTestCase<>("last([])", null),
+                new SimpleTestCase<>("last(\"\")", "argument to `last` must be ARRAY, got STRING"),
+                new SimpleTestCase<>("last([], [])", "wrong number of arguments. got=2, want=1"),
+                new SimpleTestCase<>("last([1, 2, 3])", 3),
+                new SimpleTestCase<>("let x = [1, 2, 3]; last(x)", 3)
         ).forEach(testCase -> {
             var evaluated = testEval(testCase.input);
 
