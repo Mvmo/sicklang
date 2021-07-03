@@ -4,6 +4,7 @@ import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.internal.env.SickEnvironment;
 import dev.mvmo.sicklang.internal.object.NullObject;
 import dev.mvmo.sicklang.internal.object.SickObject;
+import dev.mvmo.sicklang.internal.object.array.ArrayObject;
 import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.error.ErrorObject;
 import dev.mvmo.sicklang.internal.object.function.FunctionObject;
@@ -245,6 +246,21 @@ public class EvaluatorTest {
                 assertEquals(expectedString, ((ErrorObject) evaluated).message());
             }
         });
+    }
+
+    @Test
+    public void test$arrayLiterals() {
+        var input = "[1, 2 * 2, 3 + 3]";
+
+        var evaluated = testEval(input);
+        assertTrue(evaluated instanceof ArrayObject);
+
+        var array = (ArrayObject) evaluated;
+        assertEquals(3, array.elements().size());
+
+        testIntegerObject(array.elements().get(0), 1);
+        testIntegerObject(array.elements().get(1), 4);
+        testIntegerObject(array.elements().get(2), 6);
     }
 
     private SickObject testEval(String input) {
