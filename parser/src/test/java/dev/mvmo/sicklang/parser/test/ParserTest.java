@@ -551,7 +551,7 @@ public class ParserTest {
         var indexExpression = (IndexExpressionNode) statementNode.expressionNode();
 
         testIdentifier("myArray", indexExpression.left());
-        testInfixExpression(1, "+", 1, indexExpression.right());
+        testInfixExpression(1, "+", 1, indexExpression.index());
     }
 
     private void testLetStatement(StatementNode statement, String name) {
