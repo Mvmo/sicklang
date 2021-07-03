@@ -4,8 +4,14 @@ import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.evaluator.SicklangEvaluator;
 import dev.mvmo.sicklang.internal.env.SickEnvironment;
 import dev.mvmo.sicklang.parser.Parser;
+import lombok.SneakyThrows;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class SicklangReplApplication {
 
@@ -18,6 +24,30 @@ public class SicklangReplApplication {
     private static final String PROMPT = "$ > ";
 
     public static void main(String[] args) {
+        if (args.length >= 1) {
+            if (args[0].equalsIgnoreCase("--file")) {
+                if (args.length < 2) {
+                    System.out.println("You specified the --file flag but provided no file!");
+                    return;
+                }
+
+                Path path = Paths.get(args[1]);
+                if (!Files.exists(path)) {
+                    System.out.println("The provided file doesn't exist");
+                    return;
+                }
+
+                if (!Files.isRegularFile(path)) {
+                    System.out.println("You didn't provide a regular file!");
+                    return;
+                }
+
+                evaluateFile(path);
+                return;
+            }
+        }
+
+
         var scanner = new Scanner(System.in);
 
         var environment = SickEnvironment.newInstance();
@@ -52,6 +82,26 @@ public class SicklangReplApplication {
         System.out.println(parserErrors.size() > 1 ? "Oh, you got a bunch of errors, get out of here" : "Only one error, that might be okay");
         System.out.println();
         parserErrors.forEach(System.out::println);
+    }
+
+    // TODO proper exception handling
+    @SneakyThrows
+    public static void evaluateFile(Path path) {
+        String sourceCode = String.join("", Files.readAllLines(path));
+
+        var lexer = Lexer.newInstance(sourceCode);
+        var parser = Parser.newInstance(lexer);
+
+        var programNode = parser.parseProgram();
+        if (parser.errorMessages().size() > 0) {
+            showParserErrors(parser);
+            return;
+        }
+
+        var environment = SickEnvironment.newInstance();
+        var evaluated = SicklangEvaluator.eval(programNode, environment);
+
+        System.out.println(evaluated.inspect());
     }
 
 }
