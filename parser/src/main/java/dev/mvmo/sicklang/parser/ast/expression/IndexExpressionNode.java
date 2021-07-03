@@ -10,7 +10,7 @@ public class IndexExpressionNode implements ExpressionNode {
 
     private final Token token;
     private final ExpressionNode left;
-    private final ExpressionNode right;
+    private final ExpressionNode index;
 
     @Override
     public String tokenLiteral() {
@@ -19,7 +19,7 @@ public class IndexExpressionNode implements ExpressionNode {
 
     @Override
     public String toString() {
-        return String.format("(%s[%s])", left.toString(), right.toString());
+        return String.format("(%s[%s])", left.toString(), index.toString());
     }
 
 }
