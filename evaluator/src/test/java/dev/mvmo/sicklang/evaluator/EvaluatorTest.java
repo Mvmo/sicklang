@@ -263,6 +263,28 @@ public class EvaluatorTest {
         testIntegerObject(array.elements().get(2), 6);
     }
 
+    @Test
+    public void test$arrayIndexExpression() {
+        Stream.of(
+                new SimpleTestCase<>("[1, 2, 3][0]", 1),
+                new SimpleTestCase<>("[1, 2, 3][1]", 2),
+                new SimpleTestCase<>("[1, 2, 3][2]", 3),
+                new SimpleTestCase<>("let i = 0; [1][i]", 1),
+                new SimpleTestCase<>("[1, 2, 3][1 + 1]", 3),
+                new SimpleTestCase<>("let myArray = [1, 2, 3]; myArray[2];", 3),
+                new SimpleTestCase<>("let myArray = [1, 2, 3]; myArray[0] + myArray[1] + myArray[2];", 6),
+                new SimpleTestCase<>("let myArray = [1, 2, 3]; let i = myArray[0]; myArray[i]", 2),
+                new SimpleTestCase<>("[1, 2, 3][3]", null),
+                new SimpleTestCase<>("[1, 2, 3][-1]", null)
+        ).forEach(testCase -> {
+            var evaluated = testEval(testCase.input);
+            if (testCase.expected instanceof Integer expectedInt)
+                testIntegerObject(evaluated, expectedInt);
+            else
+                testNullObject(evaluated);
+        });
+    }
+
     private SickObject testEval(String input) {
         var lexer = Lexer.newInstance(input);
         var parser = Parser.newInstance(lexer);
