@@ -232,7 +232,13 @@ public class EvaluatorTest {
                 new SimpleTestCase<>("len(\"four\")", 4),
                 new SimpleTestCase<>("len(\"hello world\")", 11),
                 new SimpleTestCase<>("len(1)", "argument to `len` not supported. got INTEGER"),
-                new SimpleTestCase<>("len(\"one\", \"two\")", "wrong number of arguments. got=2, want=1")
+                new SimpleTestCase<>("len(\"one\", \"two\")", "wrong number of arguments. got=2, want=1"),
+
+                new SimpleTestCase<>("first([])", null),
+                new SimpleTestCase<>("first(\"\")", "argument to `first` must be ARRAY, got STRING"),
+                new SimpleTestCase<>("first([], [])", "wrong number of arguments. got=2, want=1"),
+                new SimpleTestCase<>("first([1, 2, 3])", 1),
+                new SimpleTestCase<>("let x = [1, 2, 3]; first(x)", 1)
         ).forEach(testCase -> {
             var evaluated = testEval(testCase.input);
 

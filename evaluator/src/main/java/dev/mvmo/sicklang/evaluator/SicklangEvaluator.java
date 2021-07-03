@@ -3,6 +3,7 @@ package dev.mvmo.sicklang.evaluator;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import dev.mvmo.sicklang.internal.builtin.function.FirstFunction;
 import dev.mvmo.sicklang.internal.builtin.function.LenFunction;
 import dev.mvmo.sicklang.internal.env.SickEnvironment;
 import dev.mvmo.sicklang.internal.object.BuiltinFunctionObject;
@@ -29,7 +30,8 @@ import java.util.Set;
 public class SicklangEvaluator {
 
     private static final Set<BuiltinFunctionObject> builtinFunctions = Sets.newHashSet(
-            new LenFunction()
+            new LenFunction(),
+            new FirstFunction()
     );
 
     public static SickObject eval(Node node, SickEnvironment environment) {
