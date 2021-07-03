@@ -14,7 +14,8 @@ public enum Precedence {
     SUM(TokenType.PLUS, TokenType.MINUS), // +
     PRODUCT(TokenType.SLASH, TokenType.ASTERISK), // *
     PREFIX, // -x or !x
-    CALL(TokenType.LEFT_PAREN); // myFunction(x)
+    CALL(TokenType.LEFT_PAREN),
+    INDEX(TokenType.LEFT_BRACKET); // myFunction(x)
 
     private final Set<TokenType> appliedToTypes;
 

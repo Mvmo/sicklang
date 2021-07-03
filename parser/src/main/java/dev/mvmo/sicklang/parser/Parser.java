@@ -56,6 +56,7 @@ public class Parser {
         parser.infixParseFunctionMap.put(TokenType.LESS_THAN, parser::parseInfixExpression);
         parser.infixParseFunctionMap.put(TokenType.GREATER_THAN, parser::parseInfixExpression);
         parser.infixParseFunctionMap.put(TokenType.LEFT_PAREN, parser::parseCallExpression);
+        parser.infixParseFunctionMap.put(TokenType.LEFT_BRACKET, parser::parseIndexExpression);
 
         parser.nextToken();
         parser.nextToken();
@@ -313,6 +314,17 @@ public class Parser {
 
     public ArrayLiteralExpressionNode parseArrayLiteralExpression() {
         return ArrayLiteralExpressionNode.newInstance(currentToken, parseExpressionList(TokenType.RIGHT_BRACKET));
+    }
+
+    public IndexExpressionNode parseIndexExpression(ExpressionNode left) {
+        var startToken = currentToken;
+        nextToken();
+        var indexExpression = parseExpression(Precedence.LOWEST);
+
+        if (!expectPeek(TokenType.RIGHT_BRACKET))
+            return null;
+
+        return IndexExpressionNode.newInstance(startToken, left, indexExpression);
     }
 
     public List<ExpressionNode> parseExpressionList(TokenType till) {
