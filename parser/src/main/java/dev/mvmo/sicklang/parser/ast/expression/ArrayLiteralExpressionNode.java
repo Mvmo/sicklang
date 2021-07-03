@@ -11,12 +11,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(staticName = "newInstance")
 public class ArrayLiteralExpressionNode implements ExpressionNode {
 
-    private final Token startToken; // [
+    private final Token token; // [
     private final List<ExpressionNode> elements;
 
     @Override
     public String tokenLiteral() {
-        return startToken.literal();
+        return token.literal();
     }
 
     @Override
