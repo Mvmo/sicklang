@@ -126,6 +126,18 @@ public class SicklangEvaluator {
             return new ArrayObject(elements);
         }
 
+        if (node instanceof IndexExpressionNode indexExpressionNode) {
+            var left = eval(indexExpressionNode.left(), environment);
+            if (error(left))
+                return left;
+
+            var index = eval(indexExpressionNode.index(), environment);
+            if (error(index))
+                return index;
+
+            return evalIndexExpression(left, index);
+        }
+
         return NullObject.NULL;
     }
 
@@ -250,6 +262,27 @@ public class SicklangEvaluator {
         } else {
             return NullObject.NULL;
         }
+    }
+
+    private static SickObject evalIndexExpression(SickObject left, SickObject index) {
+        if (left.objectType().equals(ObjectType.ARRAY) && index.objectType().equals(ObjectType.INTEGER))
+            return evalArrayIndexExpression(left, index);
+        return ErrorObject.newInstance("index operator not supported: %s", left.objectType());
+    }
+
+    private static SickObject evalArrayIndexExpression(SickObject left, SickObject index) {
+        Preconditions.checkArgument(left instanceof ArrayObject);
+        Preconditions.checkArgument(index instanceof IntegerObject);
+
+        var array = (ArrayObject) left;
+        var elementIndex = ((IntegerObject) index).value();
+
+        int maxIndex = array.elements().size() - 1;
+
+        if (elementIndex < 0 || elementIndex > maxIndex)
+            return NullObject.NULL;
+
+        return array.elements().get(elementIndex);
     }
 
     private static SickObject evalIdentifier(IdentifierExpressionNode node, SickEnvironment environment) {
