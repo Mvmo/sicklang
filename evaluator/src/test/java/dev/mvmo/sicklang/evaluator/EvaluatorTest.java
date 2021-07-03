@@ -12,13 +12,13 @@ import dev.mvmo.sicklang.internal.object.function.FunctionObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.internal.object.string.StringObject;
 import dev.mvmo.sicklang.parser.Parser;
+import org.junit.Test;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
+import static org.junit.Assert.*;
 
 public class EvaluatorTest {
 
@@ -281,7 +281,6 @@ public class EvaluatorTest {
                         .map(object -> (IntegerObject) object)
                         .map(IntegerObject::value)
                         .collect(Collectors.toList()));
-                ;
             }
         });
     }
