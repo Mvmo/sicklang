@@ -6,6 +6,7 @@ import com.google.common.collect.Sets;
 import dev.mvmo.sicklang.internal.builtin.function.FirstFunction;
 import dev.mvmo.sicklang.internal.builtin.function.LastFunction;
 import dev.mvmo.sicklang.internal.builtin.function.LenFunction;
+import dev.mvmo.sicklang.internal.builtin.function.TailFunction;
 import dev.mvmo.sicklang.internal.env.SickEnvironment;
 import dev.mvmo.sicklang.internal.object.BuiltinFunctionObject;
 import dev.mvmo.sicklang.internal.object.NullObject;
@@ -33,7 +34,8 @@ public class SicklangEvaluator {
     private static final Set<BuiltinFunctionObject> builtinFunctions = Sets.newHashSet(
             new LenFunction(),
             new FirstFunction(),
-            new LastFunction()
+            new LastFunction(),
+            new TailFunction()
     );
 
     public static SickObject eval(Node node, SickEnvironment environment) {

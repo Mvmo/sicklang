@@ -1,5 +1,6 @@
 package dev.mvmo.sicklang.evaluator;
 
+import com.google.common.collect.Lists;
 import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.internal.env.SickEnvironment;
 import dev.mvmo.sicklang.internal.object.NullObject;
@@ -11,15 +12,18 @@ import dev.mvmo.sicklang.internal.object.function.FunctionObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.internal.object.string.StringObject;
 import dev.mvmo.sicklang.parser.Parser;
-import org.junit.Test;
-
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static org.junit.Assert.*;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class EvaluatorTest {
 
     private static record SimpleTestCase<E>(String input, E expected) {
+
     }
 
     @Test
@@ -244,7 +248,19 @@ public class EvaluatorTest {
                 new SimpleTestCase<>("last(\"\")", "argument to `last` must be ARRAY, got STRING"),
                 new SimpleTestCase<>("last([], [])", "wrong number of arguments. got=2, want=1"),
                 new SimpleTestCase<>("last([1, 2, 3])", 3),
-                new SimpleTestCase<>("let x = [1, 2, 3]; last(x)", 3)
+                new SimpleTestCase<>("let x = [1, 2, 3]; last(x)", 3),
+
+                new SimpleTestCase<>("last([])", null),
+                new SimpleTestCase<>("last(\"\")", "argument to `last` must be ARRAY, got STRING"),
+                new SimpleTestCase<>("last([], [])", "wrong number of arguments. got=2, want=1"),
+                new SimpleTestCase<>("last([1, 2, 3])", 3),
+                new SimpleTestCase<>("let x = [1, 2, 3]; last(x)", 3),
+
+                new SimpleTestCase<>("tail([1, 2, 3])", Lists.newArrayList(2, 3)),
+                new SimpleTestCase<>("tail([])", NullObject.NULL),
+                new SimpleTestCase<>("tail(\"\")", "argument to `tail` must be ARRAY, got STRING"),
+                new SimpleTestCase<>("tail(tail([1, 2, 3]))", Lists.newArrayList(3)),
+                new SimpleTestCase<>("tail([], [])", "wrong number of arguments. got=2, want=1")
         ).forEach(testCase -> {
             var evaluated = testEval(testCase.input);
 
@@ -256,6 +272,16 @@ public class EvaluatorTest {
             if (testCase.expected instanceof String expectedString) {
                 assertTrue(evaluated instanceof ErrorObject);
                 assertEquals(expectedString, ((ErrorObject) evaluated).message());
+            }
+
+            if (testCase.expected instanceof List<?> expectedList) {
+                assertTrue(evaluated instanceof ArrayObject);
+                assertEquals(expectedList, ((ArrayObject) evaluated).elements().stream()
+                        .filter(object -> object instanceof IntegerObject)
+                        .map(object -> (IntegerObject) object)
+                        .map(IntegerObject::value)
+                        .collect(Collectors.toList()));
+                ;
             }
         });
     }
