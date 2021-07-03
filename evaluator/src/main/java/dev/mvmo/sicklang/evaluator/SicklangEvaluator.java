@@ -9,6 +9,7 @@ import dev.mvmo.sicklang.internal.object.BuiltinFunctionObject;
 import dev.mvmo.sicklang.internal.object.NullObject;
 import dev.mvmo.sicklang.internal.object.ObjectType;
 import dev.mvmo.sicklang.internal.object.SickObject;
+import dev.mvmo.sicklang.internal.object.array.ArrayObject;
 import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.error.ErrorObject;
 import dev.mvmo.sicklang.internal.object.function.FunctionObject;
@@ -115,6 +116,14 @@ public class SicklangEvaluator {
 
         if (node instanceof StringLiteralExpressionNode stringLiteralExpressionNode) {
             return new StringObject(stringLiteralExpressionNode.value());
+        }
+
+        if (node instanceof ArrayLiteralExpressionNode arrayLiteralExpressionNode) {
+            var elements = evalExpressions(arrayLiteralExpressionNode.elements(), environment);
+            if (elements.size() == 1 && error(elements.get(0)))
+                return elements.get(0);
+
+            return new ArrayObject(elements);
         }
 
         return NullObject.NULL;
