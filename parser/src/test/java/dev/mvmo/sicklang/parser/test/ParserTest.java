@@ -266,7 +266,9 @@ public class ParserTest {
                 new TestCase("!(true == true)", "(!(true == true))"),
                 new TestCase("a + add(b * c) + d", "((a + add((b * c))) + d)"),
                 new TestCase("add(a, b, 1, 2 * 3, 4 + 5, add(6, 7 * 8))", "add(a, b, 1, (2 * 3), (4 + 5), add(6, (7 * 8)))"),
-                new TestCase("add(a + b + c * d / f + g)", "add((((a + b) + ((c * d) / f)) + g))")
+                new TestCase("add(a + b + c * d / f + g)", "add((((a + b) + ((c * d) / f)) + g))"),
+                new TestCase("a * [1, 2, 3, 4][b * c] * d", "((a * ([1, 2, 3, 4][(b * c)])) * d)"),
+                new TestCase("add(a * b[2], b[1], 2 * [1, 2][1]", "add((a * (b[2])), (b[1]), (2 * ([1, 2][1])))")
         };
 
         for (TestCase testCase : testCases) {
@@ -527,6 +529,29 @@ public class ParserTest {
         testIntegerLiteral(1, arrayExpression.elements().get(0));
         testInfixExpression(2, "*", 2, arrayExpression.elements().get(1));
         testInfixExpression(3, "+", 3, arrayExpression.elements().get(2));
+    }
+
+    @Test
+    public void test$indexExpression() {
+        var input = "myArray[1 + 1]";
+
+        var lexer = Lexer.newInstance(input);
+        var parser = Parser.newInstance(lexer);
+        var programNode = parser.parseProgram();
+
+        checkParserErrors(parser);
+
+        assertEquals(1, programNode.statementNodes().size());
+        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        var statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+        assertTrue(statementNode.expressionNode() instanceof IndexExpressionNode);
+
+        var indexExpression = (IndexExpressionNode) statementNode.expressionNode();
+
+        testIdentifier("myArray", indexExpression.left());
+        testInfixExpression(1, "+", 1, indexExpression.right());
     }
 
     private void testLetStatement(StatementNode statement, String name) {
