@@ -260,7 +260,13 @@ public class EvaluatorTest {
                 new SimpleTestCase<>("tail([])", NullObject.NULL),
                 new SimpleTestCase<>("tail(\"\")", "argument to `tail` must be ARRAY, got STRING"),
                 new SimpleTestCase<>("tail(tail([1, 2, 3]))", Lists.newArrayList(3)),
-                new SimpleTestCase<>("tail([], [])", "wrong number of arguments. got=2, want=1")
+                new SimpleTestCase<>("tail([], [])", "wrong number of arguments. got=2, want=1"),
+
+                new SimpleTestCase<>("append([1, 2], 3);", Lists.newArrayList(1, 2, 3)),
+                new SimpleTestCase<>("append(\"\", 2)", "first argument to `append` must be ARRAY, got STRING"),
+                new SimpleTestCase<>("append([])", "wrong number of arguments. got=1, want=2"),
+                new SimpleTestCase<>("let x = [1, 2, 3]; append(x, 4)", Lists.newArrayList(1, 2, 3, 4)),
+                new SimpleTestCase<>("append(append([1], 2), 3)", Lists.newArrayList(1, 2, 3))
         ).forEach(testCase -> {
             var evaluated = testEval(testCase.input);
 

@@ -3,10 +3,7 @@ package dev.mvmo.sicklang.evaluator;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import dev.mvmo.sicklang.internal.builtin.function.FirstFunction;
-import dev.mvmo.sicklang.internal.builtin.function.LastFunction;
-import dev.mvmo.sicklang.internal.builtin.function.LenFunction;
-import dev.mvmo.sicklang.internal.builtin.function.TailFunction;
+import dev.mvmo.sicklang.internal.builtin.function.*;
 import dev.mvmo.sicklang.internal.env.SickEnvironment;
 import dev.mvmo.sicklang.internal.object.BuiltinFunctionObject;
 import dev.mvmo.sicklang.internal.object.NullObject;
@@ -35,7 +32,8 @@ public class SicklangEvaluator {
             new LenFunction(),
             new FirstFunction(),
             new LastFunction(),
-            new TailFunction()
+            new TailFunction(),
+            new AppendFunction()
     );
 
     public static SickObject eval(Node node, SickEnvironment environment) {
