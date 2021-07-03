@@ -6,9 +6,10 @@ public enum ObjectType {
     INTEGER,
     BOOLEAN,
     STRING,
+    ARRAY,
     RETURN_VALUE,
     ERROR,
     NULL,
-    BUILTIN
+    BUILTIN,
 
 }
