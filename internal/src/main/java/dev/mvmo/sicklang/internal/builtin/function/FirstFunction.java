@@ -1,13 +1,11 @@
 package dev.mvmo.sicklang.internal.builtin.function;
 
-import dev.mvmo.sicklang.internal.builtin.BuiltinFunction;
 import dev.mvmo.sicklang.internal.object.BuiltinFunctionObject;
 import dev.mvmo.sicklang.internal.object.NullObject;
 import dev.mvmo.sicklang.internal.object.ObjectType;
 import dev.mvmo.sicklang.internal.object.array.ArrayObject;
 import dev.mvmo.sicklang.internal.object.error.ErrorObject;
 
-// TODO: Add tests
 public class FirstFunction extends BuiltinFunctionObject {
 
     public FirstFunction() {
