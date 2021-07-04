@@ -9,12 +9,14 @@ import dev.mvmo.sicklang.internal.object.array.ArrayObject;
 import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.error.ErrorObject;
 import dev.mvmo.sicklang.internal.object.function.FunctionObject;
+import dev.mvmo.sicklang.internal.object.hash.HashObject;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.internal.object.string.StringObject;
 import dev.mvmo.sicklang.parser.Parser;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -325,6 +327,45 @@ public class EvaluatorTest {
                 testIntegerObject(evaluated, expectedInt);
             else
                 testNullObject(evaluated);
+        });
+    }
+
+    @Test
+    public void test$hashLiterals() {
+        var input = """
+                let two = "two";
+                {
+                    "one": 10 - 9,
+                    "two": 1 + 1,
+                    "thr" + "ee": 6 / 2,
+                    4: 4,
+                    true: 5,
+                    false: 6
+                }
+                """;
+
+        var evaluated = testEval(input);
+
+        assertTrue(evaluated instanceof HashObject);
+
+        var hash = (HashObject) evaluated;
+
+        var expected = Map.of(
+                new StringObject("one").hashKey(), 1,
+                new StringObject("two").hashKey(), 2,
+                new StringObject("three").hashKey(), 3,
+                new IntegerObject(4).hashKey(), 4,
+                BooleanObject.TRUE.hashKey(), 5,
+                BooleanObject.FALSE.hashKey(), 6
+        );
+
+        assertEquals(expected.size(), hash.pairs().size());
+
+        expected.forEach((expectedKey, expectedValue) -> {
+            assertTrue(hash.pairs().containsKey(expectedKey));
+
+            var hashEntry = hash.pairs().get(expectedKey);
+            testIntegerObject(hashEntry.value(), expectedValue);
         });
     }
 

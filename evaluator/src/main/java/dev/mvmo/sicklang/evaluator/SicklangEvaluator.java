@@ -2,6 +2,7 @@ package dev.mvmo.sicklang.evaluator;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import dev.mvmo.sicklang.internal.builtin.function.*;
 import dev.mvmo.sicklang.internal.env.SickEnvironment;
@@ -13,6 +14,9 @@ import dev.mvmo.sicklang.internal.object.array.ArrayObject;
 import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.error.ErrorObject;
 import dev.mvmo.sicklang.internal.object.function.FunctionObject;
+import dev.mvmo.sicklang.internal.object.hash.HashObject;
+import dev.mvmo.sicklang.internal.object.hashkey.HasHash;
+import dev.mvmo.sicklang.internal.object.hashkey.HashKey;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.internal.object.ret.ReturnValueObject;
 import dev.mvmo.sicklang.internal.object.string.StringObject;
@@ -141,6 +145,9 @@ public class SicklangEvaluator {
 
             return evalIndexExpression(left, index);
         }
+
+        if (node instanceof HashLiteralExpressionNode hashLiteralExpressionNode)
+            return evalHashLiteral(hashLiteralExpressionNode, environment);
 
         return NullObject.NULL;
     }
@@ -301,6 +308,27 @@ public class SicklangEvaluator {
             return builtinOptional.get();
 
         return ErrorObject.newInstance("identifier not found: " + node.value());
+    }
+
+    private static SickObject evalHashLiteral(HashLiteralExpressionNode hashNode, SickEnvironment environment) {
+        Map<HashKey, HashObject.Entry> pairs = Maps.newHashMap();
+
+        for (Map.Entry<ExpressionNode, ExpressionNode> nodeEntry : hashNode.pairs().entrySet()) {
+            var key = eval(nodeEntry.getKey(), environment);
+            if (error(key))
+                return key;
+
+            if (!(key instanceof HasHash keyWithHash))
+                return ErrorObject.newInstance("unusable as hash key: %s", key.objectType());
+
+            var value = eval(nodeEntry.getValue(), environment);
+            if (error(value))
+                return value;
+
+            pairs.put(keyWithHash.hashKey(), new HashObject.Entry(key, value));
+        }
+
+        return new HashObject(pairs);
     }
 
     private static List<SickObject> evalExpressions(List<ExpressionNode> expressions, SickEnvironment environment) {
