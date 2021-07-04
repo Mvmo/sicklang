@@ -3,10 +3,10 @@ package dev.mvmo.sicklang.internal.object.number;
 import com.google.common.base.Objects;
 import dev.mvmo.sicklang.internal.object.ObjectType;
 import dev.mvmo.sicklang.internal.object.SickObject;
-import dev.mvmo.sicklang.internal.object.hashkey.HasHash;
+import dev.mvmo.sicklang.internal.object.hashkey.Hashable;
 import dev.mvmo.sicklang.internal.object.hashkey.HashKey;
 
-public record IntegerObject(int value) implements SickObject, HasHash {
+public record IntegerObject(int value) implements SickObject, Hashable {
 
     @Override
     public String inspect() {

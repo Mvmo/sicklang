@@ -1,6 +1,6 @@
 package dev.mvmo.sicklang.internal.object.hashkey;
 
-public interface HasHash {
+public interface Hashable {
 
     HashKey hashKey();
 

@@ -15,7 +15,7 @@ import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.error.ErrorObject;
 import dev.mvmo.sicklang.internal.object.function.FunctionObject;
 import dev.mvmo.sicklang.internal.object.hash.HashObject;
-import dev.mvmo.sicklang.internal.object.hashkey.HasHash;
+import dev.mvmo.sicklang.internal.object.hashkey.Hashable;
 import dev.mvmo.sicklang.internal.object.hashkey.HashKey;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.internal.object.ret.ReturnValueObject;
@@ -318,7 +318,7 @@ public class SicklangEvaluator {
             if (error(key))
                 return key;
 
-            if (!(key instanceof HasHash keyWithHash))
+            if (!(key instanceof Hashable keyWithHash))
                 return ErrorObject.newInstance("unusable as hash key: %s", key.objectType());
 
             var value = eval(nodeEntry.getValue(), environment);

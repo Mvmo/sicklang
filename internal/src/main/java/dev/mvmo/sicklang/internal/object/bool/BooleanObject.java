@@ -3,10 +3,10 @@ package dev.mvmo.sicklang.internal.object.bool;
 import com.google.common.base.Objects;
 import dev.mvmo.sicklang.internal.object.ObjectType;
 import dev.mvmo.sicklang.internal.object.SickObject;
-import dev.mvmo.sicklang.internal.object.hashkey.HasHash;
+import dev.mvmo.sicklang.internal.object.hashkey.Hashable;
 import dev.mvmo.sicklang.internal.object.hashkey.HashKey;
 
-public record BooleanObject(boolean value) implements SickObject, HasHash {
+public record BooleanObject(boolean value) implements SickObject, Hashable {
 
     public static final BooleanObject TRUE = new BooleanObject(true);
     public static final BooleanObject FALSE = new BooleanObject(false);
