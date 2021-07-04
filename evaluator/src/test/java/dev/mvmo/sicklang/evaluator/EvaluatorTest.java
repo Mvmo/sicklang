@@ -167,7 +167,8 @@ public class EvaluatorTest {
                         }
                         """, "unknown operator: BOOLEAN + BOOLEAN"),
                 new SimpleTestCase<>("foobar;", "identifier not found: foobar"),
-                new SimpleTestCase<>("\"Hello\" - \"World\"", "unknown operator: STRING - STRING")
+                new SimpleTestCase<>("\"Hello\" - \"World\"", "unknown operator: STRING - STRING"),
+                new SimpleTestCase<>("{\"name\": \"sicko\"}[fn(x) { x }]", "unusable as hash key: FUNCTION")
         ).forEach(testCase -> {
             var evaluated = testEval(testCase.input);
             assertTrue(evaluated instanceof ErrorObject);
@@ -366,6 +367,25 @@ public class EvaluatorTest {
 
             var hashEntry = hash.pairs().get(expectedKey);
             testIntegerObject(hashEntry.value(), expectedValue);
+        });
+    }
+
+    @Test
+    public void test$hashIndexExpression() {
+        Stream.of(
+                new SimpleTestCase<>("{\"foo\": 5}[\"foo\"]", 5),
+                new SimpleTestCase<>("{\"foo\": 5}[\"bar\"]", null),
+                new SimpleTestCase<>("let key = \"foo\"; {\"foo\": 5}[key]", 5),
+                new SimpleTestCase<>("{}[\"foo\"]", null),
+                new SimpleTestCase<>("{5: 5}[5]", 5),
+                new SimpleTestCase<>("{true: 5}[true]", 5),
+                new SimpleTestCase<>("{false: 5}[false]", 5)
+        ).forEach(testCase -> {
+            var evaluated = testEval(testCase.input);
+            if (testCase.expected instanceof Integer expectedInt)
+                testIntegerObject(evaluated, expectedInt);
+            else
+                testNullObject(evaluated);
         });
     }
 
