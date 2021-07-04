@@ -11,5 +11,6 @@ public enum ObjectType {
     ERROR,
     NULL,
     BUILTIN,
+    HASH
 
 }
