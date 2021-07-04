@@ -118,6 +118,9 @@ public class Lexer {
             case '"':
                 token = new Token(TokenType.STRING, readString());
                 break;
+            case ':':
+                token = new Token(TokenType.COLON, ":");
+                break;
             case 0:
                 token = new Token(TokenType.EOF, "");
                 break;
