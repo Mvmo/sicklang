@@ -15,8 +15,8 @@ import dev.mvmo.sicklang.internal.object.bool.BooleanObject;
 import dev.mvmo.sicklang.internal.object.error.ErrorObject;
 import dev.mvmo.sicklang.internal.object.function.FunctionObject;
 import dev.mvmo.sicklang.internal.object.hash.HashObject;
-import dev.mvmo.sicklang.internal.object.hashkey.Hashable;
 import dev.mvmo.sicklang.internal.object.hashkey.HashKey;
+import dev.mvmo.sicklang.internal.object.hashkey.Hashable;
 import dev.mvmo.sicklang.internal.object.number.IntegerObject;
 import dev.mvmo.sicklang.internal.object.ret.ReturnValueObject;
 import dev.mvmo.sicklang.internal.object.string.StringObject;
@@ -278,6 +278,8 @@ public class SicklangEvaluator {
     private static SickObject evalIndexExpression(SickObject left, SickObject index) {
         if (left.objectType().equals(ObjectType.ARRAY) && index.objectType().equals(ObjectType.INTEGER))
             return evalArrayIndexExpression(left, index);
+        if (left.objectType().equals(ObjectType.HASH))
+            return evalHashIndexExpression(left, index);
         return ErrorObject.newInstance("index operator not supported: %s", left.objectType());
     }
 
@@ -294,6 +296,21 @@ public class SicklangEvaluator {
             return NullObject.NULL;
 
         return array.elements().get(elementIndex);
+    }
+
+    private static SickObject evalHashIndexExpression(SickObject left, SickObject index) {
+        Preconditions.checkArgument(left instanceof HashObject);
+
+        var hashObject = (HashObject) left;
+        if (!(index instanceof Hashable hashable))
+            return ErrorObject.newInstance("unusable as hash key: %s", index.objectType());
+
+        var hashKey = hashable.hashKey();
+
+        if (!hashObject.pairs().containsKey(hashKey))
+            return NullObject.NULL;
+
+        return hashObject.pairs().get(hashKey).value();
     }
 
     private static SickObject evalIdentifier(IdentifierExpressionNode node, SickEnvironment environment) {
