@@ -227,21 +227,47 @@ public class Parser {
         if (!expectPeek(TokenType.RIGHT_PAREN))
             return null;
 
-        if (!expectPeek(TokenType.LEFT_BRACE))
+        BlockStatementNode consequenceNode;
+        nextToken();
+        if (!currentTokenIs(TokenType.LEFT_BRACE))
+            consequenceNode = parseSingleLineBlockStatement();
+        else
+            consequenceNode = parseBlockStatement();
+
+        if (consequenceNode == null)
             return null;
 
-        expressionNode.consequence(parseBlockStatement());
+        expressionNode.consequence(consequenceNode);
 
         if (peekTokenIs(TokenType.ELSE)) {
             nextToken();
 
-            if (!expectPeek(TokenType.LEFT_BRACE))
+            BlockStatementNode alternativeNode;
+            nextToken();
+            if (!currentTokenIs(TokenType.LEFT_BRACE))
+                alternativeNode = parseSingleLineBlockStatement();
+            else
+                alternativeNode = parseBlockStatement();
+
+            if (alternativeNode == null)
                 return null;
 
-            expressionNode.alternative(parseBlockStatement());
+            expressionNode.alternative(alternativeNode);
         }
 
         return expressionNode;
+    }
+
+    public BlockStatementNode parseSingleLineBlockStatement() {
+        var blockStatementNode = BlockStatementNode.newInstance(new Token(TokenType.LEFT_BRACE, "{"));
+
+        var statement = parseStatement();
+        if (statement != null)
+            blockStatementNode.statementNodes().add(statement);
+        else
+            return null;
+
+        return blockStatementNode;
     }
 
     public BlockStatementNode parseBlockStatement() {

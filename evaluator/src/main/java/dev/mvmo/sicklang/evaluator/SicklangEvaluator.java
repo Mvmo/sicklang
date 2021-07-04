@@ -39,7 +39,7 @@ public class SicklangEvaluator {
             new TailFunction(),
             new AppendFunction(),
             new PrintFunction(),
-            new PrintLineFunction(),
+            new PrintlnFunction(),
             new ReadLineFunction()
     );
 
