@@ -46,6 +46,7 @@ public class Parser {
         parser.prefixParseFunctionMap.put(TokenType.FUNCTION, parser::parseFunctionExpression);
         parser.prefixParseFunctionMap.put(TokenType.STRING, parser::parseStringLiteralExpression);
         parser.prefixParseFunctionMap.put(TokenType.LEFT_BRACKET, parser::parseArrayLiteralExpression);
+        parser.prefixParseFunctionMap.put(TokenType.LEFT_BRACE, parser::parseHashLiteral);
 
         parser.infixParseFunctionMap.put(TokenType.PLUS, parser::parseInfixExpression);
         parser.infixParseFunctionMap.put(TokenType.MINUS, parser::parseInfixExpression);
@@ -325,6 +326,32 @@ public class Parser {
             return null;
 
         return IndexExpressionNode.newInstance(startToken, left, indexExpression);
+    }
+
+    public HashLiteralExpressionNode parseHashLiteral() {
+        var startToken = currentToken;
+        Map<ExpressionNode, ExpressionNode> pairs = Maps.newHashMap();
+
+        while (!peekTokenIs(TokenType.RIGHT_BRACE)) {
+            nextToken();
+            var keyExpression = parseExpression(Precedence.LOWEST);
+
+            if (!expectPeek(TokenType.COLON))
+                return null;
+
+            nextToken();
+
+            var valueExpression = parseExpression(Precedence.LOWEST);
+            pairs.put(keyExpression, valueExpression);
+
+            if (!peekTokenIs(TokenType.RIGHT_BRACE) && !expectPeek(TokenType.COMMA))
+                return null;
+        }
+
+        if (!expectPeek(TokenType.RIGHT_BRACE))
+            return null;
+
+        return HashLiteralExpressionNode.newInstance(startToken, pairs);
     }
 
     public List<ExpressionNode> parseExpressionList(TokenType till) {

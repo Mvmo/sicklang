@@ -11,6 +11,9 @@ import dev.mvmo.sicklang.parser.ast.statement.StatementNode;
 import lombok.Value;
 import org.junit.Test;
 
+import java.util.Map;
+import java.util.function.Consumer;
+
 import static org.junit.Assert.*;
 
 public class ParserTest {
@@ -552,6 +555,94 @@ public class ParserTest {
 
         testIdentifier("myArray", indexExpression.left());
         testInfixExpression(1, "+", 1, indexExpression.index());
+    }
+
+    @Test
+    public void test$hashLiteralStringKeys() {
+        String input = "{\"one\": 1, \"two\": 2, \"three\": 3}";
+
+        var lexer = Lexer.newInstance(input);
+        var parser = Parser.newInstance(lexer);
+        var programNode = parser.parseProgram();
+
+        checkParserErrors(parser);
+
+        assertEquals(1, programNode.statementNodes().size());
+        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        var statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+        assertTrue(statementNode.expressionNode() instanceof HashLiteralExpressionNode);
+
+        var hashNode = (HashLiteralExpressionNode) statementNode.expressionNode();
+        assertEquals(3, hashNode.pairs().size());
+
+        var expectedMap = Map.of("one", 1, "two", 2, "three", 3);
+
+        hashNode.pairs().forEach((key, value) -> {
+            assertTrue(key instanceof StringLiteralExpressionNode);
+            var stringKey = (StringLiteralExpressionNode) key;
+            var expectedValue = expectedMap.get(stringKey.toString());
+
+            testIntegerLiteral(expectedValue, value);
+        });
+    }
+
+    @Test
+    public void test$emptyHashLiteral() {
+        var input = "{}";
+
+        var lexer = Lexer.newInstance(input);
+        var parser = Parser.newInstance(lexer);
+        var programNode = parser.parseProgram();
+
+        checkParserErrors(parser);
+
+        assertEquals(1, programNode.statementNodes().size());
+        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        var statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+        assertTrue(statementNode.expressionNode() instanceof HashLiteralExpressionNode);
+
+        var hashNode = (HashLiteralExpressionNode) statementNode.expressionNode();
+        assertEquals(0, hashNode.pairs().size());
+    }
+
+    @Test
+    public void test$hashLiteralWithExpressions() {
+        var input = "{\"one\": 0 + 1, \"two\": 10 - 8, \"three\": 15 / 5}";
+
+        var lexer = Lexer.newInstance(input);
+        var parser = Parser.newInstance(lexer);
+        var programNode = parser.parseProgram();
+
+        checkParserErrors(parser);
+
+        assertEquals(1, programNode.statementNodes().size());
+        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        var statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+        assertTrue(statementNode.expressionNode() instanceof HashLiteralExpressionNode);
+
+        var hashNode = (HashLiteralExpressionNode) statementNode.expressionNode();
+        assertEquals(3, hashNode.pairs().size());
+
+        Map<String, Consumer<ExpressionNode>> testFunctionMap = Map.of(
+                "one", (ExpressionNode expression) -> testInfixExpression(0, "+", 1, expression),
+                "two", (ExpressionNode expression) -> testInfixExpression(10, "-", 8, expression),
+                "three", (ExpressionNode expression) -> testInfixExpression(15, "/", 5, expression)
+        );
+
+        hashNode.pairs().forEach((key, value) -> {
+            assertTrue(key instanceof StringLiteralExpressionNode);
+            var stringKey = (StringLiteralExpressionNode) key;
+
+            assertTrue(testFunctionMap.containsKey(stringKey.toString()));
+
+            testFunctionMap.get(stringKey.toString()).accept(value);
+        });
     }
 
     private void testLetStatement(StatementNode statement, String name) {
