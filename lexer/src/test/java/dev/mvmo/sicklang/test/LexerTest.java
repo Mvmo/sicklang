@@ -32,6 +32,7 @@ public class LexerTest {
                 "foo bar"
                 [1, 2];
                 {"foo": "bar"}
+                let x: string = "hello";
                 """;
 
         Token[] expectedTokens = new Token[]{
@@ -121,6 +122,13 @@ public class LexerTest {
                 new Token(TokenType.COLON, ":"),
                 new Token(TokenType.STRING, "bar"),
                 new Token(TokenType.RIGHT_BRACE, "}"),
+                new Token(TokenType.LET, "let"),
+                new Token(TokenType.IDENTIFIER, "x"),
+                new Token(TokenType.COLON, ":"),
+                new Token(TokenType.TYPE, "string"),
+                new Token(TokenType.ASSIGN, "="),
+                new Token(TokenType.STRING, "hello"),
+                new Token(TokenType.SEMICOLON, ";"),
                 new Token(TokenType.EOF, "")
         };
 

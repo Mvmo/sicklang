@@ -1,2 +1,8 @@
-let x = if (true) 10; else 20;
-println(x);
+let name =  readLine("Type your name: ");
+println("Hello " + name + "!");
+
+let mvmoHash = {"name": "Maurice", "age": 18};
+let d = {true: 1, false: 2};
+let array = [fn(x) {x * 2}, 1]
+
+println(array[0](2));

@@ -44,7 +44,8 @@ public enum TokenType {
     FALSE("FALSE"),
     IF("IF"),
     ELSE("ELSE"),
-    RETURN("RETURN");
+    RETURN("RETURN"),
+    TYPE("TYPE");
 
     private final String literal;
 
