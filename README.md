@@ -1,44 +1,14 @@
 # SickLang - A sick experimental programming language
 
-- Built on top of jvm 
+## 1. Why am I building a programming language?
 
-I'm trying to do daily work on this project except Sundays
+It's a topic which I'm interested about since I've started programming.
+I want to learn as much as I can about programming languages, how they're tokenized, parsed, interpreted and compiled.
+What problems I will come across by writing all the components by myself and how tools can help my with that later on.
+What tools are out there and why I should use them instead of building it myself.
 
-- functions are first-class citizens
-- implicit returns
+# 2. What have I learned so far?
 
-# Builtin functions
-- len(string) -> int
-```
-len("hello, world"); // 12 
-```
-
-```
-let add = fn(x, y) { x + y };
-let subtract = fn(x, y) { return x - y };
-
-let get = fn(x) {
-    if (add(x, 5) == 10) {
-        "hello"
-    } else {
-        "world"
-    }
-}
-
-let rss = fn(x, y) {
-    x * y
-}(4, 5);
-
-let z = fn(k, h) {
-    return k(h);
-};
-
-z(fn(l) {
-    l * 2;
-});
-
-let world = "world";
-let helloWorld = "hello" + "," + " " + world;
-
-let result = get(5); // "hello"
-```
+I've already learned much about this stuff just by building this project, so I want to keep going.
+I learned how to turn a senseless string into something that makes sense and can be used to build new stuff.
+What flaws there are when you start making a language, and the challenges that come with it.
