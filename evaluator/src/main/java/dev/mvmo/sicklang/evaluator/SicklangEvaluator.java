@@ -37,7 +37,10 @@ public class SicklangEvaluator {
             new FirstFunction(),
             new LastFunction(),
             new TailFunction(),
-            new AppendFunction()
+            new AppendFunction(),
+            new PrintFunction(),
+            new PrintlnFunction(),
+            new ReadLineFunction()
     );
 
     public static SickObject eval(Node node, SickEnvironment environment) {
