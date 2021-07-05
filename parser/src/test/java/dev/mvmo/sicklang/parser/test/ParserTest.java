@@ -645,6 +645,34 @@ public class ParserTest {
         });
     }
 
+    @Test
+    public void test$singleLineIfExpression() {
+        var input = """
+                if (10 == 10)
+                    return 10;
+                else
+                    return 20;
+                """;
+
+        var lexer = Lexer.newInstance(input);
+        var parser = Parser.newInstance(lexer);
+        var programNode = parser.parseProgram();
+
+        checkParserErrors(parser);
+
+        assertEquals(1, programNode.statementNodes().size());
+        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+
+        var statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+
+        assertTrue(statementNode.expressionNode() instanceof IfExpressionNode);
+
+        var ifNode = (IfExpressionNode) statementNode.expressionNode();
+
+        assertEquals(1, ifNode.consequence().statementNodes().size());
+        assertEquals(1, ifNode.alternative().statementNodes().size());
+    }
+
     private void testLetStatement(StatementNode statement, String name) {
         assertEquals("let", statement.tokenLiteral());
         assertTrue("Statement is not instanceof LetStatementNode", statement instanceof LetStatementNode);

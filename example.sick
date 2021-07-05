@@ -1,17 +1,2 @@
-let map = fn(arr, f) {
-    let iterator = fn(arr, accumulated) {
-        if (len(arr) == 0) {
-            return accumulated;
-        } else {
-            return iterator(tail(arr), append(accumulated, f(first(arr))));
-        }
-    };
-
-    iterator(arr, []);
-}
-
-let a = [1, 2, 3, 4];
-let double = fn(x) { x * 2 };
-
-map(a, double);
-
+let x = if (true) 10; else 20;
+println(x);
