@@ -1,6 +1,6 @@
 # SickLang - A sick experimental programming language
 
-![alt logo](https://github.com/Mvmo/sicklang/blob/develop/.github/assets/sick-logo.png?raw=true)
+
 
 ## 1. Why am I building a programming language?
 
