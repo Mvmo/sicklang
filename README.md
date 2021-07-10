@@ -16,4 +16,4 @@ I learned how to turn a senseless string into something that makes sense and can
 What flaws there are when you start making a language, and the challenges that come with it.
 
 # 3. Where do i wanna go with this project?
-Not so far, just learn how to get the stuff done and move on with new programming languages, where I might use some generators to get faster to the real deal, which is implementing a programming language and not a lexer or paser.
+Not so far, just learn how to get the stuff done and move on with new programming languages, where I might use some generators to get faster to the real deal, which is implementing a programming language and not a lexer or parser.
