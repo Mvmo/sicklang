@@ -17,3 +17,6 @@ What flaws there are when you start making a language, and the challenges that c
 
 # 3. Where do i wanna go with this project?
 Not so far, just learn how to get the stuff done and move on with new programming languages, where I might use some generators to get faster to the real deal, which is implementing a programming language and not a lexer or parser.
+
+# 4. Why sick?
+Maybe I'm just an uncreative boy who's sick of choosing names for projects? And also isn't this project sick? 
