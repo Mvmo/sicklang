@@ -3,8 +3,8 @@ package dev.mvmo.sicklang.internal.object.bool;
 import com.google.common.base.Objects;
 import dev.mvmo.sicklang.internal.object.ObjectType;
 import dev.mvmo.sicklang.internal.object.SickObject;
-import dev.mvmo.sicklang.internal.object.hashkey.Hashable;
 import dev.mvmo.sicklang.internal.object.hashkey.HashKey;
+import dev.mvmo.sicklang.internal.object.hashkey.Hashable;
 
 public record BooleanObject(boolean value) implements SickObject, Hashable {
 

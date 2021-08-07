@@ -3,8 +3,8 @@ package dev.mvmo.sicklang.internal.object.string;
 import com.google.common.base.Objects;
 import dev.mvmo.sicklang.internal.object.ObjectType;
 import dev.mvmo.sicklang.internal.object.SickObject;
-import dev.mvmo.sicklang.internal.object.hashkey.Hashable;
 import dev.mvmo.sicklang.internal.object.hashkey.HashKey;
+import dev.mvmo.sicklang.internal.object.hashkey.Hashable;
 
 public record StringObject(String value) implements SickObject, Hashable {
 

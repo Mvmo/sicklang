@@ -2,6 +2,7 @@ package dev.mvmo.sicklang.internal.object.array;
 
 import dev.mvmo.sicklang.internal.object.ObjectType;
 import dev.mvmo.sicklang.internal.object.SickObject;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
