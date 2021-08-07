@@ -19,8 +19,6 @@ enum class Precedence(vararg appliedTo: TokenType) {
     companion object {
         @JvmStatic // todo remove later
         fun findPrecedence(tokenType: TokenType): Precedence =
-            values()
-                .firstOrNull { it.appliedToTypes.contains(tokenType) }
-                ?: LOWEST
+            values().firstOrNull { it.appliedToTypes.contains(tokenType) } ?: LOWEST
     }
 }
