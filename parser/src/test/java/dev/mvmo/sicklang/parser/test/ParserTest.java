@@ -110,7 +110,7 @@ public class ParserTest {
 
         IdentifierExpressionNode identifierNode = (IdentifierExpressionNode) statementNode.getExpressionNode();
 
-        assertEquals("foobar", identifierNode.value());
+        assertEquals("foobar", identifierNode.getValue());
         assertEquals("foobar", identifierNode.tokenLiteral());
     }
 
@@ -679,7 +679,7 @@ public class ParserTest {
 
         LetStatementNode letStatement = (LetStatementNode) statement;
 
-        assertEquals(name, letStatement.getIdentifier().value());
+        assertEquals(name, letStatement.getIdentifier().getValue());
         assertEquals(name, letStatement.getIdentifier().tokenLiteral());
     }
 
@@ -714,7 +714,7 @@ public class ParserTest {
     private void testIdentifier(String expectedValue, ExpressionNode expressionNode) {
         assertTrue(expressionNode instanceof IdentifierExpressionNode);
         IdentifierExpressionNode identifierExpressionNode = (IdentifierExpressionNode) expressionNode;
-        assertEquals(expectedValue, identifierExpressionNode.value());
+        assertEquals(expectedValue, identifierExpressionNode.getValue());
         assertEquals(expectedValue, identifierExpressionNode.tokenLiteral());
     }
 

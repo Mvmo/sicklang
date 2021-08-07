@@ -99,7 +99,7 @@ public class SicklangEvaluator {
             if (error(val))
                 return val;
 
-            environment.set(letStatementNode.getIdentifier().value(), val);
+            environment.set(letStatementNode.getIdentifier().getValue(), val);
         }
 
         if (node instanceof IdentifierExpressionNode identifierExpressionNode) {
@@ -317,17 +317,17 @@ public class SicklangEvaluator {
     }
 
     private static SickObject evalIdentifier(IdentifierExpressionNode node, SickEnvironment environment) {
-        if (environment.hasKey(node.value()))
-            return environment.get(node.value());
+        if (environment.hasKey(node.getValue()))
+            return environment.get(node.getValue());
 
         Optional<BuiltinFunctionObject> builtinOptional = builtinFunctions.stream()
-                .filter(function -> function.name().equals(node.value()))
+                .filter(function -> function.name().equals(node.getValue()))
                 .findFirst();
 
         if (builtinOptional.isPresent())
             return builtinOptional.get();
 
-        return ErrorObject.newInstance("identifier not found: " + node.value());
+        return ErrorObject.newInstance("identifier not found: " + node.getValue());
     }
 
     private static SickObject evalHashLiteral(HashLiteralExpressionNode hashNode, SickEnvironment environment) {
@@ -387,7 +387,7 @@ public class SicklangEvaluator {
             var identifier = functionObject.parameters().get(i);
             var value = args.get(i);
 
-            environment.set(identifier.value(), value);
+            environment.set(identifier.getValue(), value);
         }
 
         return environment;

@@ -97,7 +97,7 @@ public class Parser {
         if (!expectPeek(TokenType.IDENTIFIER))
             return null;
 
-        statementNode.setIdentifier(IdentifierExpressionNode.newInstance(currentToken, currentToken.literal()));
+        statementNode.setIdentifier(new IdentifierExpressionNode(currentToken, currentToken.literal()));
 
         if (!expectPeek(TokenType.ASSIGN))
             return null;
@@ -159,7 +159,7 @@ public class Parser {
     }
 
     public IdentifierExpressionNode parseIdentifier() {
-        return IdentifierExpressionNode.newInstance(currentToken, currentToken.literal());
+        return new IdentifierExpressionNode(currentToken, currentToken.literal());
     }
 
     public IntegerLiteralExpressionNode parseIntegerLiteral() {
@@ -312,13 +312,13 @@ public class Parser {
 
         nextToken();
 
-        identifiers.add(IdentifierExpressionNode.newInstance(currentToken, currentToken.literal()));
+        identifiers.add(new IdentifierExpressionNode(currentToken, currentToken.literal()));
         // use do while
         while (peekTokenIs(TokenType.COMMA)) {
             nextToken();
             nextToken();
 
-            identifiers.add(IdentifierExpressionNode.newInstance(currentToken, currentToken.literal()));
+            identifiers.add(new IdentifierExpressionNode(currentToken, currentToken.literal()));
         }
 
         if (!expectPeek(TokenType.RIGHT_PAREN))
