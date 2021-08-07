@@ -113,10 +113,10 @@ public class Parser {
     }
 
     public ReturnStatementNode parseReturnStatement() {
-        var statementNode = ReturnStatementNode.newInstance(currentToken);
+        var statementNode = new ReturnStatementNode(currentToken);
         nextToken();
 
-        statementNode.returnValue(parseExpression(Precedence.LOWEST));
+        statementNode.setReturnValue(parseExpression(Precedence.LOWEST));
 
         if (peekTokenIs(TokenType.SEMICOLON))
             nextToken();

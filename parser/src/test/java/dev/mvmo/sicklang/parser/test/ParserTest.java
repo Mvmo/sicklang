@@ -87,7 +87,7 @@ public class ParserTest {
 
             ReturnStatementNode returnStatementNode = (ReturnStatementNode) statementNode;
 
-            testLiteralExpression(testCase.expectedValue, returnStatementNode.returnValue());
+            testLiteralExpression(testCase.expectedValue, returnStatementNode.getReturnValue());
         }
     }
 
@@ -679,8 +679,8 @@ public class ParserTest {
 
         LetStatementNode letStatement = (LetStatementNode) statement;
 
-        assertEquals(name, letStatement.identifier().value());
-        assertEquals(name, letStatement.identifier().tokenLiteral());
+        assertEquals(name, letStatement.getIdentifier().value());
+        assertEquals(name, letStatement.getIdentifier().tokenLiteral());
     }
 
     private void testIntegerLiteral(int expectedValue, ExpressionNode expressionNode) {

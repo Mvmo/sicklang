@@ -1,37 +1,21 @@
-package dev.mvmo.sicklang.parser.ast.statement;
+package dev.mvmo.sicklang.parser.ast.statement
 
-import dev.mvmo.sicklang.parser.ast.expression.ExpressionNode;
-import dev.mvmo.sicklang.token.Token;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import dev.mvmo.sicklang.parser.ast.expression.ExpressionNode
+import dev.mvmo.sicklang.token.Token
 
-@Setter
-@Getter
-@RequiredArgsConstructor(staticName = "newInstance")
-public class ReturnStatementNode implements StatementNode {
+class ReturnStatementNode(val token: Token) : StatementNode {
 
-    private final Token token;
+    var returnValue: ExpressionNode? = null
 
-    private ExpressionNode returnValue;
+    override fun tokenLiteral(): String =
+        token.literal()
 
-    @Override
-    public String tokenLiteral() {
-        return token.literal();
-    }
+    override fun toString(): String =
+        StringBuilder().apply {
+            append(tokenLiteral())
+            append(" ")
+            returnValue?.run { append(toString()) }
+            append(";")
+        }.toString()
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(tokenLiteral())
-                .append(" ");
-
-        if (returnValue != null)
-            builder.append(returnValue.toString());
-
-        builder.append(";");
-
-        return builder.toString();
-    }
 }
