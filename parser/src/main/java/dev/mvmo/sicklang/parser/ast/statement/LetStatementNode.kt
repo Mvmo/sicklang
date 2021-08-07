@@ -17,11 +17,6 @@ class LetStatementNode(val token: Token) : StatementNode {
         token.literal()
 
     override fun toString(): String =
-        """
-            ${token.literal}
-            | ${identifier.toString()}
-            | ${value.toString()}
-            |;
-        """.trimMargin()
+        "${token.literal} ${identifier.toString()} = ${value.toString()};"
 
 }
