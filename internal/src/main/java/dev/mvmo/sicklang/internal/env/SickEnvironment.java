@@ -2,16 +2,18 @@ package dev.mvmo.sicklang.internal.env;
 
 import com.google.common.collect.Maps;
 import dev.mvmo.sicklang.internal.object.SickObject;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class SickEnvironment {
 
     private final Map<String, SickObject> storageMap;
     private final SickEnvironment parent;
+
+    private SickEnvironment(Map<String, SickObject> storageMap, SickEnvironment parent) {
+        this.storageMap = storageMap;
+        this.parent = parent;
+    }
 
     public SickEnvironment set(String key, SickObject value) {
         this.storageMap.put(key, value);
