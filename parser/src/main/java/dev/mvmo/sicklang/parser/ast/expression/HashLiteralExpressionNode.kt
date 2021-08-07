@@ -1,29 +1,13 @@
-package dev.mvmo.sicklang.parser.ast.expression;
+package dev.mvmo.sicklang.parser.ast.expression
 
-import dev.mvmo.sicklang.token.Token;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import dev.mvmo.sicklang.token.Token
 
-import java.util.Map;
-import java.util.stream.Collectors;
+class HashLiteralExpressionNode(val token: Token, val pairs: Map<ExpressionNode, ExpressionNode>) : ExpressionNode {
 
-@Getter
-@RequiredArgsConstructor(staticName = "newInstance")
-public class HashLiteralExpressionNode implements ExpressionNode {
+    override fun tokenLiteral(): String =
+        token.literal()
 
-    private final Token token;
-    private final Map<ExpressionNode, ExpressionNode> pairs;
-
-    @Override
-    public String tokenLiteral() {
-        return token.literal();
-    }
-
-    @Override
-    public String toString() {
-        return String.format("{%s}", pairs.entrySet().stream()
-                .map(entry -> entry.getKey().toString() + ":" + entry.getValue().toString())
-                .collect(Collectors.joining(", ")));
-    }
+    override fun toString(): String =
+        "{${pairs.entries.joinToString { "${it.key}:${it.value}" }}}"
 
 }

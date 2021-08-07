@@ -333,7 +333,7 @@ public class SicklangEvaluator {
     private static SickObject evalHashLiteral(HashLiteralExpressionNode hashNode, SickEnvironment environment) {
         Map<HashKey, HashObject.Entry> pairs = Maps.newHashMap();
 
-        for (Map.Entry<ExpressionNode, ExpressionNode> nodeEntry : hashNode.pairs().entrySet()) {
+        for (Map.Entry<ExpressionNode, ExpressionNode> nodeEntry : hashNode.getPairs().entrySet()) {
             var key = eval(nodeEntry.getKey(), environment);
             if (error(key))
                 return key;

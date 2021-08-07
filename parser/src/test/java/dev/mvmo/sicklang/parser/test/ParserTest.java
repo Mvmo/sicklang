@@ -575,11 +575,11 @@ public class ParserTest {
         assertTrue(statementNode.getExpressionNode() instanceof HashLiteralExpressionNode);
 
         var hashNode = (HashLiteralExpressionNode) statementNode.getExpressionNode();
-        assertEquals(3, hashNode.pairs().size());
+        assertEquals(3, hashNode.getPairs().size());
 
         var expectedMap = Map.of("one", 1, "two", 2, "three", 3);
 
-        hashNode.pairs().forEach((key, value) -> {
+        hashNode.getPairs().forEach((key, value) -> {
             assertTrue(key instanceof StringLiteralExpressionNode);
             var stringKey = (StringLiteralExpressionNode) key;
             var expectedValue = expectedMap.get(stringKey.toString());
@@ -606,7 +606,7 @@ public class ParserTest {
         assertTrue(statementNode.getExpressionNode() instanceof HashLiteralExpressionNode);
 
         var hashNode = (HashLiteralExpressionNode) statementNode.getExpressionNode();
-        assertEquals(0, hashNode.pairs().size());
+        assertEquals(0, hashNode.getPairs().size());
     }
 
     @Test
@@ -627,7 +627,7 @@ public class ParserTest {
         assertTrue(statementNode.getExpressionNode() instanceof HashLiteralExpressionNode);
 
         var hashNode = (HashLiteralExpressionNode) statementNode.getExpressionNode();
-        assertEquals(3, hashNode.pairs().size());
+        assertEquals(3, hashNode.getPairs().size());
 
         Map<String, Consumer<ExpressionNode>> testFunctionMap = Map.of(
                 "one", (ExpressionNode expression) -> testInfixExpression(0, "+", 1, expression),
@@ -635,7 +635,7 @@ public class ParserTest {
                 "three", (ExpressionNode expression) -> testInfixExpression(15, "/", 5, expression)
         );
 
-        hashNode.pairs().forEach((key, value) -> {
+        hashNode.getPairs().forEach((key, value) -> {
             assertTrue(key instanceof StringLiteralExpressionNode);
             var stringKey = (StringLiteralExpressionNode) key;
 

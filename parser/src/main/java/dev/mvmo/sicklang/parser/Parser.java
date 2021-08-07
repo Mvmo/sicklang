@@ -377,7 +377,7 @@ public class Parser {
         if (!expectPeek(TokenType.RIGHT_BRACE))
             return null;
 
-        return HashLiteralExpressionNode.newInstance(startToken, pairs);
+        return new HashLiteralExpressionNode(startToken, pairs);
     }
 
     public List<ExpressionNode> parseExpressionList(TokenType till) {
