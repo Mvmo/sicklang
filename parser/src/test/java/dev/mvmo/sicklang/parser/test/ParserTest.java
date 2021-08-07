@@ -50,8 +50,8 @@ public class ParserTest {
 
             LetStatementNode letStatementNode = (LetStatementNode) statementNode;
 
-            System.out.println(letStatementNode.value());
-            testLiteralExpression(testCase.expectedValue, letStatementNode.value());
+            System.out.println(letStatementNode.getValue());
+            testLiteralExpression(testCase.expectedValue, letStatementNode.getValue());
         }
     }
 

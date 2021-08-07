@@ -93,18 +93,18 @@ public class Parser {
     }
 
     public LetStatementNode parseLetStatement() {
-        var statementNode = LetStatementNode.newInstance(currentToken);
+        var statementNode = new LetStatementNode(currentToken);
         if (!expectPeek(TokenType.IDENTIFIER))
             return null;
 
-        statementNode.identifier(IdentifierExpressionNode.newInstance(currentToken, currentToken.literal()));
+        statementNode.setIdentifier(IdentifierExpressionNode.newInstance(currentToken, currentToken.literal()));
 
         if (!expectPeek(TokenType.ASSIGN))
             return null;
 
         nextToken();
 
-        statementNode.value(parseExpression(Precedence.LOWEST));
+        statementNode.setValue(parseExpression(Precedence.LOWEST));
 
         if (peekTokenIs(TokenType.SEMICOLON))
             nextToken();

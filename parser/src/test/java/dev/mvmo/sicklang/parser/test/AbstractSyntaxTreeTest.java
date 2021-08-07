@@ -15,10 +15,9 @@ public class AbstractSyntaxTreeTest {
     public void test$abstractSyntaxTreeString() {
         ProgramNode programNode = ProgramNode.newInstance();
 
-
-        LetStatementNode letStatementNode = LetStatementNode.newInstance(new Token(TokenType.LET, "let"));
-        letStatementNode.identifier(IdentifierExpressionNode.newInstance(new Token(TokenType.IDENTIFIER, "myVar"), "myVar"));
-        letStatementNode.value(IdentifierExpressionNode.newInstance(new Token(TokenType.IDENTIFIER, "anotherVar"), "anotherVar"));
+        LetStatementNode letStatementNode = new LetStatementNode(new Token(TokenType.LET, "let"));
+        letStatementNode.setIdentifier(IdentifierExpressionNode.newInstance(new Token(TokenType.IDENTIFIER, "myVar"), "myVar"));
+        letStatementNode.setValue(IdentifierExpressionNode.newInstance(new Token(TokenType.IDENTIFIER, "anotherVar"), "anotherVar"));
 
         programNode.statementNodes().add(letStatementNode);
 
