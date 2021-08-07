@@ -133,7 +133,7 @@ public class ParserTest {
 
         IntegerLiteralExpressionNode literalExpressionNode = (IntegerLiteralExpressionNode) statementNode.getExpressionNode();
 
-        assertEquals(5, literalExpressionNode.value());
+        assertEquals(5, literalExpressionNode.getValue());
         assertEquals("5", literalExpressionNode.tokenLiteral());
     }
 
@@ -192,8 +192,8 @@ public class ParserTest {
 
             PrefixExpressionNode prefixExpressionNode = (PrefixExpressionNode) statementNode.getExpressionNode();
 
-            assertEquals(testCase.operator, prefixExpressionNode.operator());
-            testLiteralExpression(testCase.value, prefixExpressionNode.right());
+            assertEquals(testCase.operator, prefixExpressionNode.getOperator());
+            testLiteralExpression(testCase.value, prefixExpressionNode.getRight());
         }
     }
 
@@ -688,7 +688,7 @@ public class ParserTest {
 
         IntegerLiteralExpressionNode literalExpressionNode = (IntegerLiteralExpressionNode) expressionNode;
 
-        assertEquals(expectedValue, literalExpressionNode.value());
+        assertEquals(expectedValue, literalExpressionNode.getValue());
         assertEquals(String.valueOf(expectedValue), literalExpressionNode.tokenLiteral());
     }
 

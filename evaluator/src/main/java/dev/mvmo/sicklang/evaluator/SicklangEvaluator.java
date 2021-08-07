@@ -53,7 +53,7 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof IntegerLiteralExpressionNode integerNode) {
-            return new IntegerObject(integerNode.value());
+            return new IntegerObject(integerNode.getValue());
         }
 
         if (node instanceof BooleanExpressionNode booleanExpressionNode) {
@@ -61,10 +61,10 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof PrefixExpressionNode prefixExpressionNode) {
-            var right = eval(prefixExpressionNode.right(), environment);
+            var right = eval(prefixExpressionNode.getRight(), environment);
             if (error(right))
                 return right;
-            return evalPrefixExpression(prefixExpressionNode.operator(), right);
+            return evalPrefixExpression(prefixExpressionNode.getOperator(), right);
         }
 
         if (node instanceof InfixExpressionNode infixExpressionNode) {
@@ -126,7 +126,7 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof StringLiteralExpressionNode stringLiteralExpressionNode) {
-            return new StringObject(stringLiteralExpressionNode.value());
+            return new StringObject(stringLiteralExpressionNode.getValue());
         }
 
         if (node instanceof ArrayLiteralExpressionNode arrayLiteralExpressionNode) {

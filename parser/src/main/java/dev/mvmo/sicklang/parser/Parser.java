@@ -163,11 +163,11 @@ public class Parser {
     }
 
     public IntegerLiteralExpressionNode parseIntegerLiteral() {
-        var literalExpressionNode = IntegerLiteralExpressionNode.newInstance(currentToken);
+        var literalExpressionNode = new IntegerLiteralExpressionNode(currentToken);
 
         try {
             int integer = Integer.parseInt(currentToken.literal());
-            literalExpressionNode.value(integer);
+            literalExpressionNode.setValue(integer);
         } catch (NumberFormatException exception) {
             var errorMsg = String.format("could not parse %s as an integer", currentToken.literal());
             errorMessages.add(errorMsg);
@@ -179,11 +179,11 @@ public class Parser {
     }
 
     public ExpressionNode parsePrefixExpression() {
-        var prefixExpressionNode = PrefixExpressionNode.newInstance(currentToken, currentToken.literal());
+        var prefixExpressionNode = new PrefixExpressionNode(currentToken, currentToken.literal());
 
         nextToken();
 
-        prefixExpressionNode.right(parseExpression(Precedence.PREFIX));
+        prefixExpressionNode.setRight(parseExpression(Precedence.PREFIX));
 
         return prefixExpressionNode;
     }
@@ -336,7 +336,7 @@ public class Parser {
 
     // TODO: private access
     public StringLiteralExpressionNode parseStringLiteralExpression() {
-        return StringLiteralExpressionNode.newInstance(currentToken, currentToken.literal());
+        return new StringLiteralExpressionNode(currentToken, currentToken.literal());
     }
 
     public ArrayLiteralExpressionNode parseArrayLiteralExpression() {

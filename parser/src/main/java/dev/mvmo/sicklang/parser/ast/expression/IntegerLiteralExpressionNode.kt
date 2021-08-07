@@ -1,26 +1,15 @@
-package dev.mvmo.sicklang.parser.ast.expression;
+package dev.mvmo.sicklang.parser.ast.expression
 
-import dev.mvmo.sicklang.token.Token;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import dev.mvmo.sicklang.token.Token
 
-@Getter
-@Setter
-@RequiredArgsConstructor(staticName = "newInstance")
-public class IntegerLiteralExpressionNode implements ExpressionNode {
+class IntegerLiteralExpressionNode(val token: Token) : ExpressionNode {
 
-    private final Token token;
-    private int value;
+    var value = 0
 
-    @Override
-    public String tokenLiteral() {
-        return token.literal();
-    }
+    override fun tokenLiteral(): String =
+        token.literal()
 
-    @Override
-    public String toString() {
-        return token.literal();
-    }
+    override fun toString(): String =
+        token.literal()
 
 }
