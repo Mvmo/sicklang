@@ -1,9 +1,7 @@
-package dev.mvmo.sicklang.parser.ast.function;
+package dev.mvmo.sicklang.parser.ast.function
 
-import dev.mvmo.sicklang.parser.ast.expression.ExpressionNode;
+import dev.mvmo.sicklang.parser.ast.expression.ExpressionNode
 
-public interface InfixParseFunction {
-
-    ExpressionNode parse(ExpressionNode leftExpression);
-
+interface InfixParseFunction {
+    fun parse(leftExpression: ExpressionNode?): ExpressionNode?
 }
