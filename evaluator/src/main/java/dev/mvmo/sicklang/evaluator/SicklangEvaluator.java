@@ -265,14 +265,14 @@ public class SicklangEvaluator {
     }
 
     private static SickObject evalIfExpression(IfExpressionNode ifExpressionNode, SickEnvironment environment) {
-        var condition = eval(ifExpressionNode.conditionalExpressionNode(), environment);
+        var condition = eval(ifExpressionNode.getConditionalExpressionNode(), environment);
         if (error(condition))
             return condition;
 
         if (truthy(condition)) {
-            return eval(ifExpressionNode.consequence(), environment);
-        } else if (ifExpressionNode.alternative() != null) {
-            return eval(ifExpressionNode.alternative(), environment);
+            return eval(ifExpressionNode.getConsequence(), environment);
+        } else if (ifExpressionNode.getAlternative() != null) {
+            return eval(ifExpressionNode.getAlternative(), environment);
         } else {
             return NullObject.NULL;
         }

@@ -215,14 +215,14 @@ public class Parser {
     }
 
     public ExpressionNode parseIfExpression() {
-        var expressionNode = IfExpressionNode.newInstance(currentToken);
+        var expressionNode = new IfExpressionNode(currentToken);
 
         if (!expectPeek(TokenType.LEFT_PAREN))
             return null;
 
         nextToken();
 
-        expressionNode.conditionalExpressionNode(parseExpression(Precedence.LOWEST));
+        expressionNode.setConditionalExpressionNode(parseExpression(Precedence.LOWEST));
 
         if (!expectPeek(TokenType.RIGHT_PAREN))
             return null;
@@ -237,7 +237,7 @@ public class Parser {
         if (consequenceNode == null)
             return null;
 
-        expressionNode.consequence(consequenceNode);
+        expressionNode.setConsequence(consequenceNode);
 
         if (peekTokenIs(TokenType.ELSE)) {
             nextToken();
@@ -252,7 +252,7 @@ public class Parser {
             if (alternativeNode == null)
                 return null;
 
-            expressionNode.alternative(alternativeNode);
+            expressionNode.setAlternative(alternativeNode);
         }
 
         return expressionNode;

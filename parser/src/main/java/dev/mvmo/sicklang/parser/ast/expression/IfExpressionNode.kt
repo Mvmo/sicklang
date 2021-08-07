@@ -1,39 +1,18 @@
-package dev.mvmo.sicklang.parser.ast.expression;
+package dev.mvmo.sicklang.parser.ast.expression
 
-import dev.mvmo.sicklang.parser.ast.statement.BlockStatementNode;
-import dev.mvmo.sicklang.token.Token;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import dev.mvmo.sicklang.parser.ast.statement.BlockStatementNode
+import dev.mvmo.sicklang.token.Token
 
-@Setter
-@Getter
-@RequiredArgsConstructor(staticName = "newInstance")
-public class IfExpressionNode implements ExpressionNode {
+class IfExpressionNode(val token: Token) : ExpressionNode {
 
-    private final Token token;
-    private ExpressionNode conditionalExpressionNode;
-    private BlockStatementNode consequence;
-    private BlockStatementNode alternative;
+    var conditionalExpressionNode: ExpressionNode? = null
+    var consequence: BlockStatementNode? = null
+    var alternative: BlockStatementNode? = null
 
-    @Override
-    public String tokenLiteral() {
-        return token.literal();
-    }
+    override fun tokenLiteral(): String =
+        token.literal()
 
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
+    override fun toString(): String =
+        "if${conditionalExpressionNode.toString()} $consequence ${if (alternative != null) "else$alternative" else ""}"
 
-        stringBuilder.append("if")
-                .append(conditionalExpressionNode)
-                .append(" ")
-                .append(consequence);
-
-        if (alternative != null)
-            stringBuilder.append("else")
-                    .append(alternative);
-
-        return stringBuilder.toString();
-    }
 }

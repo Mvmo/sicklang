@@ -304,16 +304,16 @@ public class ParserTest {
 
         IfExpressionNode ifExpressionNode = (IfExpressionNode) statementNode.getExpressionNode();
 
-        testInfixExpression("x", "<", "y", ifExpressionNode.conditionalExpressionNode());
+        testInfixExpression("x", "<", "y", ifExpressionNode.getConditionalExpressionNode());
 
-        assertEquals(1, ifExpressionNode.consequence().getStatementNodes().size());
-        assertTrue(ifExpressionNode.consequence().getStatementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, ifExpressionNode.getConsequence().getStatementNodes().size());
+        assertTrue(ifExpressionNode.getConsequence().getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode consequenceStatementNode = (ExpressionStatementNode) ifExpressionNode.consequence().getStatementNodes().get(0);
+        ExpressionStatementNode consequenceStatementNode = (ExpressionStatementNode) ifExpressionNode.getConsequence().getStatementNodes().get(0);
 
         testIdentifier("x", consequenceStatementNode.getExpressionNode());
 
-        assertNull(ifExpressionNode.alternative());
+        assertNull(ifExpressionNode.getAlternative());
     }
 
     @Test
@@ -335,19 +335,19 @@ public class ParserTest {
 
         IfExpressionNode ifExpressionNode = (IfExpressionNode) statementNode.getExpressionNode();
 
-        testInfixExpression("x", "<", "y", ifExpressionNode.conditionalExpressionNode());
+        testInfixExpression("x", "<", "y", ifExpressionNode.getConditionalExpressionNode());
 
-        assertEquals(1, ifExpressionNode.consequence().getStatementNodes().size());
-        assertTrue(ifExpressionNode.consequence().getStatementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, ifExpressionNode.getConsequence().getStatementNodes().size());
+        assertTrue(ifExpressionNode.getConsequence().getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode consequenceStatementNode = (ExpressionStatementNode) ifExpressionNode.consequence().getStatementNodes().get(0);
+        ExpressionStatementNode consequenceStatementNode = (ExpressionStatementNode) ifExpressionNode.getConsequence().getStatementNodes().get(0);
 
         testIdentifier("x", consequenceStatementNode.getExpressionNode());
 
-        assertEquals(1, ifExpressionNode.alternative().getStatementNodes().size());
-        assertTrue(ifExpressionNode.alternative().getStatementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, ifExpressionNode.getAlternative().getStatementNodes().size());
+        assertTrue(ifExpressionNode.getAlternative().getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode alternativeStatementNode = (ExpressionStatementNode) ifExpressionNode.alternative().getStatementNodes().get(0);
+        ExpressionStatementNode alternativeStatementNode = (ExpressionStatementNode) ifExpressionNode.getAlternative().getStatementNodes().get(0);
 
         testIdentifier("y", alternativeStatementNode.getExpressionNode());
     }
@@ -669,8 +669,8 @@ public class ParserTest {
 
         var ifNode = (IfExpressionNode) statementNode.getExpressionNode();
 
-        assertEquals(1, ifNode.consequence().getStatementNodes().size());
-        assertEquals(1, ifNode.alternative().getStatementNodes().size());
+        assertEquals(1, ifNode.getConsequence().getStatementNodes().size());
+        assertEquals(1, ifNode.getAlternative().getStatementNodes().size());
     }
 
     private void testLetStatement(StatementNode statement, String name) {
