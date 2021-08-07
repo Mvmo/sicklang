@@ -553,8 +553,8 @@ public class ParserTest {
 
         var indexExpression = (IndexExpressionNode) statementNode.getExpressionNode();
 
-        testIdentifier("myArray", indexExpression.left());
-        testInfixExpression(1, "+", 1, indexExpression.index());
+        testIdentifier("myArray", indexExpression.getLeft());
+        testInfixExpression(1, "+", 1, indexExpression.getIndex());
     }
 
     @Test
@@ -697,9 +697,9 @@ public class ParserTest {
 
         InfixExpressionNode infixExpressionNode = (InfixExpressionNode) expressionNode;
 
-        testLiteralExpression(expectedLeft, infixExpressionNode.left());
-        assertEquals(expectedOperator, infixExpressionNode.operator());
-        testLiteralExpression(expectedRight, infixExpressionNode.right());
+        testLiteralExpression(expectedLeft, infixExpressionNode.getLeft());
+        assertEquals(expectedOperator, infixExpressionNode.getOperator());
+        testLiteralExpression(expectedRight, infixExpressionNode.getRight());
     }
 
     private void testBooleanLiteral(boolean expectedValue, ExpressionNode expressionNode) {

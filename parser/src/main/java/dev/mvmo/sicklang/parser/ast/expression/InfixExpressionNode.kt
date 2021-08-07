@@ -1,31 +1,16 @@
-package dev.mvmo.sicklang.parser.ast.expression;
+package dev.mvmo.sicklang.parser.ast.expression
 
-import dev.mvmo.sicklang.token.Token;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import dev.mvmo.sicklang.token.Token
 
-@Getter
-@Setter
-@RequiredArgsConstructor(staticName = "newInstance")
-public class InfixExpressionNode implements ExpressionNode {
+class InfixExpressionNode(val token: Token, val left: ExpressionNode, val operator: String) : ExpressionNode {
 
-    private final Token token;
-    private final ExpressionNode left;
-    private final String operator;
-    private ExpressionNode right;
+    var right: ExpressionNode? = null
 
-    @Override
-    public String tokenLiteral() {
-        return token.literal();
+    override fun tokenLiteral(): String {
+        return token.literal()
     }
 
-    @Override
-    public String toString() {
-        return "(" +
-                left +
-                " " + operator + " " +
-                right +
-                ')';
-    }
+    override fun toString(): String =
+        "($left $operator $right)"
+
 }

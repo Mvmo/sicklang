@@ -68,15 +68,15 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof InfixExpressionNode infixExpressionNode) {
-            var left = eval(infixExpressionNode.left(), environment);
+            var left = eval(infixExpressionNode.getLeft(), environment);
             if (error(left))
                 return left;
 
-            var right = eval(infixExpressionNode.right(), environment);
+            var right = eval(infixExpressionNode.getRight(), environment);
             if (error(right))
                 return right;
 
-            return evalInfixExpression(infixExpressionNode.operator(), left, right);
+            return evalInfixExpression(infixExpressionNode.getOperator(), left, right);
         }
 
         if (node instanceof BlockStatementNode blockStatementNode) {
@@ -138,11 +138,11 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof IndexExpressionNode indexExpressionNode) {
-            var left = eval(indexExpressionNode.left(), environment);
+            var left = eval(indexExpressionNode.getLeft(), environment);
             if (error(left))
                 return left;
 
-            var index = eval(indexExpressionNode.index(), environment);
+            var index = eval(indexExpressionNode.getIndex(), environment);
             if (error(index))
                 return index;
 

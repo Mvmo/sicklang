@@ -189,12 +189,12 @@ public class Parser {
     }
 
     public ExpressionNode parseInfixExpression(ExpressionNode left) {
-        var infixExpressionNode = InfixExpressionNode.newInstance(currentToken, left, currentToken.literal());
+        var infixExpressionNode = new InfixExpressionNode(currentToken, left, currentToken.literal());
         var precedence = Precedence.findPrecedence(currentToken.type());
 
         nextToken();
 
-        infixExpressionNode.right(parseExpression(precedence));
+        infixExpressionNode.setRight(parseExpression(precedence));
 
         return infixExpressionNode;
     }
@@ -351,7 +351,7 @@ public class Parser {
         if (!expectPeek(TokenType.RIGHT_BRACKET))
             return null;
 
-        return IndexExpressionNode.newInstance(startToken, left, indexExpression);
+        return new IndexExpressionNode(startToken, left, indexExpression);
     }
 
     public HashLiteralExpressionNode parseHashLiteral() {

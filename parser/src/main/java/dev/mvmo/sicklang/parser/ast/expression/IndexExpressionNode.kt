@@ -1,25 +1,13 @@
-package dev.mvmo.sicklang.parser.ast.expression;
+package dev.mvmo.sicklang.parser.ast.expression
 
-import dev.mvmo.sicklang.token.Token;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import dev.mvmo.sicklang.token.Token
 
-@Getter
-@RequiredArgsConstructor(staticName = "newInstance")
-public class IndexExpressionNode implements ExpressionNode {
+class IndexExpressionNode(val token: Token, val left: ExpressionNode, val index: ExpressionNode) : ExpressionNode {
 
-    private final Token token;
-    private final ExpressionNode left;
-    private final ExpressionNode index;
+    override fun tokenLiteral(): String =
+        token.literal()
 
-    @Override
-    public String tokenLiteral() {
-        return token.literal();
-    }
-
-    @Override
-    public String toString() {
-        return String.format("(%s[%s])", left.toString(), index.toString());
-    }
+    override fun toString(): String =
+        "($left[$index])"
 
 }
