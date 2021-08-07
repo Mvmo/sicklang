@@ -3,6 +3,7 @@ package dev.mvmo.sicklang.repl;
 import dev.mvmo.sicklang.Lexer;
 import dev.mvmo.sicklang.evaluator.SicklangEvaluator;
 import dev.mvmo.sicklang.internal.env.SickEnvironment;
+import dev.mvmo.sicklang.parser.Parser;
 import lombok.SneakyThrows;
 
 import java.nio.file.Files;
