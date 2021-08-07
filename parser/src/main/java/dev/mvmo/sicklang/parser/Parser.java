@@ -200,7 +200,7 @@ public class Parser {
     }
 
     public BooleanExpressionNode parseBooleanExpression() {
-        return BooleanExpressionNode.newInstance(currentToken, currentTokenIs(TokenType.TRUE));
+        return new BooleanExpressionNode(currentToken, currentTokenIs(TokenType.TRUE));
     }
 
     public ExpressionNode parseGroupedExpression() {

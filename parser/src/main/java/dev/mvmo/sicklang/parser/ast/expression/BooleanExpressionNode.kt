@@ -1,24 +1,13 @@
-package dev.mvmo.sicklang.parser.ast.expression;
+package dev.mvmo.sicklang.parser.ast.expression
 
-import dev.mvmo.sicklang.token.Token;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import dev.mvmo.sicklang.token.Token
 
-@Getter
-@RequiredArgsConstructor(staticName = "newInstance")
-public class BooleanExpressionNode implements ExpressionNode {
+class BooleanExpressionNode(val token: Token, val value: Boolean) : ExpressionNode {
 
-    private final Token token;
-    private final boolean value;
+    override fun tokenLiteral(): String =
+        token.literal()
 
-    @Override
-    public String tokenLiteral() {
-        return token.literal();
-    }
-
-    @Override
-    public String toString() {
-        return token.literal();
-    }
+    override fun toString(): String =
+        token.literal()
 
 }

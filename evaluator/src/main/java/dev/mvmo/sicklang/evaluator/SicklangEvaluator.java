@@ -57,7 +57,7 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof BooleanExpressionNode booleanExpressionNode) {
-            return BooleanObject.fromNative(booleanExpressionNode.value());
+            return BooleanObject.fromNative(booleanExpressionNode.getValue());
         }
 
         if (node instanceof PrefixExpressionNode prefixExpressionNode) {

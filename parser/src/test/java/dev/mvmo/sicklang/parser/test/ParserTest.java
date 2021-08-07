@@ -156,7 +156,7 @@ public class ParserTest {
 
         BooleanExpressionNode booleanExpressionNode = (BooleanExpressionNode) statementNode.getExpressionNode();
 
-        assertTrue(booleanExpressionNode.value());
+        assertTrue(booleanExpressionNode.getValue());
         assertEquals("true", booleanExpressionNode.tokenLiteral());
     }
 
@@ -707,7 +707,7 @@ public class ParserTest {
 
         BooleanExpressionNode booleanExpressionNode = (BooleanExpressionNode) expressionNode;
 
-        assertEquals(expectedValue, booleanExpressionNode.value());
+        assertEquals(expectedValue, booleanExpressionNode.getValue());
         assertEquals(String.valueOf(expectedValue), booleanExpressionNode.tokenLiteral());
     }
 
