@@ -1,33 +1,26 @@
-package dev.mvmo.sicklang.parser.precedence;
+package dev.mvmo.sicklang.parser.precedence
 
-import com.google.common.collect.Sets;
-import dev.mvmo.sicklang.token.TokenType;
+import com.google.common.collect.Sets
+import dev.mvmo.sicklang.token.TokenType
 
-import java.util.Arrays;
-import java.util.Set;
+enum class Precedence(vararg appliedTo: TokenType) {
 
-public enum Precedence {
-
-    LOWEST(),
-    EQUALS(TokenType.EQUALS, TokenType.NOT_EQUALS), // ==
-    LESS_GREATER_THAN(TokenType.LESS_THAN, TokenType.GREATER_THAN), // > or <
-    SUM(TokenType.PLUS, TokenType.MINUS), // +
-    PRODUCT(TokenType.SLASH, TokenType.ASTERISK), // *
-    PREFIX, // -x or !x
+    LOWEST,
+    EQUALS(TokenType.EQUALS, TokenType.NOT_EQUALS),  // ==
+    LESS_GREATER_THAN(TokenType.LESS_THAN, TokenType.GREATER_THAN),  // > or <
+    SUM(TokenType.PLUS, TokenType.MINUS),  // +
+    PRODUCT(TokenType.SLASH, TokenType.ASTERISK),  // *
+    PREFIX,  // -x or !x
     CALL(TokenType.LEFT_PAREN),
-    INDEX(TokenType.LEFT_BRACKET); // myFunction(x)
+    INDEX(TokenType.LEFT_BRACKET);
 
-    private final Set<TokenType> appliedToTypes;
+    private val appliedToTypes: Set<TokenType> = Sets.newHashSet(*appliedTo)
 
-    Precedence(TokenType... appliedTo) {
-        this.appliedToTypes = Sets.newHashSet(appliedTo);
+    companion object {
+        @JvmStatic // todo remove later
+        fun findPrecedence(tokenType: TokenType): Precedence =
+            values()
+                .firstOrNull { it.appliedToTypes.contains(tokenType) }
+                ?: LOWEST
     }
-
-    public static Precedence findPrecedence(TokenType tokenType) {
-        return Arrays.stream(values())
-                .filter(precedence -> precedence.appliedToTypes.contains(tokenType))
-                .findFirst()
-                .orElse(LOWEST);
-    }
-
 }
