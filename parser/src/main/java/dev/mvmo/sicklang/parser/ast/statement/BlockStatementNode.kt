@@ -1,32 +1,17 @@
-package dev.mvmo.sicklang.parser.ast.statement;
+package dev.mvmo.sicklang.parser.ast.statement
 
-import com.google.common.collect.Lists;
-import dev.mvmo.sicklang.token.Token;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import com.google.common.collect.Lists
+import dev.mvmo.sicklang.token.Token
 
-import java.util.List;
+class BlockStatementNode(val token: Token) : StatementNode {
+    val statementNodes: List<StatementNode> = Lists.newArrayList()
 
-@Getter
-@Setter
-@RequiredArgsConstructor(staticName = "newInstance")
-public class BlockStatementNode implements StatementNode {
+    override fun tokenLiteral(): String =
+        token.literal()
 
-    private final Token token;
-    private final List<StatementNode> statementNodes = Lists.newArrayList();
+    override fun toString(): String =
+        StringBuilder().apply {
+            statementNodes.forEach(::append)
+        }.toString()
 
-    @Override
-    public String tokenLiteral() {
-        return token.literal();
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (StatementNode statementNode : statementNodes)
-            stringBuilder.append(statementNode);
-
-        return stringBuilder.toString();
-    }
 }

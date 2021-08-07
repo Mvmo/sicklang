@@ -172,7 +172,7 @@ public class SicklangEvaluator {
     private static SickObject evalBlockStatement(BlockStatementNode blockStatementNode, SickEnvironment environment) {
         SickObject result = null;
 
-        for (StatementNode statementNode : blockStatementNode.statementNodes()) {
+        for (StatementNode statementNode : blockStatementNode.getStatementNodes()) {
             result = eval(statementNode, environment);
             if (result instanceof ReturnValueObject || result instanceof ErrorObject) {
                 return result;

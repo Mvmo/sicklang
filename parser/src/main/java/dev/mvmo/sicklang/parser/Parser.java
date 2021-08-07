@@ -259,11 +259,11 @@ public class Parser {
     }
 
     public BlockStatementNode parseSingleLineBlockStatement() {
-        var blockStatementNode = BlockStatementNode.newInstance(new Token(TokenType.LEFT_BRACE, "{"));
+        var blockStatementNode = new BlockStatementNode(new Token(TokenType.LEFT_BRACE, "{"));
 
         var statement = parseStatement();
         if (statement != null)
-            blockStatementNode.statementNodes().add(statement);
+            blockStatementNode.getStatementNodes().add(statement);
         else
             return null;
 
@@ -271,14 +271,14 @@ public class Parser {
     }
 
     public BlockStatementNode parseBlockStatement() {
-        var blockStatementNode = BlockStatementNode.newInstance(currentToken);
+        var blockStatementNode = new BlockStatementNode(currentToken);
 
         nextToken();
 
         while (!currentTokenIs(TokenType.RIGHT_BRACE) && !currentTokenIs(TokenType.EOF)) {
             var statement = parseStatement();
             if (statement != null)
-                blockStatementNode.statementNodes().add(statement);
+                blockStatementNode.getStatementNodes().add(statement);
 
             nextToken();
         }

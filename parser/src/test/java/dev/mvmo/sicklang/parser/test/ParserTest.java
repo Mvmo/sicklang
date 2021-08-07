@@ -306,10 +306,10 @@ public class ParserTest {
 
         testInfixExpression("x", "<", "y", ifExpressionNode.conditionalExpressionNode());
 
-        assertEquals(1, ifExpressionNode.consequence().statementNodes().size());
-        assertTrue(ifExpressionNode.consequence().statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, ifExpressionNode.consequence().getStatementNodes().size());
+        assertTrue(ifExpressionNode.consequence().getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode consequenceStatementNode = (ExpressionStatementNode) ifExpressionNode.consequence().statementNodes().get(0);
+        ExpressionStatementNode consequenceStatementNode = (ExpressionStatementNode) ifExpressionNode.consequence().getStatementNodes().get(0);
 
         testIdentifier("x", consequenceStatementNode.getExpressionNode());
 
@@ -337,17 +337,17 @@ public class ParserTest {
 
         testInfixExpression("x", "<", "y", ifExpressionNode.conditionalExpressionNode());
 
-        assertEquals(1, ifExpressionNode.consequence().statementNodes().size());
-        assertTrue(ifExpressionNode.consequence().statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, ifExpressionNode.consequence().getStatementNodes().size());
+        assertTrue(ifExpressionNode.consequence().getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode consequenceStatementNode = (ExpressionStatementNode) ifExpressionNode.consequence().statementNodes().get(0);
+        ExpressionStatementNode consequenceStatementNode = (ExpressionStatementNode) ifExpressionNode.consequence().getStatementNodes().get(0);
 
         testIdentifier("x", consequenceStatementNode.getExpressionNode());
 
-        assertEquals(1, ifExpressionNode.alternative().statementNodes().size());
-        assertTrue(ifExpressionNode.alternative().statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, ifExpressionNode.alternative().getStatementNodes().size());
+        assertTrue(ifExpressionNode.alternative().getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode alternativeStatementNode = (ExpressionStatementNode) ifExpressionNode.alternative().statementNodes().get(0);
+        ExpressionStatementNode alternativeStatementNode = (ExpressionStatementNode) ifExpressionNode.alternative().getStatementNodes().get(0);
 
         testIdentifier("y", alternativeStatementNode.getExpressionNode());
     }
@@ -376,10 +376,10 @@ public class ParserTest {
         testLiteralExpression("x", functionLiteralExpressionNode.parameters().get(0));
         testLiteralExpression("y", functionLiteralExpressionNode.parameters().get(1));
 
-        assertEquals(1, functionLiteralExpressionNode.body().statementNodes().size());
-        assertTrue(functionLiteralExpressionNode.body().statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, functionLiteralExpressionNode.body().getStatementNodes().size());
+        assertTrue(functionLiteralExpressionNode.body().getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode bodyExpressionNode = (ExpressionStatementNode) functionLiteralExpressionNode.body().statementNodes().get(0);
+        ExpressionStatementNode bodyExpressionNode = (ExpressionStatementNode) functionLiteralExpressionNode.body().getStatementNodes().get(0);
 
         testInfixExpression("x", "+", "y", bodyExpressionNode.getExpressionNode());
     }
@@ -669,8 +669,8 @@ public class ParserTest {
 
         var ifNode = (IfExpressionNode) statementNode.getExpressionNode();
 
-        assertEquals(1, ifNode.consequence().statementNodes().size());
-        assertEquals(1, ifNode.alternative().statementNodes().size());
+        assertEquals(1, ifNode.consequence().getStatementNodes().size());
+        assertEquals(1, ifNode.alternative().getStatementNodes().size());
     }
 
     private void testLetStatement(StatementNode statement, String name) {
