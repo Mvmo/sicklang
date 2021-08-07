@@ -1,6 +1,5 @@
-package dev.mvmo.sicklang.parser.ast.expression;
+package dev.mvmo.sicklang.parser.ast.expression
 
-import dev.mvmo.sicklang.parser.ast.Node;
+import dev.mvmo.sicklang.parser.ast.Node
 
-public interface ExpressionNode extends Node {
-}
+interface ExpressionNode : Node
