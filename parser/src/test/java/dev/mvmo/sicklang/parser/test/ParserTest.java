@@ -440,13 +440,13 @@ public class ParserTest {
 
         CallExpressionNode callExpressionNode = (CallExpressionNode) statementNode.getExpressionNode();
 
-        testIdentifier("add", callExpressionNode.function());
+        testIdentifier("add", callExpressionNode.getFunction());
 
-        assertEquals(3, callExpressionNode.arguments().size());
+        assertEquals(3, callExpressionNode.getArguments().size());
 
-        testLiteralExpression(1, callExpressionNode.arguments().get(0));
-        testInfixExpression(2, "*", 3, callExpressionNode.arguments().get(1));
-        testInfixExpression(4, "+", 5, callExpressionNode.arguments().get(2));
+        testLiteralExpression(1, callExpressionNode.getArguments().get(0));
+        testInfixExpression(2, "*", 3, callExpressionNode.getArguments().get(1));
+        testInfixExpression(4, "+", 5, callExpressionNode.getArguments().get(2));
     }
 
     @Test
@@ -479,10 +479,10 @@ public class ParserTest {
 
             CallExpressionNode callExpressionNode = (CallExpressionNode) statementNode.getExpressionNode();
 
-            assertEquals(testCase.expectedParamIdentifiers.length, callExpressionNode.arguments().size());
+            assertEquals(testCase.expectedParamIdentifiers.length, callExpressionNode.getArguments().size());
 
             for (int i = 0; i < testCase.expectedParamIdentifiers.length; i++)
-                testLiteralExpression(testCase.expectedParamIdentifiers[i], callExpressionNode.arguments().get(i));
+                testLiteralExpression(testCase.expectedParamIdentifiers[i], callExpressionNode.getArguments().get(i));
         }
     }
 

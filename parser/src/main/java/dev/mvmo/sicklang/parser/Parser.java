@@ -328,8 +328,8 @@ public class Parser {
     }
 
     public ExpressionNode parseCallExpression(ExpressionNode function) {
-        var callExpressionNode = CallExpressionNode.newInstance(currentToken, function);
-        callExpressionNode.arguments(parseExpressionList(TokenType.RIGHT_PAREN));
+        var callExpressionNode = new CallExpressionNode(currentToken, function);
+        callExpressionNode.setArguments(parseExpressionList(TokenType.RIGHT_PAREN));
 
         return callExpressionNode;
     }

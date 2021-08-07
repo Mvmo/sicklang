@@ -114,11 +114,11 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof CallExpressionNode callExpressionNode) {
-            var function = eval(callExpressionNode.function(), environment);
+            var function = eval(callExpressionNode.getFunction(), environment);
             if (error(function))
                 return function;
 
-            var args = evalExpressions(callExpressionNode.arguments(), environment);
+            var args = evalExpressions(callExpressionNode.getArguments(), environment);
             if (args.size() == 1 && error(args.get(0)))
                 return args.get(0);
 

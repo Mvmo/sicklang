@@ -1,33 +1,15 @@
-package dev.mvmo.sicklang.parser.ast.expression;
+package dev.mvmo.sicklang.parser.ast.expression
 
-import dev.mvmo.sicklang.token.Token;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import dev.mvmo.sicklang.token.Token
 
-import java.util.List;
-import java.util.stream.Collectors;
+class CallExpressionNode(val token: Token, val function: ExpressionNode) : ExpressionNode {
 
-@Getter
-@Setter
-@RequiredArgsConstructor(staticName = "newInstance")
-public class CallExpressionNode implements ExpressionNode {
+    var arguments: List<ExpressionNode>? = null
 
-    private final Token token;
-    private final ExpressionNode function; // identifier or function
-    private List<ExpressionNode> arguments;
+    override fun tokenLiteral(): String =
+        token.literal()
 
-    @Override
-    public String tokenLiteral() {
-        return token.literal();
-    }
-
-    @Override
-    public String toString() {
-        return function.toString() +
-                "(" +
-                arguments.stream().map(ExpressionNode::toString).collect(Collectors.joining(", ")) +
-                ")";
-    }
+    override fun toString(): String =
+        "$function(${arguments?.joinToString(transform = ExpressionNode::toString) ?: ""})"
 
 }
