@@ -1,27 +1,13 @@
-package dev.mvmo.sicklang.parser.ast.expression;
+package dev.mvmo.sicklang.parser.ast.expression
 
-import dev.mvmo.sicklang.token.Token;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import dev.mvmo.sicklang.token.Token
 
-import java.util.List;
-import java.util.stream.Collectors;
+class ArrayLiteralExpressionNode(val token: Token, val elements: List<ExpressionNode>) : ExpressionNode {
 
-@Getter
-@RequiredArgsConstructor(staticName = "newInstance")
-public class ArrayLiteralExpressionNode implements ExpressionNode {
+    override fun tokenLiteral(): String =
+        token.literal()
 
-    private final Token token; // [
-    private final List<ExpressionNode> elements;
-
-    @Override
-    public String tokenLiteral() {
-        return token.literal();
-    }
-
-    @Override
-    public String toString() {
-        return String.format("[%s]", elements.stream().map(ExpressionNode::toString).collect(Collectors.joining(", ")));
-    }
+    override fun toString(): String =
+        "[${elements.joinToString(transform = ExpressionNode::toString)}]"
 
 }

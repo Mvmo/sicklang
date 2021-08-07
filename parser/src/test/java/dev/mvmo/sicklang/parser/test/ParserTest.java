@@ -527,11 +527,11 @@ public class ParserTest {
 
         var arrayExpression = (ArrayLiteralExpressionNode) statementNode.getExpressionNode();
 
-        assertEquals(3, arrayExpression.elements().size());
+        assertEquals(3, arrayExpression.getElements().size());
 
-        testIntegerLiteral(1, arrayExpression.elements().get(0));
-        testInfixExpression(2, "*", 2, arrayExpression.elements().get(1));
-        testInfixExpression(3, "+", 3, arrayExpression.elements().get(2));
+        testIntegerLiteral(1, arrayExpression.getElements().get(0));
+        testInfixExpression(2, "*", 2, arrayExpression.getElements().get(1));
+        testInfixExpression(3, "+", 3, arrayExpression.getElements().get(2));
     }
 
     @Test

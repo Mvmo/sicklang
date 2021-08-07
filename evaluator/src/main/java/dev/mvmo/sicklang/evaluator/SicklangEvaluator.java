@@ -130,7 +130,7 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof ArrayLiteralExpressionNode arrayLiteralExpressionNode) {
-            var elements = evalExpressions(arrayLiteralExpressionNode.elements(), environment);
+            var elements = evalExpressions(arrayLiteralExpressionNode.getElements(), environment);
             if (elements.size() == 1 && error(elements.get(0)))
                 return elements.get(0);
 

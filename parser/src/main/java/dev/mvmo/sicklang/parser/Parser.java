@@ -340,7 +340,7 @@ public class Parser {
     }
 
     public ArrayLiteralExpressionNode parseArrayLiteralExpression() {
-        return ArrayLiteralExpressionNode.newInstance(currentToken, parseExpressionList(TokenType.RIGHT_BRACKET));
+        return new ArrayLiteralExpressionNode(currentToken, parseExpressionList(TokenType.RIGHT_BRACKET));
     }
 
     public IndexExpressionNode parseIndexExpression(ExpressionNode left) {
