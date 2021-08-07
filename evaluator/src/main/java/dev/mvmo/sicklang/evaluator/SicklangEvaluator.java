@@ -107,8 +107,8 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof FunctionLiteralExpressionNode functionLiteralExpressionNode) {
-            var params = functionLiteralExpressionNode.parameters();
-            var body = functionLiteralExpressionNode.body();
+            var params = functionLiteralExpressionNode.getParameters();
+            var body = functionLiteralExpressionNode.getBody();
 
             return new FunctionObject(params, body, environment);
         }

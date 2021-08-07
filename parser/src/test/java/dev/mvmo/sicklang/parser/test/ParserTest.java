@@ -371,15 +371,15 @@ public class ParserTest {
 
         FunctionLiteralExpressionNode functionLiteralExpressionNode = (FunctionLiteralExpressionNode) statementNode.getExpressionNode();
 
-        assertEquals(2, functionLiteralExpressionNode.parameters().size());
+        assertEquals(2, functionLiteralExpressionNode.getParameters().size());
 
-        testLiteralExpression("x", functionLiteralExpressionNode.parameters().get(0));
-        testLiteralExpression("y", functionLiteralExpressionNode.parameters().get(1));
+        testLiteralExpression("x", functionLiteralExpressionNode.getParameters().get(0));
+        testLiteralExpression("y", functionLiteralExpressionNode.getParameters().get(1));
 
-        assertEquals(1, functionLiteralExpressionNode.body().getStatementNodes().size());
-        assertTrue(functionLiteralExpressionNode.body().getStatementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, functionLiteralExpressionNode.getBody().getStatementNodes().size());
+        assertTrue(functionLiteralExpressionNode.getBody().getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode bodyExpressionNode = (ExpressionStatementNode) functionLiteralExpressionNode.body().getStatementNodes().get(0);
+        ExpressionStatementNode bodyExpressionNode = (ExpressionStatementNode) functionLiteralExpressionNode.getBody().getStatementNodes().get(0);
 
         testInfixExpression("x", "+", "y", bodyExpressionNode.getExpressionNode());
     }
@@ -414,10 +414,10 @@ public class ParserTest {
 
             FunctionLiteralExpressionNode functionLiteralExpressionNode = (FunctionLiteralExpressionNode) statementNode.getExpressionNode();
 
-            assertEquals(testCase.expectedParamIdentifiers.length, functionLiteralExpressionNode.parameters().size());
+            assertEquals(testCase.expectedParamIdentifiers.length, functionLiteralExpressionNode.getParameters().size());
 
             for (int i = 0; i < testCase.expectedParamIdentifiers.length; i++)
-                testLiteralExpression(testCase.expectedParamIdentifiers[i], functionLiteralExpressionNode.parameters().get(i));
+                testLiteralExpression(testCase.expectedParamIdentifiers[i], functionLiteralExpressionNode.getParameters().get(i));
         }
     }
 

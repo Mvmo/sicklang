@@ -287,17 +287,17 @@ public class Parser {
     }
 
     public FunctionLiteralExpressionNode parseFunctionExpression() {
-        var functionLiteralExpressionNode = FunctionLiteralExpressionNode.newInstance(currentToken);
+        var functionLiteralExpressionNode = new FunctionLiteralExpressionNode(currentToken);
 
         if (!expectPeek(TokenType.LEFT_PAREN))
             return null;
 
-        functionLiteralExpressionNode.parameters(parseFunctionParameters());
+        functionLiteralExpressionNode.setParameters(parseFunctionParameters());
 
         if (!expectPeek(TokenType.LEFT_BRACE))
             return null;
 
-        functionLiteralExpressionNode.body(parseBlockStatement());
+        functionLiteralExpressionNode.setBody(parseBlockStatement());
 
         return functionLiteralExpressionNode;
     }

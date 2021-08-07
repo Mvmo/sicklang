@@ -1,35 +1,17 @@
-package dev.mvmo.sicklang.parser.ast.expression;
+package dev.mvmo.sicklang.parser.ast.expression
 
-import dev.mvmo.sicklang.parser.ast.statement.BlockStatementNode;
-import dev.mvmo.sicklang.token.Token;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import dev.mvmo.sicklang.parser.ast.statement.BlockStatementNode
+import dev.mvmo.sicklang.token.Token
 
-import java.util.List;
-import java.util.stream.Collectors;
+class FunctionLiteralExpressionNode(val token: Token) : ExpressionNode {
 
-@Getter
-@Setter
-@RequiredArgsConstructor(staticName = "newInstance")
-public class FunctionLiteralExpressionNode implements ExpressionNode {
+    var parameters: List<IdentifierExpressionNode>? = null
+    var body: BlockStatementNode? = null
 
-    private final Token token;
-    private List<IdentifierExpressionNode> parameters;
-    private BlockStatementNode body;
+    override fun tokenLiteral(): String =
+        token.literal()
 
-    @Override
-    public String tokenLiteral() {
-        return token.literal();
-    }
-
-    @Override
-    public String toString() {
-        return tokenLiteral() +
-                "(" +
-                parameters.stream().map(IdentifierExpressionNode::toString).collect(Collectors.joining(", ")) +
-                ") " +
-                body;
-    }
+    override fun toString(): String =
+        "${tokenLiteral()}(${parameters?.joinToString(transform = IdentifierExpressionNode::toString) ?: ""}) $body"
 
 }
