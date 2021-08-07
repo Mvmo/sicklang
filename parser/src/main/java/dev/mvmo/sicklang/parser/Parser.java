@@ -125,9 +125,9 @@ public class Parser {
     }
 
     public ExpressionStatementNode parseExpressionStatement() {
-        var statementNode = ExpressionStatementNode.newInstance(currentToken);
+        var statementNode = new ExpressionStatementNode(currentToken);
 
-        statementNode.expressionNode(parseExpression(Precedence.LOWEST));
+        statementNode.setExpressionNode(parseExpression(Precedence.LOWEST));
 
         if (peekTokenIs(TokenType.SEMICOLON))
             nextToken();

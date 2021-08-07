@@ -49,7 +49,7 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof ExpressionStatementNode expressionStatementNode) {
-            return eval(expressionStatementNode.expressionNode(), environment);
+            return eval(expressionStatementNode.getExpressionNode(), environment);
         }
 
         if (node instanceof IntegerLiteralExpressionNode integerNode) {
@@ -88,18 +88,18 @@ public class SicklangEvaluator {
         }
 
         if (node instanceof ReturnStatementNode returnStatementNode) {
-            var val = eval(returnStatementNode.returnValue(), environment);
+            var val = eval(returnStatementNode.getReturnValue(), environment);
             if (error(val))
                 return val;
             return new ReturnValueObject(val);
         }
 
         if (node instanceof LetStatementNode letStatementNode) {
-            var val = eval(letStatementNode.value(), environment);
+            var val = eval(letStatementNode.getValue(), environment);
             if (error(val))
                 return val;
 
-            environment.set(letStatementNode.identifier().value(), val);
+            environment.set(letStatementNode.getIdentifier().value(), val);
         }
 
         if (node instanceof IdentifierExpressionNode identifierExpressionNode) {

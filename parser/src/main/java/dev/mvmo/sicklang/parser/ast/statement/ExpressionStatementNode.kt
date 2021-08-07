@@ -1,30 +1,16 @@
-package dev.mvmo.sicklang.parser.ast.statement;
+package dev.mvmo.sicklang.parser.ast.statement
 
-import dev.mvmo.sicklang.parser.ast.expression.ExpressionNode;
-import dev.mvmo.sicklang.token.Token;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import dev.mvmo.sicklang.parser.ast.expression.ExpressionNode
+import dev.mvmo.sicklang.token.Token
 
-@Getter
-@Setter
-@RequiredArgsConstructor(staticName = "newInstance")
-public class ExpressionStatementNode implements StatementNode {
+class ExpressionStatementNode(val token: Token) : StatementNode {
 
-    private final Token token;
+    var expressionNode: ExpressionNode? = null
 
-    private ExpressionNode expressionNode;
+    override fun tokenLiteral(): String =
+        token.literal()
 
-    @Override
-    public String tokenLiteral() {
-        return token.literal();
-    }
+    override fun toString(): String =
+        expressionNode?.toString() ?: ""
 
-    @Override
-    public String toString() {
-        if (expressionNode != null)
-            return expressionNode.toString();
-
-        return "";
-    }
 }
