@@ -1,6 +1,5 @@
-package dev.mvmo.sicklang.parser.ast.statement;
+package dev.mvmo.sicklang.parser.ast.statement
 
-import dev.mvmo.sicklang.parser.ast.Node;
+import dev.mvmo.sicklang.parser.ast.Node
 
-public interface StatementNode extends Node {
-}
+interface StatementNode : Node

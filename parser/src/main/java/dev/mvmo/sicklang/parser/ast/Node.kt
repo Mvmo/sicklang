@@ -1,9 +1,7 @@
-package dev.mvmo.sicklang.parser.ast;
+package dev.mvmo.sicklang.parser.ast
 
-public interface Node {
+interface Node {
+    fun tokenLiteral(): String
 
-    String tokenLiteral();
-
-    String toString();
-
+    override fun toString(): String
 }
