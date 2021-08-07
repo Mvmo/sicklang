@@ -158,7 +158,7 @@ public class SicklangEvaluator {
     private static SickObject evalProgram(ProgramNode programNode, SickEnvironment environment) {
         SickObject result = null;
 
-        for (StatementNode statementNode : programNode.statementNodes()) {
+        for (StatementNode statementNode : programNode.getStatementNodes()) {
             result = eval(statementNode, environment);
             if (result instanceof ReturnValueObject returnValueObject)
                 return returnValueObject.value();

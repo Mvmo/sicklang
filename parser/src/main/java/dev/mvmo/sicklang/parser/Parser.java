@@ -71,12 +71,12 @@ public class Parser {
     }
 
     public ProgramNode parseProgram() {
-        var programNode = ProgramNode.newInstance();
+        var programNode = new ProgramNode();
 
         while (!currentTokenIs(TokenType.EOF)) {
             var statementNode = parseStatement();
             if (statementNode != null)
-                programNode.statementNodes().add(statementNode);
+                programNode.getStatementNodes().add(statementNode);
 
             nextToken();
         }
