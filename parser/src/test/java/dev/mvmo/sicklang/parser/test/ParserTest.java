@@ -35,7 +35,7 @@ public class ParserTest {
 
         for (TestCase testCase : testCases) {
             Lexer lexer = Lexer.newInstance(testCase.input);
-            Parser parser = Parser.newInstance(lexer);
+            Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
             checkParserErrors(parser);
@@ -73,7 +73,7 @@ public class ParserTest {
 
         for (TestCase testCase : testCases) {
             Lexer lexer = Lexer.newInstance(testCase.input);
-            Parser parser = Parser.newInstance(lexer);
+            Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
             checkParserErrors(parser);
@@ -96,7 +96,7 @@ public class ParserTest {
         String input = "foobar;";
 
         Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
+        Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
         checkParserErrors(parser);
@@ -119,7 +119,7 @@ public class ParserTest {
         String input = "5;";
 
         Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
+        Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
         checkParserErrors(parser);
@@ -142,7 +142,7 @@ public class ParserTest {
         String input = "true;";
 
         Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
+        Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
         checkParserErrors(parser);
@@ -178,7 +178,7 @@ public class ParserTest {
 
         for (TestCase<?> testCase : testCases) {
             Lexer lexer = Lexer.newInstance(testCase.input);
-            Parser parser = Parser.newInstance(lexer);
+            Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
             checkParserErrors(parser);
@@ -223,7 +223,7 @@ public class ParserTest {
 
         for (TestCase<?> testCase : testCases) {
             Lexer lexer = Lexer.newInstance(testCase.input);
-            Parser parser = Parser.newInstance(lexer);
+            Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
             checkParserErrors(parser);
@@ -276,7 +276,7 @@ public class ParserTest {
 
         for (TestCase testCase : testCases) {
             Lexer lexer = Lexer.newInstance(testCase.input);
-            Parser parser = Parser.newInstance(lexer);
+            Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
             checkParserErrors(parser);
@@ -290,7 +290,7 @@ public class ParserTest {
         String input = "if (x < y) { x }";
 
         Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
+        Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
         checkParserErrors(parser);
@@ -321,7 +321,7 @@ public class ParserTest {
         String input = "if (x < y) { x } else { y }";
 
         Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
+        Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
         checkParserErrors(parser);
@@ -357,7 +357,7 @@ public class ParserTest {
         String input = "fn(x, y) { x + y; }";
 
         Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
+        Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
         checkParserErrors(parser);
@@ -400,7 +400,7 @@ public class ParserTest {
 
         for (TestCase testCase : testCases) {
             Lexer lexer = Lexer.newInstance(testCase.input);
-            Parser parser = Parser.newInstance(lexer);
+            Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
             checkParserErrors(parser);
@@ -426,7 +426,7 @@ public class ParserTest {
         String input = "add(1, 2 * 3, 4 + 5);";
 
         Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
+        Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
         checkParserErrors(parser);
@@ -465,7 +465,7 @@ public class ParserTest {
 
         for (TestCase testCase : testCases) {
             Lexer lexer = Lexer.newInstance(testCase.input);
-            Parser parser = Parser.newInstance(lexer);
+            Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
             checkParserErrors(parser);
@@ -491,7 +491,7 @@ public class ParserTest {
         var input = "\"hello world\"";
 
         var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
         checkParserErrors(parser);
@@ -513,7 +513,7 @@ public class ParserTest {
         var input = "[1, 2 * 2, 3 + 3]";
 
         var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
         checkParserErrors(parser);
@@ -539,7 +539,7 @@ public class ParserTest {
         var input = "myArray[1 + 1]";
 
         var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
         checkParserErrors(parser);
@@ -562,7 +562,7 @@ public class ParserTest {
         String input = "{\"one\": 1, \"two\": 2, \"three\": 3}";
 
         var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
         checkParserErrors(parser);
@@ -593,7 +593,7 @@ public class ParserTest {
         var input = "{}";
 
         var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
         checkParserErrors(parser);
@@ -614,7 +614,7 @@ public class ParserTest {
         var input = "{\"one\": 0 + 1, \"two\": 10 - 8, \"three\": 15 / 5}";
 
         var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
         checkParserErrors(parser);
@@ -655,7 +655,7 @@ public class ParserTest {
                 """;
 
         var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
         checkParserErrors(parser);
@@ -729,11 +729,11 @@ public class ParserTest {
     }
 
     private void checkParserErrors(Parser parser) {
-        if (parser.errorMessages().size() == 0)
+        if (parser.getErrorMessages().size() == 0)
             return;
 
-        System.err.printf("parser has %d errors\n", parser.errorMessages().size());
-        parser.errorMessages().stream()
+        System.err.printf("parser has %d errors\n", parser.getErrorMessages().size());
+        parser.getErrorMessages().stream()
                 .map(message -> "parser error: " + message)
                 .forEach(System.err::println);
 

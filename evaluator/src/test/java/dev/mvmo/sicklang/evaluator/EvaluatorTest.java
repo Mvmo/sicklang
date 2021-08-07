@@ -391,7 +391,7 @@ public class EvaluatorTest {
 
     private SickObject testEval(String input) {
         var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
         var environment = SickEnvironment.newInstance();
 

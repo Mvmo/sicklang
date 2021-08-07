@@ -1,10 +1,10 @@
 package dev.mvmo.sicklang.parser.ast.statement
 
-import com.google.common.collect.Lists
 import dev.mvmo.sicklang.token.Token
 
 class BlockStatementNode(val token: Token) : StatementNode {
-    val statementNodes: List<StatementNode> = Lists.newArrayList()
+
+    val statementNodes: MutableList<StatementNode> = arrayListOf()
 
     override fun tokenLiteral(): String =
         token.literal()
