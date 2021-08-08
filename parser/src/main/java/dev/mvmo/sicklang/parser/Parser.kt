@@ -83,13 +83,11 @@ class Parser(private val lexer: Lexer) {
 
     fun parseLetStatement(): LetStatementNode {
         val statementNode = LetStatementNode(currentToken)
-        if (!expectPeek(TokenType.IDENTIFIER))
-            throw SickParseException("unexpected token. was looking for identifier")
+        expectPeek(TokenType.IDENTIFIER)
 
         statementNode.identifier = IdentifierExpressionNode(currentToken, currentToken.literal())
 
-        if (!expectPeek(TokenType.ASSIGN))
-            throw SickParseException("unexpected token. was looking for assign")
+        expectPeek(TokenType.ASSIGN)
 
         nextToken()
 
@@ -187,9 +185,7 @@ class Parser(private val lexer: Lexer) {
         nextToken()
 
         val expressionNode = parseExpression(Precedence.LOWEST)
-
-        if (!expectPeek(TokenType.RIGHT_PAREN))
-            throw SickParseException("Expected peek token to be right paren")
+        expectPeek(TokenType.RIGHT_PAREN)
 
         return expressionNode
     }
@@ -197,16 +193,13 @@ class Parser(private val lexer: Lexer) {
     fun parseIfExpression(): ExpressionNode {
         val expressionNode = IfExpressionNode(currentToken)
 
-        if (!expectPeek(TokenType.LEFT_PAREN))
-            throw SickParseException("Expected peek token to be left paren")
+        expectPeek(TokenType.LEFT_PAREN)
 
         nextToken()
 
         expressionNode.conditionalExpressionNode = parseExpression(Precedence.LOWEST)
 
-        if (!expectPeek(TokenType.RIGHT_PAREN))
-            throw SickParseException("Expected peek token to be right paren")
-
+        expectPeek(TokenType.RIGHT_PAREN)
 
         nextToken()
         val consequenceNode = if (!currentTokenIs(TokenType.LEFT_BRACE))
@@ -258,13 +251,11 @@ class Parser(private val lexer: Lexer) {
     fun parseFunctionExpression(): FunctionLiteralExpressionNode {
         val functionLiteralExpressionNode = FunctionLiteralExpressionNode(currentToken)
 
-        if (!expectPeek(TokenType.LEFT_PAREN))
-            throw SickParseException("Expected peek token to be left paren")
+        expectPeek(TokenType.LEFT_PAREN)
 
         functionLiteralExpressionNode.parameters = parseFunctionParameters()
 
-        if (!expectPeek(TokenType.LEFT_BRACE))
-            throw SickParseException("Expected peek token to be left brace")
+        expectPeek(TokenType.LEFT_BRACE)
 
         functionLiteralExpressionNode.body = parseBlockStatement()
 
@@ -290,8 +281,7 @@ class Parser(private val lexer: Lexer) {
             identifiers.add(IdentifierExpressionNode(currentToken, currentToken.literal()))
         }
 
-        if (!expectPeek(TokenType.RIGHT_PAREN))
-            throw SickParseException("Expected peek token to be right paren")
+        expectPeek(TokenType.RIGHT_PAREN)
 
         return identifiers
     }
@@ -316,13 +306,12 @@ class Parser(private val lexer: Lexer) {
         nextToken()
         val indexExpression = parseExpression(Precedence.LOWEST)
 
-        if (!expectPeek(TokenType.RIGHT_BRACKET))
-            throw SickParseException("Expected peek token to be right bracket")
+        expectPeek(TokenType.RIGHT_BRACKET)
 
         return IndexExpressionNode(startToken, left, indexExpression)
     }
 
-    fun parseHashLiteral(): HashLiteralExpressionNode {
+    private fun parseHashLiteral(): HashLiteralExpressionNode {
         val startToken = currentToken
         val pairs = mutableMapOf<ExpressionNode, ExpressionNode>()
 
@@ -330,28 +319,26 @@ class Parser(private val lexer: Lexer) {
             nextToken();
             val keyExpression = parseExpression(Precedence.LOWEST);
 
-            if (!expectPeek(TokenType.COLON))
-                throw SickParseException("Expected peek token to be colon")
+            expectPeek(TokenType.COLON)
 
             nextToken()
 
             val valueExpression = parseExpression(Precedence.LOWEST)
             pairs[keyExpression] = valueExpression
 
-            if (!peekTokenIs(TokenType.RIGHT_BRACE) && !expectPeek(TokenType.COMMA))
-                throw SickParseException("rofl")
+            if (!peekTokenIs(TokenType.RIGHT_BRACE))
+                expectPeek(TokenType.COMMA)
         }
 
-        if (!expectPeek(TokenType.RIGHT_BRACE))
-            throw SickParseException("Expected peek token to be right brace")
+        expectPeek(TokenType.RIGHT_BRACE)
 
         return HashLiteralExpressionNode(startToken, pairs)
     }
 
-    fun parseExpressionList(till: TokenType): List<ExpressionNode> {
+    private fun parseExpressionList(until: TokenType): List<ExpressionNode> {
         val list = arrayListOf<ExpressionNode>()
 
-        if (peekTokenIs(till)) {
+        if (peekTokenIs(until)) {
             nextToken()
             return list
         }
@@ -366,38 +353,26 @@ class Parser(private val lexer: Lexer) {
             list.add(parseExpression(Precedence.LOWEST))
         }
 
-        if (!expectPeek(till))
-            throw SickParseException("Expected peek token to be $till")
+        expectPeek(until)
 
         return list
     }
 
     fun currentTokenIs(tokenType: TokenType): Boolean {
-        return currentToken.type().equals(tokenType);
+        return currentToken.type().equals(tokenType)
     }
 
     fun peekTokenIs(tokenType: TokenType): Boolean {
-        return peekToken.type().equals(tokenType);
+        return peekToken.type().equals(tokenType)
     }
 
-    fun expectPeek(tokenType: TokenType): Boolean {
+    private fun expectPeek(tokenType: TokenType) {
         if (peekTokenIs(tokenType)) {
             nextToken()
-            return true
-        } else {
-            peekError(tokenType)
-            return false;
+            return
         }
-    }
 
-    fun noPrefixParseFunctionError(type: TokenType) {
-        val message = String.format("no prefix parse function found for type %s", type.name);
-        errorMessages.add(message);
-    }
-
-    fun peekError(tokenType: TokenType) {
-        val message = String.format("expected next token to be %s, got %s instead", tokenType, peekToken.type());
-        errorMessages.add(message);
+        throw UnexpectedTokenException(tokenType, peekToken.type)
     }
 
 }
