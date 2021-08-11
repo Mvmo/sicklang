@@ -34,7 +34,7 @@ public class ParserTest {
         };
 
         for (TestCase testCase : testCases) {
-            Lexer lexer = Lexer.newInstance(testCase.input);
+            Lexer lexer = new Lexer(testCase.input);
             Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
@@ -72,7 +72,7 @@ public class ParserTest {
         };
 
         for (TestCase testCase : testCases) {
-            Lexer lexer = Lexer.newInstance(testCase.input);
+            Lexer lexer = new Lexer(testCase.input);
             Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
@@ -95,7 +95,7 @@ public class ParserTest {
     public void test$identifierExpression() {
         String input = "foobar;";
 
-        Lexer lexer = Lexer.newInstance(input);
+        Lexer lexer = new Lexer(input);
         Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
@@ -118,7 +118,7 @@ public class ParserTest {
     public void test$integerLiteralExpression() {
         String input = "5;";
 
-        Lexer lexer = Lexer.newInstance(input);
+        Lexer lexer = new Lexer(input);
         Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
@@ -141,7 +141,7 @@ public class ParserTest {
     public void test$booleanExpression() {
         String input = "true;";
 
-        Lexer lexer = Lexer.newInstance(input);
+        Lexer lexer = new Lexer(input);
         Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
@@ -177,7 +177,7 @@ public class ParserTest {
         };
 
         for (TestCase<?> testCase : testCases) {
-            Lexer lexer = Lexer.newInstance(testCase.input);
+            Lexer lexer = new Lexer(testCase.input);
             Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
@@ -222,7 +222,7 @@ public class ParserTest {
         };
 
         for (TestCase<?> testCase : testCases) {
-            Lexer lexer = Lexer.newInstance(testCase.input);
+            Lexer lexer = new Lexer(testCase.input);
             Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
@@ -275,7 +275,7 @@ public class ParserTest {
         };
 
         for (TestCase testCase : testCases) {
-            Lexer lexer = Lexer.newInstance(testCase.input);
+            Lexer lexer = new Lexer(testCase.input);
             Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
@@ -289,7 +289,7 @@ public class ParserTest {
     public void test$ifExpression() {
         String input = "if (x < y) { x }";
 
-        Lexer lexer = Lexer.newInstance(input);
+        Lexer lexer = new Lexer(input);
         Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
@@ -320,7 +320,7 @@ public class ParserTest {
     public void test$ifElseExpression() {
         String input = "if (x < y) { x } else { y }";
 
-        Lexer lexer = Lexer.newInstance(input);
+        Lexer lexer = new Lexer(input);
         Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
@@ -356,7 +356,7 @@ public class ParserTest {
     public void test$functionLiteral() {
         String input = "fn(x, y) { x + y; }";
 
-        Lexer lexer = Lexer.newInstance(input);
+        Lexer lexer = new Lexer(input);
         Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
@@ -399,7 +399,7 @@ public class ParserTest {
         };
 
         for (TestCase testCase : testCases) {
-            Lexer lexer = Lexer.newInstance(testCase.input);
+            Lexer lexer = new Lexer(testCase.input);
             Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
@@ -425,7 +425,7 @@ public class ParserTest {
     public void test$callExpression() {
         String input = "add(1, 2 * 3, 4 + 5);";
 
-        Lexer lexer = Lexer.newInstance(input);
+        Lexer lexer = new Lexer(input);
         Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
@@ -464,7 +464,7 @@ public class ParserTest {
         };
 
         for (TestCase testCase : testCases) {
-            Lexer lexer = Lexer.newInstance(testCase.input);
+            Lexer lexer = new Lexer(testCase.input);
             Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
@@ -490,7 +490,7 @@ public class ParserTest {
     public void test$stringLiteralExpression() {
         var input = "\"hello world\"";
 
-        var lexer = Lexer.newInstance(input);
+        var lexer = new Lexer(input);
         var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
@@ -512,7 +512,7 @@ public class ParserTest {
     public void test$arrayLiteralExpressions() {
         var input = "[1, 2 * 2, 3 + 3]";
 
-        var lexer = Lexer.newInstance(input);
+        var lexer = new Lexer(input);
         var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
@@ -538,7 +538,7 @@ public class ParserTest {
     public void test$indexExpression() {
         var input = "myArray[1 + 1]";
 
-        var lexer = Lexer.newInstance(input);
+        var lexer = new Lexer(input);
         var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
@@ -561,7 +561,7 @@ public class ParserTest {
     public void test$hashLiteralStringKeys() {
         String input = "{\"one\": 1, \"two\": 2, \"three\": 3}";
 
-        var lexer = Lexer.newInstance(input);
+        var lexer = new Lexer(input);
         var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
@@ -592,7 +592,7 @@ public class ParserTest {
     public void test$emptyHashLiteral() {
         var input = "{}";
 
-        var lexer = Lexer.newInstance(input);
+        var lexer = new Lexer(input);
         var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
@@ -613,7 +613,7 @@ public class ParserTest {
     public void test$hashLiteralWithExpressions() {
         var input = "{\"one\": 0 + 1, \"two\": 10 - 8, \"three\": 15 / 5}";
 
-        var lexer = Lexer.newInstance(input);
+        var lexer = new Lexer(input);
         var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
@@ -654,7 +654,7 @@ public class ParserTest {
                     return 20;
                 """;
 
-        var lexer = Lexer.newInstance(input);
+        var lexer = new Lexer(input);
         var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 

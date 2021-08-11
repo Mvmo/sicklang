@@ -53,7 +53,7 @@ public class SicklangReplApplication {
             System.out.print(PROMPT);
             var scannedLine = scanner.nextLine();
 
-            var lexer = Lexer.newInstance(scannedLine);
+            var lexer = new Lexer(scannedLine);
             var parser = new Parser(lexer);
             var programNode = parser.parseProgram();
 
@@ -87,7 +87,7 @@ public class SicklangReplApplication {
     public static void evaluateFile(Path path) {
         String sourceCode = String.join("", Files.readAllLines(path));
 
-        var lexer = Lexer.newInstance(sourceCode);
+        var lexer = new Lexer(sourceCode);
         var parser = new Parser(lexer);
 
         var programNode = parser.parseProgram();

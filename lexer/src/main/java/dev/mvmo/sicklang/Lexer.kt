@@ -1,190 +1,118 @@
-package dev.mvmo.sicklang;
+package dev.mvmo.sicklang
 
-import dev.mvmo.sicklang.token.Token;
-import dev.mvmo.sicklang.token.TokenType;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import dev.mvmo.sicklang.token.Token
+import dev.mvmo.sicklang.token.TokenType
 
-@ToString
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class Lexer {
+class Lexer(private val input: String) {
+    private var position // current position on input (points to current char)
+            = 0
+    private var readPosition // current reading position in input (after current char)
+            = 0
+    private var currentChar // current char under examination
+            = '\u0000'
 
-    private final String input;
-
-    private int position; // current position on input (points to current char)
-    private int readPosition; // current reading position in input (after current char)
-    private char currentChar; // current char under examination
-
-    public static Lexer newInstance(String input) {
-        var lexer = new Lexer(input);
-        lexer.readChar();
-
-        return lexer;
+    init {
+        readChar()
     }
 
-    private void readChar() {
-        if (this.readPosition >= this.input.length())
-            this.currentChar = 0;
-        else
-            this.currentChar = this.input.charAt(this.readPosition);
-
-        this.position = this.readPosition;
-        this.readPosition += 1;
+    private fun readChar() {
+        currentChar = if (readPosition >= input.length) '\u0000' else input[readPosition]
+        position = readPosition
+        readPosition += 1
     }
 
-    private char peekChar() {
-        if (this.readPosition >= this.input.length())
-            return 0;
-        else
-            return this.input.charAt(this.readPosition);
+    private fun peekChar(): Char {
+        return if (readPosition >= input.length) '\u0000'
+        else input[readPosition]
     }
 
-    public Token nextToken() {
-        skipWhitespace();
-
-        Token token;
-
-        switch (currentChar) {
-            //<editor-fold desc="operators">
-            case '=':
+    fun nextToken(): Token {
+        skipWhitespace()
+        val token: Token = when (currentChar) {
+            '=' -> {
                 if (peekChar() == '=') {
-                    char c = currentChar;
-                    readChar();
+                    val c = currentChar
+                    readChar()
+                    val literal = "$c$currentChar"
 
-                    var literal = "" + c + currentChar;
-
-                    token = new Token(TokenType.EQUALS, literal);
-                    break;
-                }
-
-                token = new Token(TokenType.ASSIGN, "=");
-                break;
-            case '+':
-                token = new Token(TokenType.PLUS, "+");
-                break;
-            case '-':
-                token = new Token(TokenType.MINUS, "-");
-                break;
-            case '*':
-                token = new Token(TokenType.ASTERISK, "*");
-                break;
-            case '/':
-                token = new Token(TokenType.SLASH, "/");
-                break;
-            case '!':
+                    Token(TokenType.EQUALS, literal)
+                } else
+                    Token(TokenType.ASSIGN, "=")
+            }
+            '+' -> Token(TokenType.PLUS, "+")
+            '-' -> Token(TokenType.MINUS, "-")
+            '*' -> Token(TokenType.ASTERISK, "*")
+            '/' -> Token(TokenType.SLASH, "/")
+            '!' -> {
                 if (peekChar() == '=') {
-                    char c = currentChar;
-                    readChar();
-
-                    var literal = "" + c + currentChar;
-
-                    token = new Token(TokenType.NOT_EQUALS, literal);
-                    break;
-                }
-                token = new Token(TokenType.BANG, "!");
-                break;
-            case '<':
-                token = new Token(TokenType.LESS_THAN, "<");
-                break;
-            case '>':
-                token = new Token(TokenType.GREATER_THAN, ">");
-                break;
-            //</editor-fold>
-            case ';':
-                token = new Token(TokenType.SEMICOLON, ";");
-                break;
-            case '(':
-                token = new Token(TokenType.LEFT_PAREN, "(");
-                break;
-            case ')':
-                token = new Token(TokenType.RIGHT_PAREN, ")");
-                break;
-            case ',':
-                token = new Token(TokenType.COMMA, ",");
-                break;
-            case '{':
-                token = new Token(TokenType.LEFT_BRACE, "{");
-                break;
-            case '}':
-                token = new Token(TokenType.RIGHT_BRACE, "}");
-                break;
-            case '[':
-                token = new Token(TokenType.LEFT_BRACKET, "[");
-                break;
-            case ']':
-                token = new Token(TokenType.RIGHT_BRACKET, "]");
-                break;
-            case '"':
-                token = new Token(TokenType.STRING, readString());
-                break;
-            case ':':
-                token = new Token(TokenType.COLON, ":");
-                break;
-            case 0:
-                token = new Token(TokenType.EOF, "");
-                break;
-            default:
-                return findToken();
+                    val c = currentChar
+                    readChar()
+                    val literal = "" + c + currentChar
+                    Token(TokenType.NOT_EQUALS, literal)
+                } else
+                    Token(TokenType.BANG, "!")
+            }
+            '<' -> Token(TokenType.LESS_THAN, "<")
+            '>' -> Token(TokenType.GREATER_THAN, ">")
+            ';' -> Token(TokenType.SEMICOLON, ";")
+            '(' -> Token(TokenType.LEFT_PAREN, "(")
+            ')' -> Token(TokenType.RIGHT_PAREN, ")")
+            ',' -> Token(TokenType.COMMA, ",")
+            '{' -> Token(TokenType.LEFT_BRACE, "{")
+            '}' -> Token(TokenType.RIGHT_BRACE, "}")
+            '[' -> Token(TokenType.LEFT_BRACKET, "[")
+            ']' -> Token(TokenType.RIGHT_BRACKET, "]")
+            '"' -> Token(TokenType.STRING, readString())
+            ':' -> Token(TokenType.COLON, ":")
+            '\u0000' -> Token(TokenType.EOF, "")
+            else -> return findToken()
         }
-
-        readChar();
-
-        return token;
+        readChar()
+        return token
     }
 
-    private Token findToken() {
-        if (letter(currentChar)) {
-            var literal = readIdentifier();
-            var tokenType = Token.lookupIdentifier(literal);
-
-            return new Token(tokenType, literal);
+    private fun findToken(): Token {
+        if (currentChar.isLetter()) {
+            val literal = readIdentifier()
+            val tokenType = Token.lookupIdentifier(literal)
+            return Token(tokenType, literal)
         }
 
-        if (digit(currentChar)) {
-            return new Token(TokenType.INTEGER, readNumber());
-        }
-
-        return new Token(TokenType.ILLEGAL, String.valueOf(this.currentChar));
+        return if (currentChar.isDigit())
+            Token(TokenType.INTEGER, readNumber())
+        else
+            Token(TokenType.ILLEGAL, currentChar.toString())
     }
 
-    private String readIdentifier() {
-        int startPosition = this.position;
-        while (letter(currentChar))
-            readChar();
-
-        return this.input.substring(startPosition, this.position);
+    private fun readIdentifier(): String {
+        val startPosition = position
+        while (currentChar.isLetter())
+            readChar()
+        return input.substring(startPosition, position)
     }
 
-    private String readNumber() {
-        int startPosition = this.position;
-        while (digit(currentChar))
-            readChar();
-
-        return this.input.substring(startPosition, this.position);
+    private fun readNumber(): String {
+        val startPosition = position
+        while (currentChar.isDigit())
+            readChar()
+        return input.substring(startPosition, position)
     }
 
     // TODO: Add support for escaped strings "\t\n\s"
-    private String readString() {
-        int startPosition = this.position + 1;
+    private fun readString(): String {
+        val startPosition = position + 1
         do {
-            readChar();
-        } while (this.currentChar != '"' && this.currentChar != 0);
-
-        return this.input.substring(startPosition, this.position);
+            readChar()
+        } while (currentChar != '"' && currentChar != '\u0000')
+        return input.substring(startPosition, position)
     }
 
-    private void skipWhitespace() {
+    private fun skipWhitespace() {
         while (currentChar == ' ' || currentChar == '\t' || currentChar == '\n' || currentChar == '\r')
-            readChar();
+            readChar()
     }
 
-    private boolean letter(char c) {
-        return Character.isLetter(c);
+    override fun toString(): String {
+        return "Lexer(input=$input, position=$position, readPosition=$readPosition, currentChar=$currentChar)"
     }
-
-    private boolean digit(char c) {
-        return Character.isDigit(c);
-    }
-
 }

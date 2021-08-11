@@ -124,7 +124,7 @@ public class LexerTest {
                 new Token(TokenType.EOF, "")
         };
 
-        Lexer lexer = Lexer.newInstance(input);
+        Lexer lexer = new Lexer(input);
 
         for (int i = 0; i < expectedTokens.length; i++) {
             Token expectedToken = expectedTokens[i];
