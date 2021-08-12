@@ -321,7 +321,7 @@ public class SicklangEvaluator {
             return environment.get(node.getValue());
 
         Optional<BuiltinFunctionObject> builtinOptional = builtinFunctions.stream()
-                .filter(function -> function.name().equals(node.getValue()))
+                .filter(function -> function.getName().equals(node.getValue()))
                 .findFirst();
 
         if (builtinOptional.isPresent())
@@ -374,7 +374,7 @@ public class SicklangEvaluator {
         }
 
         if (object instanceof BuiltinFunctionObject builtinFunctionObject) {
-            return builtinFunctionObject.function().call(args);
+            return builtinFunctionObject.getFunction().call(args);
         }
 
         return ErrorObject.newInstance("not a function: %s", object.objectType());
