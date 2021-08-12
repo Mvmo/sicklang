@@ -13,10 +13,10 @@ class LetStatementNode(val token: Token) : StatementNode {
     var identifier: IdentifierExpressionNode? = null
     var value: ExpressionNode? = null
 
-    override fun tokenLiteral(): String =
-        token.literal()
+    override fun tokenLiteral() =
+        token.literal
 
-    override fun toString(): String =
+    override fun toString() =
         "${token.literal} ${identifier.toString()} = ${value.toString()};"
 
 }

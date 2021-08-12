@@ -7,10 +7,10 @@ class ExpressionStatementNode(val token: Token) : StatementNode {
 
     var expressionNode: ExpressionNode? = null
 
-    override fun tokenLiteral(): String =
-        token.literal()
+    override fun tokenLiteral() =
+        token.literal
 
-    override fun toString(): String =
+    override fun toString() =
         expressionNode?.toString() ?: ""
 
 }

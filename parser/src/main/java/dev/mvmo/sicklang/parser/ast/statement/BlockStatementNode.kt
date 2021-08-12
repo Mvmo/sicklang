@@ -6,10 +6,10 @@ class BlockStatementNode(val token: Token) : StatementNode {
 
     val statementNodes: MutableList<StatementNode> = arrayListOf()
 
-    override fun tokenLiteral(): String =
-        token.literal()
+    override fun tokenLiteral() =
+        token.literal
 
-    override fun toString(): String =
+    override fun toString() =
         StringBuilder().apply {
             statementNodes.forEach(::append)
         }.toString()
