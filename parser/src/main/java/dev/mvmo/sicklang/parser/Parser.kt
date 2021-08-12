@@ -74,7 +74,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     fun parseStatement(): StatementNode {
-        return when (currentToken.type()) {
+        return when (currentToken.type) {
             TokenType.LET -> parseLetStatement()
             TokenType.RETURN -> parseReturnStatement()
             else -> parseExpressionStatement()
@@ -85,7 +85,7 @@ class Parser(private val lexer: Lexer) {
         val statementNode = LetStatementNode(currentToken)
         expectPeek(TokenType.IDENTIFIER)
 
-        statementNode.identifier = IdentifierExpressionNode(currentToken, currentToken.literal())
+        statementNode.identifier = IdentifierExpressionNode(currentToken, currentToken.literal)
 
         expectPeek(TokenType.ASSIGN)
 
@@ -123,13 +123,13 @@ class Parser(private val lexer: Lexer) {
     }
 
     fun parseExpression(precedence: Precedence): ExpressionNode {
-        val prefixParseFunction = prefixParseFunctionMap[currentToken.type()]
+        val prefixParseFunction = prefixParseFunctionMap[currentToken.type]
             ?: throw SickParseException("No prefix parse function found for ${currentToken.type}")
 
         var leftExpression = prefixParseFunction.parse()
 
-        while (!peekTokenIs(TokenType.SEMICOLON) && precedence.ordinal < Precedence.findPrecedence(peekToken.type()).ordinal) {
-            val infixParseFunction = infixParseFunctionMap[peekToken.type()]
+        while (!peekTokenIs(TokenType.SEMICOLON) && precedence.ordinal < Precedence.findPrecedence(peekToken.type).ordinal) {
+            val infixParseFunction = infixParseFunctionMap[peekToken.type]
                 ?: return leftExpression
 
             nextToken();
@@ -141,14 +141,14 @@ class Parser(private val lexer: Lexer) {
     }
 
     fun parseIdentifier(): IdentifierExpressionNode {
-        return IdentifierExpressionNode(currentToken, currentToken.literal());
+        return IdentifierExpressionNode(currentToken, currentToken.literal);
     }
 
     fun parseIntegerLiteral(): IntegerLiteralExpressionNode {
         val literalExpressionNode = IntegerLiteralExpressionNode(currentToken)
 
         try {
-            val integer = currentToken.literal().toInt()
+            val integer = currentToken.literal.toInt()
             literalExpressionNode.value = integer
         } catch (_: NumberFormatException) {
             throw SickParseException("Couldn't convert '${currentToken.literal}' to int")
@@ -158,7 +158,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     fun parsePrefixExpression(): ExpressionNode {
-        val prefixExpressionNode = PrefixExpressionNode(currentToken, currentToken.literal())
+        val prefixExpressionNode = PrefixExpressionNode(currentToken, currentToken.literal)
 
         nextToken()
         prefixExpressionNode.right = parseExpression(Precedence.PREFIX)
@@ -167,8 +167,8 @@ class Parser(private val lexer: Lexer) {
     }
 
     fun parseInfixExpression(left: ExpressionNode): ExpressionNode {
-        val infixExpressionNode = InfixExpressionNode(currentToken, left, currentToken.literal())
-        val precedence = Precedence.findPrecedence(currentToken.type())
+        val infixExpressionNode = InfixExpressionNode(currentToken, left, currentToken.literal)
+        val precedence = Precedence.findPrecedence(currentToken.type)
 
         nextToken();
 
@@ -272,13 +272,13 @@ class Parser(private val lexer: Lexer) {
 
         nextToken()
 
-        identifiers.add(IdentifierExpressionNode(currentToken, currentToken.literal()))
+        identifiers.add(IdentifierExpressionNode(currentToken, currentToken.literal))
 
         while (peekTokenIs(TokenType.COMMA)) {
             nextToken()
             nextToken()
 
-            identifiers.add(IdentifierExpressionNode(currentToken, currentToken.literal()))
+            identifiers.add(IdentifierExpressionNode(currentToken, currentToken.literal))
         }
 
         expectPeek(TokenType.RIGHT_PAREN)
@@ -294,7 +294,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     fun parseStringLiteralExpression(): StringLiteralExpressionNode {
-        return StringLiteralExpressionNode(currentToken, currentToken.literal())
+        return StringLiteralExpressionNode(currentToken, currentToken.literal)
     }
 
     fun parseArrayLiteralExpression(): ArrayLiteralExpressionNode {
@@ -359,11 +359,11 @@ class Parser(private val lexer: Lexer) {
     }
 
     fun currentTokenIs(tokenType: TokenType): Boolean {
-        return currentToken.type().equals(tokenType)
+        return currentToken.type == tokenType
     }
 
     fun peekTokenIs(tokenType: TokenType): Boolean {
-        return peekToken.type().equals(tokenType)
+        return peekToken.type == tokenType
     }
 
     private fun expectPeek(tokenType: TokenType) {
