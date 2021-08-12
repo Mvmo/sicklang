@@ -9,7 +9,7 @@ class FunctionLiteralExpressionNode(val token: Token) : ExpressionNode {
     var body: BlockStatementNode? = null
 
     override fun tokenLiteral(): String =
-        token.literal()
+        token.literal
 
     override fun toString(): String =
         "${tokenLiteral()}(${parameters?.joinToString(transform = IdentifierExpressionNode::toString) ?: ""}) $body"

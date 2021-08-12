@@ -7,7 +7,7 @@ class CallExpressionNode(val token: Token, val function: ExpressionNode) : Expre
     var arguments: List<ExpressionNode>? = null
 
     override fun tokenLiteral(): String =
-        token.literal()
+        token.literal
 
     override fun toString(): String =
         "$function(${arguments?.joinToString(transform = ExpressionNode::toString) ?: ""})"

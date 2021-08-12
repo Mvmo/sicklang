@@ -7,7 +7,7 @@ class InfixExpressionNode(val token: Token, val left: ExpressionNode, val operat
     var right: ExpressionNode? = null
 
     override fun tokenLiteral(): String {
-        return token.literal()
+        return token.literal
     }
 
     override fun toString(): String =

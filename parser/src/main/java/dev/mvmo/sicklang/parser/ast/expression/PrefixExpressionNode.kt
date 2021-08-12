@@ -7,7 +7,7 @@ class PrefixExpressionNode(val token: Token, val operator: String) : ExpressionN
     var right: ExpressionNode? = null
 
     override fun tokenLiteral(): String =
-        token.literal()
+        token.literal
 
     override fun toString(): String =
         "($operator$right)"

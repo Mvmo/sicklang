@@ -10,7 +10,7 @@ class IfExpressionNode(val token: Token) : ExpressionNode {
     var alternative: BlockStatementNode? = null
 
     override fun tokenLiteral(): String =
-        token.literal()
+        token.literal
 
     override fun toString(): String =
         "if${conditionalExpressionNode.toString()} $consequence ${if (alternative != null) "else$alternative" else ""}"
