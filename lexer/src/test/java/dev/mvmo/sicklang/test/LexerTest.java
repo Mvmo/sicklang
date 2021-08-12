@@ -130,10 +130,10 @@ public class LexerTest {
             Token expectedToken = expectedTokens[i];
             Token token = lexer.nextToken();
 
-            System.out.println(token.toString());
+            System.out.println(token);
 
             assertEquals(String.format("expected[%d] -> Type isn't the same type as the found one.\nExpected ('%s') and found ('%s')" +
-                            lexer.toString(), i, expectedToken.getType(), token.getType()),
+                            lexer, i, expectedToken.getType(), token.getType()),
                     expectedToken.getType(), token.getType());
 
             assertEquals(String.format("expected[%d] -> Literal isn't the same as the found one.\nExpected ('%s') and found ('%s')", i, expectedToken.getLiteral(), token.getLiteral()),
