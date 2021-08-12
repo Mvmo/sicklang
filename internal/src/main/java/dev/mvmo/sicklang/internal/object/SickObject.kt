@@ -1,9 +1,6 @@
-package dev.mvmo.sicklang.internal.object;
+package dev.mvmo.sicklang.internal.`object`
 
-public interface SickObject {
-
-    ObjectType objectType();
-
-    String inspect();
-
+interface SickObject {
+    fun objectType(): ObjectType
+    fun inspect(): String
 }

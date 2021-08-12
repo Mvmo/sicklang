@@ -1,6 +1,6 @@
-package dev.mvmo.sicklang.internal.object;
+package dev.mvmo.sicklang.internal.`object`
 
-public enum ObjectType {
+enum class ObjectType {
 
     FUNCTION,
     INTEGER,
