@@ -1,21 +1,15 @@
-package dev.mvmo.sicklang.internal.object;
+package dev.mvmo.sicklang.internal.`object`
 
-public record NullObject() implements SickObject {
+class NullObject : SickObject {
+    override fun inspect() =
+        "null"
 
-    public static NullObject NULL = new NullObject();
+    override fun objectType() =
+        ObjectType.NULL
 
-    @Override
-    public String inspect() {
-        return "null";
+    companion object {
+        @JvmField
+        val NULL = NullObject()
+        fun get() = NULL
     }
-
-    @Override
-    public ObjectType objectType() {
-        return ObjectType.NULL;
-    }
-
-    public static NullObject get() {
-        return NULL;
-    }
-
 }
