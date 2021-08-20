@@ -15,7 +15,7 @@ public class LenFunction extends BuiltinFunctionObject {
 
             var arg = args.get(0);
             if (arg instanceof StringObject stringObject)
-                return new IntegerObject(stringObject.value().length());
+                return new IntegerObject(stringObject.getValue().length());
             else if (arg instanceof ArrayObject arrayObject)
                 return new IntegerObject(arrayObject.elements().size());
 

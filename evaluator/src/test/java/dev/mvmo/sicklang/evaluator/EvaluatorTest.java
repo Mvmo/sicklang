@@ -219,7 +219,7 @@ public class EvaluatorTest {
 
         var evaluated = testEval(input);
         assertTrue(evaluated instanceof StringObject);
-        assertEquals("Hello, World!", ((StringObject) evaluated).value());
+        assertEquals("Hello, World!", ((StringObject) evaluated).getValue());
     }
 
     @Test
@@ -228,7 +228,7 @@ public class EvaluatorTest {
 
         var evaluated = testEval(input);
         assertTrue(evaluated instanceof StringObject);
-        assertEquals("Hello, World!", ((StringObject) evaluated).value());
+        assertEquals("Hello, World!", ((StringObject) evaluated).getValue());
     }
 
     // TODO fix order of params rofl
@@ -288,7 +288,7 @@ public class EvaluatorTest {
                 assertEquals(expectedList, ((ArrayObject) evaluated).elements().stream()
                         .filter(object -> object instanceof IntegerObject)
                         .map(object -> (IntegerObject) object)
-                        .map(IntegerObject::value)
+                        .map(IntegerObject::getValue)
                         .collect(Collectors.toList()));
             }
         });
@@ -360,13 +360,13 @@ public class EvaluatorTest {
                 BooleanObject.FALSE.hashKey(), 6
         );
 
-        assertEquals(expected.size(), hash.pairs().size());
+        assertEquals(expected.size(), hash.getPairs().size());
 
         expected.forEach((expectedKey, expectedValue) -> {
-            assertTrue(hash.pairs().containsKey(expectedKey));
+            assertTrue(hash.getPairs().containsKey(expectedKey));
 
-            var hashEntry = hash.pairs().get(expectedKey);
-            testIntegerObject(hashEntry.value(), expectedValue);
+            var hashEntry = hash.getPairs().get(expectedKey);
+            testIntegerObject(hashEntry.getValue(), expectedValue);
         });
     }
 
@@ -402,7 +402,7 @@ public class EvaluatorTest {
         assertTrue(object instanceof IntegerObject);
 
         var integerObject = (IntegerObject) object;
-        assertEquals(expected, integerObject.value());
+        assertEquals(expected, integerObject.getValue());
     }
 
     private void testBooleanObject(SickObject object, boolean expected) {

@@ -161,7 +161,7 @@ public class SicklangEvaluator {
         for (StatementNode statementNode : programNode.getStatementNodes()) {
             result = eval(statementNode, environment);
             if (result instanceof ReturnValueObject returnValueObject)
-                return returnValueObject.value();
+                return returnValueObject.getValue();
             if (result instanceof ErrorObject)
                 return result;
         }
@@ -202,7 +202,7 @@ public class SicklangEvaluator {
 
         var integerObject = (IntegerObject) right;
 
-        return new IntegerObject(-integerObject.value());
+        return new IntegerObject(-integerObject.getValue());
     }
 
     private static SickObject evalInfixExpression(String operator, SickObject left, SickObject right) {
@@ -233,8 +233,8 @@ public class SicklangEvaluator {
         Preconditions.checkArgument(left instanceof IntegerObject);
         Preconditions.checkArgument(right instanceof IntegerObject);
 
-        int leftInt = ((IntegerObject) left).value();
-        int rightInt = ((IntegerObject) right).value();
+        int leftInt = ((IntegerObject) left).getValue();
+        int rightInt = ((IntegerObject) right).getValue();
 
         return switch (operator) {
             case "+" -> new IntegerObject(leftInt + rightInt);
@@ -258,8 +258,8 @@ public class SicklangEvaluator {
         if (!operator.equals("+"))
             return ErrorObject.newInstance("unknown operator: %s %s %s", left.objectType(), operator, right.objectType());
 
-        var leftValue = ((StringObject) left).value();
-        var rightValue = ((StringObject) right).value();
+        var leftValue = ((StringObject) left).getValue();
+        var rightValue = ((StringObject) right).getValue();
 
         return new StringObject(leftValue + rightValue);
     }
@@ -291,7 +291,7 @@ public class SicklangEvaluator {
         Preconditions.checkArgument(index instanceof IntegerObject);
 
         var array = (ArrayObject) left;
-        var elementIndex = ((IntegerObject) index).value();
+        var elementIndex = ((IntegerObject) index).getValue();
 
         int maxIndex = array.elements().size() - 1;
 
@@ -310,10 +310,10 @@ public class SicklangEvaluator {
 
         var hashKey = hashable.hashKey();
 
-        if (!hashObject.pairs().containsKey(hashKey))
+        if (!hashObject.getPairs().containsKey(hashKey))
             return NullObject.NULL;
 
-        return hashObject.pairs().get(hashKey).value();
+        return hashObject.getPairs().get(hashKey).getValue();
     }
 
     private static SickObject evalIdentifier(IdentifierExpressionNode node, SickEnvironment environment) {
@@ -395,7 +395,7 @@ public class SicklangEvaluator {
 
     private static SickObject unwrapReturnValue(SickObject sickObject) {
         if (sickObject instanceof ReturnValueObject returnValueObject)
-            return returnValueObject.value();
+            return returnValueObject.getValue();
         return sickObject;
     }
 
