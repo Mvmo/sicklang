@@ -186,7 +186,7 @@ public class SicklangEvaluator {
         return switch (operator) {
             case "!" -> evalBangOperatorExpression(right);
             case "-" -> evalMinusPrefixOperatorExpression(right);
-            default -> ErrorObject.newInstance("unknown operator: %s%s", operator, right.objectType());
+            default -> ErrorObject.formatted("unknown operator: %s%s", operator, right.objectType());
         };
     }
 
@@ -198,7 +198,7 @@ public class SicklangEvaluator {
 
     private static SickObject evalMinusPrefixOperatorExpression(SickObject right) {
         if (!right.objectType().equals(ObjectType.INTEGER)) // @TODO: maybe we could just do a instanceof check here - maybe also remove the objectType thingy??
-            return ErrorObject.newInstance("unknown operator: -%s", right.objectType());
+            return ErrorObject.formatted("unknown operator: -%s", right.objectType());
 
         var integerObject = (IntegerObject) right;
 
@@ -207,7 +207,7 @@ public class SicklangEvaluator {
 
     private static SickObject evalInfixExpression(String operator, SickObject left, SickObject right) {
         if (!left.objectType().equals(right.objectType())) {
-            return ErrorObject.newInstance("type mismatch: %s %s %s", left.objectType(), operator, right.objectType());
+            return ErrorObject.formatted("type mismatch: %s %s %s", left.objectType(), operator, right.objectType());
         }
 
         if (left.objectType().equals(ObjectType.INTEGER) && right.objectType().equals(ObjectType.INTEGER)) {
@@ -226,7 +226,7 @@ public class SicklangEvaluator {
             return BooleanObject.fromNative(left != right);
         }
 
-        return ErrorObject.newInstance("unknown operator: %s %s %s", left.objectType(), operator, right.objectType());
+        return ErrorObject.formatted("unknown operator: %s %s %s", left.objectType(), operator, right.objectType());
     }
 
     private static SickObject evalIntegerInfixExpression(String operator, SickObject left, SickObject right) {
@@ -247,7 +247,7 @@ public class SicklangEvaluator {
             case "==" -> BooleanObject.fromNative(leftInt == rightInt);
             case "!=" -> BooleanObject.fromNative(leftInt != rightInt);
 
-            default -> ErrorObject.newInstance("unknown operator: %s %s %s", left.objectType(), operator, right.objectType());
+            default -> ErrorObject.formatted("unknown operator: %s %s %s", left.objectType(), operator, right.objectType());
         };
     }
 
@@ -256,7 +256,7 @@ public class SicklangEvaluator {
         Preconditions.checkArgument(right instanceof StringObject);
 
         if (!operator.equals("+"))
-            return ErrorObject.newInstance("unknown operator: %s %s %s", left.objectType(), operator, right.objectType());
+            return ErrorObject.formatted("unknown operator: %s %s %s", left.objectType(), operator, right.objectType());
 
         var leftValue = ((StringObject) left).getValue();
         var rightValue = ((StringObject) right).getValue();
@@ -283,7 +283,7 @@ public class SicklangEvaluator {
             return evalArrayIndexExpression(left, index);
         if (left.objectType().equals(ObjectType.HASH))
             return evalHashIndexExpression(left, index);
-        return ErrorObject.newInstance("index operator not supported: %s", left.objectType());
+        return ErrorObject.formatted("index operator not supported: %s", left.objectType());
     }
 
     private static SickObject evalArrayIndexExpression(SickObject left, SickObject index) {
@@ -306,7 +306,7 @@ public class SicklangEvaluator {
 
         var hashObject = (HashObject) left;
         if (!(index instanceof Hashable hashable))
-            return ErrorObject.newInstance("unusable as hash key: %s", index.objectType());
+            return ErrorObject.formatted("unusable as hash key: %s", index.objectType());
 
         var hashKey = hashable.hashKey();
 
@@ -327,7 +327,7 @@ public class SicklangEvaluator {
         if (builtinOptional.isPresent())
             return builtinOptional.get();
 
-        return ErrorObject.newInstance("identifier not found: " + node.getValue());
+        return ErrorObject.formatted("identifier not found: " + node.getValue());
     }
 
     private static SickObject evalHashLiteral(HashLiteralExpressionNode hashNode, SickEnvironment environment) {
@@ -339,7 +339,7 @@ public class SicklangEvaluator {
                 return key;
 
             if (!(key instanceof Hashable keyWithHash))
-                return ErrorObject.newInstance("unusable as hash key: %s", key.objectType());
+                return ErrorObject.formatted("unusable as hash key: %s", key.objectType());
 
             var value = eval(nodeEntry.getValue(), environment);
             if (error(value))
@@ -377,7 +377,7 @@ public class SicklangEvaluator {
             return builtinFunctionObject.getFunction().call(args);
         }
 
-        return ErrorObject.newInstance("not a function: %s", object.objectType());
+        return ErrorObject.formatted("not a function: %s", object.objectType());
     }
 
     private static SickEnvironment extendFunctionEnvironment(FunctionObject functionObject, List<SickObject> args) {

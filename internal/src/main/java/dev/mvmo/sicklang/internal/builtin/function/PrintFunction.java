@@ -12,7 +12,7 @@ public class PrintFunction extends BuiltinFunctionObject {
     public PrintFunction() {
         super("print", args -> {
             if (args.size() == 0)
-                return ErrorObject.newInstance("wrong number of arguments to 'print'");
+                return ErrorObject.formatted("wrong number of arguments to 'print'");
 
             System.out.print(args.stream()
                     .map(SickObject::inspect)

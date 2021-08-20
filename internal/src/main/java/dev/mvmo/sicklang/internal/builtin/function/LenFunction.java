@@ -11,7 +11,7 @@ public class LenFunction extends BuiltinFunctionObject {
     public LenFunction() {
         super("len", args -> {
             if (args.size() != 1)
-                return ErrorObject.newInstance("wrong number of arguments. got=%d, want=%d", args.size(), 1);
+                return ErrorObject.formatted("wrong number of arguments. got=%d, want=%d", args.size(), 1);
 
             var arg = args.get(0);
             if (arg instanceof StringObject stringObject)
@@ -19,7 +19,7 @@ public class LenFunction extends BuiltinFunctionObject {
             else if (arg instanceof ArrayObject arrayObject)
                 return new IntegerObject(arrayObject.elements().size());
 
-            return ErrorObject.newInstance("argument to `len` not supported. got %s", arg.objectType());
+            return ErrorObject.formatted("argument to `len` not supported. got %s", arg.objectType());
         });
     }
 

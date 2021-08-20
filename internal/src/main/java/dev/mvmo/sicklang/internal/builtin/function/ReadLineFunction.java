@@ -12,11 +12,11 @@ public class ReadLineFunction extends BuiltinFunctionObject {
     public ReadLineFunction() {
         super("readLine", args -> {
             if (args.size() > 1)
-                return ErrorObject.newInstance("wrong number of arguments to 'readLine'");
+                return ErrorObject.formatted("wrong number of arguments to 'readLine'");
 
             if (args.size() == 1) {
                 if (!args.get(0).objectType().equals(ObjectType.STRING))
-                    return ErrorObject.newInstance("expected string got=%s", args.get(0).objectType());
+                    return ErrorObject.formatted("expected string got=%s", args.get(0).objectType());
 
                 System.out.print(args.get(0).inspect());
             }

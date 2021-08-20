@@ -1,22 +1,21 @@
-package dev.mvmo.sicklang.internal.object.error;
+package dev.mvmo.sicklang.internal.`object`.error
 
-import dev.mvmo.sicklang.internal.object.ObjectType;
-import dev.mvmo.sicklang.internal.object.SickObject;
+import dev.mvmo.sicklang.internal.`object`.ObjectType
+import dev.mvmo.sicklang.internal.`object`.SickObject
 
-public record ErrorObject(String message) implements SickObject {
+class ErrorObject(val message: String) : SickObject {
 
-    @Override
-    public String inspect() {
-        return "ERROR: " + message;
-    }
+    override fun inspect() =
+        "ERROR: $message"
 
-    @Override
-    public ObjectType objectType() {
-        return ObjectType.ERROR;
-    }
+    override fun objectType() =
+        ObjectType.ERROR
 
-    public static ErrorObject newInstance(String message, Object... args) {
-        return new ErrorObject(String.format(message, args));
+    companion object {
+        @JvmStatic
+        fun formatted(message: String, vararg args: Any): ErrorObject {
+            return ErrorObject(String.format(message, *args))
+        }
     }
 
 }

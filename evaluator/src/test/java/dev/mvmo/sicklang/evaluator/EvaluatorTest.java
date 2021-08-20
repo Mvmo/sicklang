@@ -173,7 +173,7 @@ public class EvaluatorTest {
             var evaluated = testEval(testCase.input);
             assertTrue(evaluated instanceof ErrorObject);
             var errorObject = (ErrorObject) evaluated;
-            assertEquals(testCase.expected, errorObject.message());
+            assertEquals(testCase.expected, errorObject.getMessage());
         });
     }
 
@@ -280,7 +280,7 @@ public class EvaluatorTest {
 
             if (testCase.expected instanceof String expectedString) {
                 assertTrue(evaluated instanceof ErrorObject);
-                assertEquals(expectedString, ((ErrorObject) evaluated).message());
+                assertEquals(expectedString, ((ErrorObject) evaluated).getMessage());
             }
 
             if (testCase.expected instanceof List<?> expectedList) {

@@ -11,10 +11,10 @@ public class LastFunction extends BuiltinFunctionObject {
     public LastFunction() {
         super("last", args -> {
             if (args.size() != 1)
-                return ErrorObject.newInstance("wrong number of arguments. got=%d, want=%d", args.size(), 1);
+                return ErrorObject.formatted("wrong number of arguments. got=%d, want=%d", args.size(), 1);
 
             if (!args.get(0).objectType().equals(ObjectType.ARRAY))
-                return ErrorObject.newInstance("argument to `last` must be ARRAY, got %s", args.get(0).objectType());
+                return ErrorObject.formatted("argument to `last` must be ARRAY, got %s", args.get(0).objectType());
 
             var array = (ArrayObject) args.get(0);
             var length = array.elements().size();
