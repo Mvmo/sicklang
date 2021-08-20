@@ -186,9 +186,9 @@ public class EvaluatorTest {
 
         var functionObject = (FunctionObject) evaluated;
 
-        assertEquals(1, functionObject.parameters().size());
-        assertEquals("x", functionObject.parameters().get(0).toString());
-        assertEquals("(x + 2)", functionObject.body().toString());
+        assertEquals(1, functionObject.getParameters().size());
+        assertEquals("x", functionObject.getParameters().get(0).toString());
+        assertEquals("(x + 2)", functionObject.getBody().toString());
     }
 
     @Test

@@ -368,7 +368,7 @@ public class SicklangEvaluator {
     private static SickObject applyFunction(SickObject object, List<SickObject> args) {
         if (object instanceof FunctionObject functionObject) {
             var extendedEnvironment = extendFunctionEnvironment(functionObject, args);
-            var evaluated = eval(functionObject.body(), extendedEnvironment);
+            var evaluated = eval(functionObject.getBody(), extendedEnvironment);
 
             return unwrapReturnValue(evaluated);
         }
@@ -381,10 +381,10 @@ public class SicklangEvaluator {
     }
 
     private static SickEnvironment extendFunctionEnvironment(FunctionObject functionObject, List<SickObject> args) {
-        var environment = SickEnvironment.newEnclosedInstance(functionObject.environment());
+        var environment = SickEnvironment.newEnclosedInstance(functionObject.getEnvironment());
 
-        for (int i = 0; i < functionObject.parameters().size(); i++) {
-            var identifier = functionObject.parameters().get(i);
+        for (int i = 0; i < functionObject.getParameters().size(); i++) {
+            var identifier = functionObject.getParameters().get(i);
             var value = args.get(i);
 
             environment.set(identifier.getValue(), value);
