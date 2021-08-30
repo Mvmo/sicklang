@@ -4,6 +4,3 @@ println(x);
 println("hello, world")
 
 20
-
-let russia = {"key": "value"}
-russia["k"] = "";

@@ -409,7 +409,7 @@ public class EvaluatorTest {
         assertTrue(object instanceof BooleanObject);
 
         var booleanObject = (BooleanObject) object;
-        assertEquals(expected, booleanObject.value());
+        assertEquals(expected, booleanObject.getValue());
     }
 
     private void testNullObject(SickObject object) {
