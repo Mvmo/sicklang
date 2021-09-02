@@ -1,58 +1,46 @@
-package dev.mvmo.sicklang.internal.env;
+package dev.mvmo.sicklang.internal.env
 
-import com.google.common.collect.Maps;
-import dev.mvmo.sicklang.internal.object.SickObject;
+import dev.mvmo.sicklang.internal.`object`.SickObject
 
-import java.util.Map;
+class SickEnvironment private constructor(
+    private val storageMap: MutableMap<String, SickObject>,
+    private val parent: SickEnvironment?
+) {
 
-public class SickEnvironment {
-
-    private final Map<String, SickObject> storageMap;
-    private final SickEnvironment parent;
-
-    private SickEnvironment(Map<String, SickObject> storageMap, SickEnvironment parent) {
-        this.storageMap = storageMap;
-        this.parent = parent;
+    operator fun set(key: String, value: SickObject): SickEnvironment {
+        storageMap[key] = value
+        return this
     }
 
-    public SickEnvironment set(String key, SickObject value) {
-        this.storageMap.put(key, value);
-        return this;
+    fun setAndGet(key: String, value: SickObject): SickObject {
+        set(key, value)
+        return value
     }
 
-    public SickObject setAndGet(String key, SickObject value) {
-        set(key, value);
-        return value;
+    operator fun get(key: String): SickObject? {
+        val `val`: SickObject? = storageMap[key]
+        return if (`val` == null && parent != null) parent[key] else `val`
     }
 
-    public SickObject get(String key) {
-        var val = storageMap.get(key);
-        if (val == null && parent != null)
-            return parent.get(key);
-
-        return val;
+    fun getOrDefault(key: String, defaultValue: SickObject?): SickObject? {
+        return if (hasKey(key)) get(key) else defaultValue
     }
 
-    public SickObject getOrDefault(String key, SickObject defaultValue) {
-        if (hasKey(key))
-            return get(key);
-        return defaultValue;
+    fun hasKey(key: String): Boolean {
+        val contains = storageMap.containsKey(key)
+        return if (!contains && parent != null) parent.hasKey(key) else contains
     }
 
-    public boolean hasKey(String key) {
-        boolean contains = storageMap.containsKey(key);
-        if (!contains && parent != null)
-            return parent.hasKey(key);
+    companion object {
+        @JvmStatic
+        fun newEnclosedInstance(environment: SickEnvironment): SickEnvironment {
+            return SickEnvironment(mutableMapOf(), environment)
+        }
 
-        return contains;
-    }
-
-    public static SickEnvironment newEnclosedInstance(SickEnvironment environment) {
-        return new SickEnvironment(Maps.newHashMap(), environment);
-    }
-
-    public static SickEnvironment newInstance() {
-        return new SickEnvironment(Maps.newHashMap(), null);
+        @JvmStatic
+        fun newInstance(): SickEnvironment {
+            return SickEnvironment(mutableMapOf(), null)
+        }
     }
 
 }
