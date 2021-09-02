@@ -17,8 +17,8 @@ public class FirstFunction extends BuiltinFunctionObject {
                 return ErrorObject.formatted("argument to `first` must be ARRAY, got %s", args.get(0).objectType());
 
             var array = (ArrayObject) args.get(0);
-            if (array.elements().size() > 0)
-                return array.elements().get(0);
+            if (array.getElements().size() > 0)
+                return array.getElements().get(0);
 
             return NullObject.NULL;
         });

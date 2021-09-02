@@ -18,7 +18,7 @@ public class AppendFunction extends BuiltinFunctionObject {
 
             var array = (ArrayObject) args.get(0);
 
-            var newElements = new ArrayList<>(array.elements());
+            var newElements = new ArrayList<>(array.getElements());
             newElements.add(args.get(1));
 
             return new ArrayObject(newElements);

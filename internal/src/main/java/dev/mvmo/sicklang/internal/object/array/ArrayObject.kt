@@ -1,23 +1,14 @@
-package dev.mvmo.sicklang.internal.object.array;
+package dev.mvmo.sicklang.internal.`object`.array
 
-import dev.mvmo.sicklang.internal.object.ObjectType;
-import dev.mvmo.sicklang.internal.object.SickObject;
+import dev.mvmo.sicklang.internal.`object`.ObjectType
+import dev.mvmo.sicklang.internal.`object`.SickObject
 
-import java.util.List;
-import java.util.stream.Collectors;
+class ArrayObject(val elements: List<SickObject>) : SickObject {
 
-public record ArrayObject(List<SickObject> elements) implements SickObject {
+    override fun inspect() =
+        "[${elements.joinToString(transform = SickObject::inspect)}}"
 
-    @Override
-    public String inspect() {
-        return String.format("[%s]", elements.stream()
-                .map(SickObject::inspect)
-                .collect(Collectors.joining(", ")));
-    }
-
-    @Override
-    public ObjectType objectType() {
-        return ObjectType.ARRAY;
-    }
+    override fun objectType() =
+        ObjectType.ARRAY
 
 }

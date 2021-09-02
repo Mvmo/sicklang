@@ -285,7 +285,7 @@ public class EvaluatorTest {
 
             if (testCase.expected instanceof List<?> expectedList) {
                 assertTrue(evaluated instanceof ArrayObject);
-                assertEquals(expectedList, ((ArrayObject) evaluated).elements().stream()
+                assertEquals(expectedList, ((ArrayObject) evaluated).getElements().stream()
                         .filter(object -> object instanceof IntegerObject)
                         .map(object -> (IntegerObject) object)
                         .map(IntegerObject::getValue)
@@ -302,11 +302,11 @@ public class EvaluatorTest {
         assertTrue(evaluated instanceof ArrayObject);
 
         var array = (ArrayObject) evaluated;
-        assertEquals(3, array.elements().size());
+        assertEquals(3, array.getElements().size());
 
-        testIntegerObject(array.elements().get(0), 1);
-        testIntegerObject(array.elements().get(1), 4);
-        testIntegerObject(array.elements().get(2), 6);
+        testIntegerObject(array.getElements().get(0), 1);
+        testIntegerObject(array.getElements().get(1), 4);
+        testIntegerObject(array.getElements().get(2), 6);
     }
 
     @Test

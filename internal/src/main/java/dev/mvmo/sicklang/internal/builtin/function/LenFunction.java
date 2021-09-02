@@ -17,7 +17,7 @@ public class LenFunction extends BuiltinFunctionObject {
             if (arg instanceof StringObject stringObject)
                 return new IntegerObject(stringObject.getValue().length());
             else if (arg instanceof ArrayObject arrayObject)
-                return new IntegerObject(arrayObject.elements().size());
+                return new IntegerObject(arrayObject.getElements().size());
 
             return ErrorObject.formatted("argument to `len` not supported. got %s", arg.objectType());
         });

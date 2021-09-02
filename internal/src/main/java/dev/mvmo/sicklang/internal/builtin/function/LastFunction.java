@@ -17,10 +17,10 @@ public class LastFunction extends BuiltinFunctionObject {
                 return ErrorObject.formatted("argument to `last` must be ARRAY, got %s", args.get(0).objectType());
 
             var array = (ArrayObject) args.get(0);
-            var length = array.elements().size();
+            var length = array.getElements().size();
 
             if (length > 0)
-                return array.elements().get(length - 1);
+                return array.getElements().get(length - 1);
 
             return NullObject.NULL;
         });

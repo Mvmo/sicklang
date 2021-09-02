@@ -293,12 +293,12 @@ public class SicklangEvaluator {
         var array = (ArrayObject) left;
         var elementIndex = ((IntegerObject) index).getValue();
 
-        int maxIndex = array.elements().size() - 1;
+        int maxIndex = array.getElements().size() - 1;
 
         if (elementIndex < 0 || elementIndex > maxIndex)
             return NullObject.NULL;
 
-        return array.elements().get(elementIndex);
+        return array.getElements().get(elementIndex);
     }
 
     private static SickObject evalHashIndexExpression(SickObject left, SickObject index) {

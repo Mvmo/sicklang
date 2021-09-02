@@ -17,8 +17,8 @@ public class TailFunction extends BuiltinFunctionObject {
                 return ErrorObject.formatted("argument to `tail` must be ARRAY, got %s", args.get(0).objectType());
 
             var array = (ArrayObject) args.get(0);
-            if (array.elements().size() > 0)
-                return new ArrayObject(array.elements().subList(1, array.elements().size()));
+            if (array.getElements().size() > 0)
+                return new ArrayObject(array.getElements().subList(1, array.getElements().size()));
 
             return new ArrayObject(Lists.newArrayList());
         });
