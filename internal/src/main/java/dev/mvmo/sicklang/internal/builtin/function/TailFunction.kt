@@ -1,27 +1,25 @@
-package dev.mvmo.sicklang.internal.builtin.function;
+package dev.mvmo.sicklang.internal.builtin.function
 
-import com.google.common.collect.Lists;
-import dev.mvmo.sicklang.internal.object.BuiltinFunctionObject;
-import dev.mvmo.sicklang.internal.object.ObjectType;
-import dev.mvmo.sicklang.internal.object.array.ArrayObject;
-import dev.mvmo.sicklang.internal.object.error.ErrorObject;
+import dev.mvmo.sicklang.internal.``object`
+import dev.mvmo.sicklang.internal.`object`.BuiltinFunctionObject
+import dev.mvmo.sicklang.internal.`object`.ObjectType
 
-public class TailFunction extends BuiltinFunctionObject {
-
-    public TailFunction() {
-        super("tail", args -> {
-            if (args.size() != 1)
-                return ErrorObject.formatted("wrong number of arguments. got=%d, want=%d", args.size(), 1);
-
-            if (!args.get(0).objectType().equals(ObjectType.ARRAY))
-                return ErrorObject.formatted("argument to `tail` must be ARRAY, got %s", args.get(0).objectType());
-
-            var array = (ArrayObject) args.get(0);
-            if (array.getElements().size() > 0)
-                return new ArrayObject(array.getElements().subList(1, array.getElements().size()));
-
-            return new ArrayObject(Lists.newArrayList());
-        });
-    }
-
-}
+class TailFunction : BuiltinFunctionObject("tail", BuiltinFunction { args: List<SickObject> ->
+    if (args.size != 1) return@BuiltinFunctionObject ErrorObject.formatted(
+        "wrong number of arguments. got=%d, want=%d",
+        args.size,
+        1
+    )
+    if (args[0].objectType() != ObjectType.ARRAY) return@BuiltinFunctionObject ErrorObject.formatted(
+        "argument to `tail` must be ARRAY, got %s",
+        args[0].objectType()
+    )
+    val array: ArrayObject = args[0] as ArrayObject
+    if (array.elements.size > 0) return@BuiltinFunctionObject ArrayObject(
+        array.elements.subList(
+            1,
+            array.elements.size
+        )
+    )
+    ArrayObject(Lists.newArrayList<SickObject>())
+})
