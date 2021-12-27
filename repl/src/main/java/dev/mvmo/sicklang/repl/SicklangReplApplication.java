@@ -53,17 +53,17 @@ public class SicklangReplApplication {
             System.out.print(PROMPT);
             var scannedLine = scanner.nextLine();
 
-            var lexer = Lexer.newInstance(scannedLine);
-            var parser = Parser.newInstance(lexer);
+            var lexer = new Lexer(scannedLine);
+            var parser = new Parser(lexer);
             var programNode = parser.parseProgram();
 
-            if (parser.errorMessages().size() != 0) {
+            if (parser.getErrorMessages().size() != 0) {
                 showParserErrors(parser);
                 return;
             }
 
-            var evaluated = SicklangEvaluator.eval(programNode, environment);
-            if (evaluated == null)
+            var evaluated = SicklangEvaluator.INSTANCE.eval(programNode, environment);
+            if (evaluated == null) // TODO: what is this
                 return;
 
             System.out.println(evaluated.inspect());
@@ -75,7 +75,7 @@ public class SicklangReplApplication {
         System.out.println("Oh bro, you got an error! Let's see");
         System.out.println();
 
-        var parserErrors = parser.errorMessages();
+        var parserErrors = parser.getErrorMessages();
 
         System.out.println(parserErrors.size() > 1 ? "Oh, you got a bunch of errors, get out of here" : "Only one error, that might be okay");
         System.out.println();
@@ -87,17 +87,17 @@ public class SicklangReplApplication {
     public static void evaluateFile(Path path) {
         String sourceCode = String.join("", Files.readAllLines(path));
 
-        var lexer = Lexer.newInstance(sourceCode);
-        var parser = Parser.newInstance(lexer);
+        var lexer = new Lexer(sourceCode);
+        var parser = new Parser(lexer);
 
         var programNode = parser.parseProgram();
-        if (parser.errorMessages().size() > 0) {
+        if (parser.getErrorMessages().size() > 0) {
             showParserErrors(parser);
             return;
         }
 
         var environment = SickEnvironment.newInstance();
-        var evaluated = SicklangEvaluator.eval(programNode, environment);
+        var evaluated = SicklangEvaluator.INSTANCE.eval(programNode, environment);
 
         System.out.println(evaluated.inspect());
     }

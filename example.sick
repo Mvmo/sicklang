@@ -1,2 +1,6 @@
 let x = if (true) 10; else 20;
 println(x);
+
+println("hello, world")
+
+20

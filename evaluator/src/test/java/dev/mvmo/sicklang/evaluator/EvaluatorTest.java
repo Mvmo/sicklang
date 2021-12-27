@@ -173,7 +173,7 @@ public class EvaluatorTest {
             var evaluated = testEval(testCase.input);
             assertTrue(evaluated instanceof ErrorObject);
             var errorObject = (ErrorObject) evaluated;
-            assertEquals(testCase.expected, errorObject.message());
+            assertEquals(testCase.expected, errorObject.getMessage());
         });
     }
 
@@ -186,9 +186,9 @@ public class EvaluatorTest {
 
         var functionObject = (FunctionObject) evaluated;
 
-        assertEquals(1, functionObject.parameters().size());
-        assertEquals("x", functionObject.parameters().get(0).toString());
-        assertEquals("(x + 2)", functionObject.body().toString());
+        assertEquals(1, functionObject.getParameters().size());
+        assertEquals("x", functionObject.getParameters().get(0).toString());
+        assertEquals("(x + 2)", functionObject.getBody().toString());
     }
 
     @Test
@@ -219,7 +219,7 @@ public class EvaluatorTest {
 
         var evaluated = testEval(input);
         assertTrue(evaluated instanceof StringObject);
-        assertEquals("Hello, World!", ((StringObject) evaluated).value());
+        assertEquals("Hello, World!", ((StringObject) evaluated).getValue());
     }
 
     @Test
@@ -228,7 +228,7 @@ public class EvaluatorTest {
 
         var evaluated = testEval(input);
         assertTrue(evaluated instanceof StringObject);
-        assertEquals("Hello, World!", ((StringObject) evaluated).value());
+        assertEquals("Hello, World!", ((StringObject) evaluated).getValue());
     }
 
     // TODO fix order of params rofl
@@ -280,15 +280,15 @@ public class EvaluatorTest {
 
             if (testCase.expected instanceof String expectedString) {
                 assertTrue(evaluated instanceof ErrorObject);
-                assertEquals(expectedString, ((ErrorObject) evaluated).message());
+                assertEquals(expectedString, ((ErrorObject) evaluated).getMessage());
             }
 
             if (testCase.expected instanceof List<?> expectedList) {
                 assertTrue(evaluated instanceof ArrayObject);
-                assertEquals(expectedList, ((ArrayObject) evaluated).elements().stream()
+                assertEquals(expectedList, ((ArrayObject) evaluated).getElements().stream()
                         .filter(object -> object instanceof IntegerObject)
                         .map(object -> (IntegerObject) object)
-                        .map(IntegerObject::value)
+                        .map(IntegerObject::getValue)
                         .collect(Collectors.toList()));
             }
         });
@@ -302,11 +302,11 @@ public class EvaluatorTest {
         assertTrue(evaluated instanceof ArrayObject);
 
         var array = (ArrayObject) evaluated;
-        assertEquals(3, array.elements().size());
+        assertEquals(3, array.getElements().size());
 
-        testIntegerObject(array.elements().get(0), 1);
-        testIntegerObject(array.elements().get(1), 4);
-        testIntegerObject(array.elements().get(2), 6);
+        testIntegerObject(array.getElements().get(0), 1);
+        testIntegerObject(array.getElements().get(1), 4);
+        testIntegerObject(array.getElements().get(2), 6);
     }
 
     @Test
@@ -360,13 +360,13 @@ public class EvaluatorTest {
                 BooleanObject.FALSE.hashKey(), 6
         );
 
-        assertEquals(expected.size(), hash.pairs().size());
+        assertEquals(expected.size(), hash.getPairs().size());
 
         expected.forEach((expectedKey, expectedValue) -> {
-            assertTrue(hash.pairs().containsKey(expectedKey));
+            assertTrue(hash.getPairs().containsKey(expectedKey));
 
-            var hashEntry = hash.pairs().get(expectedKey);
-            testIntegerObject(hashEntry.value(), expectedValue);
+            var hashEntry = hash.getPairs().get(expectedKey);
+            testIntegerObject(hashEntry.getValue(), expectedValue);
         });
     }
 
@@ -390,26 +390,26 @@ public class EvaluatorTest {
     }
 
     private SickObject testEval(String input) {
-        var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var lexer = new Lexer(input);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
         var environment = SickEnvironment.newInstance();
 
-        return SicklangEvaluator.eval(programNode, environment);
+        return SicklangEvaluator.INSTANCE.eval(programNode, environment);
     }
 
     private void testIntegerObject(SickObject object, int expected) {
         assertTrue(object instanceof IntegerObject);
 
         var integerObject = (IntegerObject) object;
-        assertEquals(expected, integerObject.value());
+        assertEquals(expected, integerObject.getValue());
     }
 
     private void testBooleanObject(SickObject object, boolean expected) {
         assertTrue(object instanceof BooleanObject);
 
         var booleanObject = (BooleanObject) object;
-        assertEquals(expected, booleanObject.value());
+        assertEquals(expected, booleanObject.getValue());
     }
 
     private void testNullObject(SickObject object) {

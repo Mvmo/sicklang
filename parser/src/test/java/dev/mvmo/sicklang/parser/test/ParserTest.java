@@ -34,24 +34,24 @@ public class ParserTest {
         };
 
         for (TestCase testCase : testCases) {
-            Lexer lexer = Lexer.newInstance(testCase.input);
-            Parser parser = Parser.newInstance(lexer);
+            Lexer lexer = new Lexer(testCase.input);
+            Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
             checkParserErrors(parser);
 
             assertNotNull(programNode);
-            assertEquals(1, programNode.statementNodes().size());
+            assertEquals(1, programNode.getStatementNodes().size());
 
 
-            var statementNode = programNode.statementNodes().get(0);
+            var statementNode = programNode.getStatementNodes().get(0);
 
             testLetStatement(statementNode, testCase.expectedIdentifier);
 
             LetStatementNode letStatementNode = (LetStatementNode) statementNode;
 
-            System.out.println(letStatementNode.value());
-            testLiteralExpression(testCase.expectedValue, letStatementNode.value());
+            System.out.println(letStatementNode.getValue());
+            testLiteralExpression(testCase.expectedValue, letStatementNode.getValue());
         }
     }
 
@@ -72,22 +72,22 @@ public class ParserTest {
         };
 
         for (TestCase testCase : testCases) {
-            Lexer lexer = Lexer.newInstance(testCase.input);
-            Parser parser = Parser.newInstance(lexer);
+            Lexer lexer = new Lexer(testCase.input);
+            Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
             checkParserErrors(parser);
 
             assertNotNull(programNode);
-            assertEquals(1, programNode.statementNodes().size());
+            assertEquals(1, programNode.getStatementNodes().size());
 
-            var statementNode = programNode.statementNodes().get(0);
+            var statementNode = programNode.getStatementNodes().get(0);
 
             assertTrue(statementNode instanceof ReturnStatementNode);
 
             ReturnStatementNode returnStatementNode = (ReturnStatementNode) statementNode;
 
-            testLiteralExpression(testCase.expectedValue, returnStatementNode.returnValue());
+            testLiteralExpression(testCase.expectedValue, returnStatementNode.getReturnValue());
         }
     }
 
@@ -95,22 +95,22 @@ public class ParserTest {
     public void test$identifierExpression() {
         String input = "foobar;";
 
-        Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
+        Lexer lexer = new Lexer(input);
+        Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
         checkParserErrors(parser);
 
-        assertEquals(1, programNode.statementNodes().size());
-        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, programNode.getStatementNodes().size());
+        assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-        assertTrue(statementNode.expressionNode() instanceof IdentifierExpressionNode);
+        assertTrue(statementNode.getExpressionNode() instanceof IdentifierExpressionNode);
 
-        IdentifierExpressionNode identifierNode = (IdentifierExpressionNode) statementNode.expressionNode();
+        IdentifierExpressionNode identifierNode = (IdentifierExpressionNode) statementNode.getExpressionNode();
 
-        assertEquals("foobar", identifierNode.value());
+        assertEquals("foobar", identifierNode.getValue());
         assertEquals("foobar", identifierNode.tokenLiteral());
     }
 
@@ -118,22 +118,22 @@ public class ParserTest {
     public void test$integerLiteralExpression() {
         String input = "5;";
 
-        Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
+        Lexer lexer = new Lexer(input);
+        Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
         checkParserErrors(parser);
 
-        assertEquals(1, programNode.statementNodes().size());
-        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, programNode.getStatementNodes().size());
+        assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-        assertTrue(statementNode.expressionNode() instanceof IntegerLiteralExpressionNode);
+        assertTrue(statementNode.getExpressionNode() instanceof IntegerLiteralExpressionNode);
 
-        IntegerLiteralExpressionNode literalExpressionNode = (IntegerLiteralExpressionNode) statementNode.expressionNode();
+        IntegerLiteralExpressionNode literalExpressionNode = (IntegerLiteralExpressionNode) statementNode.getExpressionNode();
 
-        assertEquals(5, literalExpressionNode.value());
+        assertEquals(5, literalExpressionNode.getValue());
         assertEquals("5", literalExpressionNode.tokenLiteral());
     }
 
@@ -141,22 +141,22 @@ public class ParserTest {
     public void test$booleanExpression() {
         String input = "true;";
 
-        Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
+        Lexer lexer = new Lexer(input);
+        Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
         checkParserErrors(parser);
 
-        assertEquals(1, programNode.statementNodes().size());
-        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, programNode.getStatementNodes().size());
+        assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-        assertTrue(statementNode.expressionNode() instanceof BooleanExpressionNode);
+        assertTrue(statementNode.getExpressionNode() instanceof BooleanExpressionNode);
 
-        BooleanExpressionNode booleanExpressionNode = (BooleanExpressionNode) statementNode.expressionNode();
+        BooleanExpressionNode booleanExpressionNode = (BooleanExpressionNode) statementNode.getExpressionNode();
 
-        assertTrue(booleanExpressionNode.value());
+        assertTrue(booleanExpressionNode.getValue());
         assertEquals("true", booleanExpressionNode.tokenLiteral());
     }
 
@@ -177,23 +177,23 @@ public class ParserTest {
         };
 
         for (TestCase<?> testCase : testCases) {
-            Lexer lexer = Lexer.newInstance(testCase.input);
-            Parser parser = Parser.newInstance(lexer);
+            Lexer lexer = new Lexer(testCase.input);
+            Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
             checkParserErrors(parser);
 
-            assertEquals(1, programNode.statementNodes().size());
-            assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+            assertEquals(1, programNode.getStatementNodes().size());
+            assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-            ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+            ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-            assertTrue(statementNode.expressionNode() instanceof PrefixExpressionNode);
+            assertTrue(statementNode.getExpressionNode() instanceof PrefixExpressionNode);
 
-            PrefixExpressionNode prefixExpressionNode = (PrefixExpressionNode) statementNode.expressionNode();
+            PrefixExpressionNode prefixExpressionNode = (PrefixExpressionNode) statementNode.getExpressionNode();
 
-            assertEquals(testCase.operator, prefixExpressionNode.operator());
-            testLiteralExpression(testCase.value, prefixExpressionNode.right());
+            assertEquals(testCase.operator, prefixExpressionNode.getOperator());
+            testLiteralExpression(testCase.value, prefixExpressionNode.getRight());
         }
     }
 
@@ -222,18 +222,18 @@ public class ParserTest {
         };
 
         for (TestCase<?> testCase : testCases) {
-            Lexer lexer = Lexer.newInstance(testCase.input);
-            Parser parser = Parser.newInstance(lexer);
+            Lexer lexer = new Lexer(testCase.input);
+            Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
             checkParserErrors(parser);
 
-            assertEquals(1, programNode.statementNodes().size());
-            assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+            assertEquals(1, programNode.getStatementNodes().size());
+            assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-            ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+            ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-            testInfixExpression(testCase.leftValue, testCase.operator, testCase.rightValue, statementNode.expressionNode());
+            testInfixExpression(testCase.leftValue, testCase.operator, testCase.rightValue, statementNode.getExpressionNode());
         }
     }
 
@@ -275,8 +275,8 @@ public class ParserTest {
         };
 
         for (TestCase testCase : testCases) {
-            Lexer lexer = Lexer.newInstance(testCase.input);
-            Parser parser = Parser.newInstance(lexer);
+            Lexer lexer = new Lexer(testCase.input);
+            Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
             checkParserErrors(parser);
@@ -289,99 +289,99 @@ public class ParserTest {
     public void test$ifExpression() {
         String input = "if (x < y) { x }";
 
-        Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
+        Lexer lexer = new Lexer(input);
+        Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
         checkParserErrors(parser);
 
-        assertEquals(1, programNode.statementNodes().size());
-        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, programNode.getStatementNodes().size());
+        assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-        assertTrue(statementNode.expressionNode() instanceof IfExpressionNode);
+        assertTrue(statementNode.getExpressionNode() instanceof IfExpressionNode);
 
-        IfExpressionNode ifExpressionNode = (IfExpressionNode) statementNode.expressionNode();
+        IfExpressionNode ifExpressionNode = (IfExpressionNode) statementNode.getExpressionNode();
 
-        testInfixExpression("x", "<", "y", ifExpressionNode.conditionalExpressionNode());
+        testInfixExpression("x", "<", "y", ifExpressionNode.getConditionalExpressionNode());
 
-        assertEquals(1, ifExpressionNode.consequence().statementNodes().size());
-        assertTrue(ifExpressionNode.consequence().statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, ifExpressionNode.getConsequence().getStatementNodes().size());
+        assertTrue(ifExpressionNode.getConsequence().getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode consequenceStatementNode = (ExpressionStatementNode) ifExpressionNode.consequence().statementNodes().get(0);
+        ExpressionStatementNode consequenceStatementNode = (ExpressionStatementNode) ifExpressionNode.getConsequence().getStatementNodes().get(0);
 
-        testIdentifier("x", consequenceStatementNode.expressionNode());
+        testIdentifier("x", consequenceStatementNode.getExpressionNode());
 
-        assertNull(ifExpressionNode.alternative());
+        assertNull(ifExpressionNode.getAlternative());
     }
 
     @Test
     public void test$ifElseExpression() {
         String input = "if (x < y) { x } else { y }";
 
-        Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
+        Lexer lexer = new Lexer(input);
+        Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
         checkParserErrors(parser);
 
-        assertEquals(1, programNode.statementNodes().size());
-        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, programNode.getStatementNodes().size());
+        assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-        assertTrue(statementNode.expressionNode() instanceof IfExpressionNode);
+        assertTrue(statementNode.getExpressionNode() instanceof IfExpressionNode);
 
-        IfExpressionNode ifExpressionNode = (IfExpressionNode) statementNode.expressionNode();
+        IfExpressionNode ifExpressionNode = (IfExpressionNode) statementNode.getExpressionNode();
 
-        testInfixExpression("x", "<", "y", ifExpressionNode.conditionalExpressionNode());
+        testInfixExpression("x", "<", "y", ifExpressionNode.getConditionalExpressionNode());
 
-        assertEquals(1, ifExpressionNode.consequence().statementNodes().size());
-        assertTrue(ifExpressionNode.consequence().statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, ifExpressionNode.getConsequence().getStatementNodes().size());
+        assertTrue(ifExpressionNode.getConsequence().getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode consequenceStatementNode = (ExpressionStatementNode) ifExpressionNode.consequence().statementNodes().get(0);
+        ExpressionStatementNode consequenceStatementNode = (ExpressionStatementNode) ifExpressionNode.getConsequence().getStatementNodes().get(0);
 
-        testIdentifier("x", consequenceStatementNode.expressionNode());
+        testIdentifier("x", consequenceStatementNode.getExpressionNode());
 
-        assertEquals(1, ifExpressionNode.alternative().statementNodes().size());
-        assertTrue(ifExpressionNode.alternative().statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, ifExpressionNode.getAlternative().getStatementNodes().size());
+        assertTrue(ifExpressionNode.getAlternative().getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode alternativeStatementNode = (ExpressionStatementNode) ifExpressionNode.alternative().statementNodes().get(0);
+        ExpressionStatementNode alternativeStatementNode = (ExpressionStatementNode) ifExpressionNode.getAlternative().getStatementNodes().get(0);
 
-        testIdentifier("y", alternativeStatementNode.expressionNode());
+        testIdentifier("y", alternativeStatementNode.getExpressionNode());
     }
 
     @Test
     public void test$functionLiteral() {
         String input = "fn(x, y) { x + y; }";
 
-        Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
+        Lexer lexer = new Lexer(input);
+        Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
         checkParserErrors(parser);
 
-        assertEquals(1, programNode.statementNodes().size());
-        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, programNode.getStatementNodes().size());
+        assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-        assertTrue(statementNode.expressionNode() instanceof FunctionLiteralExpressionNode);
+        assertTrue(statementNode.getExpressionNode() instanceof FunctionLiteralExpressionNode);
 
-        FunctionLiteralExpressionNode functionLiteralExpressionNode = (FunctionLiteralExpressionNode) statementNode.expressionNode();
+        FunctionLiteralExpressionNode functionLiteralExpressionNode = (FunctionLiteralExpressionNode) statementNode.getExpressionNode();
 
-        assertEquals(2, functionLiteralExpressionNode.parameters().size());
+        assertEquals(2, functionLiteralExpressionNode.getParameters().size());
 
-        testLiteralExpression("x", functionLiteralExpressionNode.parameters().get(0));
-        testLiteralExpression("y", functionLiteralExpressionNode.parameters().get(1));
+        testLiteralExpression("x", functionLiteralExpressionNode.getParameters().get(0));
+        testLiteralExpression("y", functionLiteralExpressionNode.getParameters().get(1));
 
-        assertEquals(1, functionLiteralExpressionNode.body().statementNodes().size());
-        assertTrue(functionLiteralExpressionNode.body().statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, functionLiteralExpressionNode.getBody().getStatementNodes().size());
+        assertTrue(functionLiteralExpressionNode.getBody().getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode bodyExpressionNode = (ExpressionStatementNode) functionLiteralExpressionNode.body().statementNodes().get(0);
+        ExpressionStatementNode bodyExpressionNode = (ExpressionStatementNode) functionLiteralExpressionNode.getBody().getStatementNodes().get(0);
 
-        testInfixExpression("x", "+", "y", bodyExpressionNode.expressionNode());
+        testInfixExpression("x", "+", "y", bodyExpressionNode.getExpressionNode());
     }
 
     @Test
@@ -399,25 +399,25 @@ public class ParserTest {
         };
 
         for (TestCase testCase : testCases) {
-            Lexer lexer = Lexer.newInstance(testCase.input);
-            Parser parser = Parser.newInstance(lexer);
+            Lexer lexer = new Lexer(testCase.input);
+            Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
             checkParserErrors(parser);
 
-            assertTrue(programNode.statementNodes().size() >= 1);
-            assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+            assertTrue(programNode.getStatementNodes().size() >= 1);
+            assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-            ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+            ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-            assertTrue(statementNode.expressionNode() instanceof FunctionLiteralExpressionNode);
+            assertTrue(statementNode.getExpressionNode() instanceof FunctionLiteralExpressionNode);
 
-            FunctionLiteralExpressionNode functionLiteralExpressionNode = (FunctionLiteralExpressionNode) statementNode.expressionNode();
+            FunctionLiteralExpressionNode functionLiteralExpressionNode = (FunctionLiteralExpressionNode) statementNode.getExpressionNode();
 
-            assertEquals(testCase.expectedParamIdentifiers.length, functionLiteralExpressionNode.parameters().size());
+            assertEquals(testCase.expectedParamIdentifiers.length, functionLiteralExpressionNode.getParameters().size());
 
             for (int i = 0; i < testCase.expectedParamIdentifiers.length; i++)
-                testLiteralExpression(testCase.expectedParamIdentifiers[i], functionLiteralExpressionNode.parameters().get(i));
+                testLiteralExpression(testCase.expectedParamIdentifiers[i], functionLiteralExpressionNode.getParameters().get(i));
         }
     }
 
@@ -425,28 +425,28 @@ public class ParserTest {
     public void test$callExpression() {
         String input = "add(1, 2 * 3, 4 + 5);";
 
-        Lexer lexer = Lexer.newInstance(input);
-        Parser parser = Parser.newInstance(lexer);
+        Lexer lexer = new Lexer(input);
+        Parser parser = new Parser(lexer);
 
         ProgramNode programNode = parser.parseProgram();
         checkParserErrors(parser);
 
-        assertEquals(1, programNode.statementNodes().size());
-        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, programNode.getStatementNodes().size());
+        assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+        ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-        assertTrue(statementNode.expressionNode() instanceof CallExpressionNode);
+        assertTrue(statementNode.getExpressionNode() instanceof CallExpressionNode);
 
-        CallExpressionNode callExpressionNode = (CallExpressionNode) statementNode.expressionNode();
+        CallExpressionNode callExpressionNode = (CallExpressionNode) statementNode.getExpressionNode();
 
-        testIdentifier("add", callExpressionNode.function());
+        testIdentifier("add", callExpressionNode.getFunction());
 
-        assertEquals(3, callExpressionNode.arguments().size());
+        assertEquals(3, callExpressionNode.getArguments().size());
 
-        testLiteralExpression(1, callExpressionNode.arguments().get(0));
-        testInfixExpression(2, "*", 3, callExpressionNode.arguments().get(1));
-        testInfixExpression(4, "+", 5, callExpressionNode.arguments().get(2));
+        testLiteralExpression(1, callExpressionNode.getArguments().get(0));
+        testInfixExpression(2, "*", 3, callExpressionNode.getArguments().get(1));
+        testInfixExpression(4, "+", 5, callExpressionNode.getArguments().get(2));
     }
 
     @Test
@@ -464,25 +464,25 @@ public class ParserTest {
         };
 
         for (TestCase testCase : testCases) {
-            Lexer lexer = Lexer.newInstance(testCase.input);
-            Parser parser = Parser.newInstance(lexer);
+            Lexer lexer = new Lexer(testCase.input);
+            Parser parser = new Parser(lexer);
 
             ProgramNode programNode = parser.parseProgram();
             checkParserErrors(parser);
 
-            assertTrue(programNode.statementNodes().size() >= 1);
-            assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+            assertTrue(programNode.getStatementNodes().size() >= 1);
+            assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-            ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+            ExpressionStatementNode statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-            assertTrue(statementNode.expressionNode() instanceof CallExpressionNode);
+            assertTrue(statementNode.getExpressionNode() instanceof CallExpressionNode);
 
-            CallExpressionNode callExpressionNode = (CallExpressionNode) statementNode.expressionNode();
+            CallExpressionNode callExpressionNode = (CallExpressionNode) statementNode.getExpressionNode();
 
-            assertEquals(testCase.expectedParamIdentifiers.length, callExpressionNode.arguments().size());
+            assertEquals(testCase.expectedParamIdentifiers.length, callExpressionNode.getArguments().size());
 
             for (int i = 0; i < testCase.expectedParamIdentifiers.length; i++)
-                testLiteralExpression(testCase.expectedParamIdentifiers[i], callExpressionNode.arguments().get(i));
+                testLiteralExpression(testCase.expectedParamIdentifiers[i], callExpressionNode.getArguments().get(i));
         }
     }
 
@@ -490,20 +490,20 @@ public class ParserTest {
     public void test$stringLiteralExpression() {
         var input = "\"hello world\"";
 
-        var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var lexer = new Lexer(input);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
         checkParserErrors(parser);
 
-        assertEquals(1, programNode.statementNodes().size());
-        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, programNode.getStatementNodes().size());
+        assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        var statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+        var statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-        assertTrue(statementNode.expressionNode() instanceof StringLiteralExpressionNode);
+        assertTrue(statementNode.getExpressionNode() instanceof StringLiteralExpressionNode);
 
-        var stringExpression = (StringLiteralExpressionNode) statementNode.expressionNode();
+        var stringExpression = (StringLiteralExpressionNode) statementNode.getExpressionNode();
 
         assertEquals("hello world", stringExpression.tokenLiteral());
     }
@@ -512,74 +512,74 @@ public class ParserTest {
     public void test$arrayLiteralExpressions() {
         var input = "[1, 2 * 2, 3 + 3]";
 
-        var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var lexer = new Lexer(input);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
         checkParserErrors(parser);
 
-        assertEquals(1, programNode.statementNodes().size());
-        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, programNode.getStatementNodes().size());
+        assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        var statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+        var statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-        assertTrue(statementNode.expressionNode() instanceof ArrayLiteralExpressionNode);
+        assertTrue(statementNode.getExpressionNode() instanceof ArrayLiteralExpressionNode);
 
-        var arrayExpression = (ArrayLiteralExpressionNode) statementNode.expressionNode();
+        var arrayExpression = (ArrayLiteralExpressionNode) statementNode.getExpressionNode();
 
-        assertEquals(3, arrayExpression.elements().size());
+        assertEquals(3, arrayExpression.getElements().size());
 
-        testIntegerLiteral(1, arrayExpression.elements().get(0));
-        testInfixExpression(2, "*", 2, arrayExpression.elements().get(1));
-        testInfixExpression(3, "+", 3, arrayExpression.elements().get(2));
+        testIntegerLiteral(1, arrayExpression.getElements().get(0));
+        testInfixExpression(2, "*", 2, arrayExpression.getElements().get(1));
+        testInfixExpression(3, "+", 3, arrayExpression.getElements().get(2));
     }
 
     @Test
     public void test$indexExpression() {
         var input = "myArray[1 + 1]";
 
-        var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var lexer = new Lexer(input);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
         checkParserErrors(parser);
 
-        assertEquals(1, programNode.statementNodes().size());
-        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, programNode.getStatementNodes().size());
+        assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        var statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+        var statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-        assertTrue(statementNode.expressionNode() instanceof IndexExpressionNode);
+        assertTrue(statementNode.getExpressionNode() instanceof IndexExpressionNode);
 
-        var indexExpression = (IndexExpressionNode) statementNode.expressionNode();
+        var indexExpression = (IndexExpressionNode) statementNode.getExpressionNode();
 
-        testIdentifier("myArray", indexExpression.left());
-        testInfixExpression(1, "+", 1, indexExpression.index());
+        testIdentifier("myArray", indexExpression.getLeft());
+        testInfixExpression(1, "+", 1, indexExpression.getIndex());
     }
 
     @Test
     public void test$hashLiteralStringKeys() {
         String input = "{\"one\": 1, \"two\": 2, \"three\": 3}";
 
-        var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var lexer = new Lexer(input);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
         checkParserErrors(parser);
 
-        assertEquals(1, programNode.statementNodes().size());
-        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, programNode.getStatementNodes().size());
+        assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        var statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+        var statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-        assertTrue(statementNode.expressionNode() instanceof HashLiteralExpressionNode);
+        assertTrue(statementNode.getExpressionNode() instanceof HashLiteralExpressionNode);
 
-        var hashNode = (HashLiteralExpressionNode) statementNode.expressionNode();
-        assertEquals(3, hashNode.pairs().size());
+        var hashNode = (HashLiteralExpressionNode) statementNode.getExpressionNode();
+        assertEquals(3, hashNode.getPairs().size());
 
         var expectedMap = Map.of("one", 1, "two", 2, "three", 3);
 
-        hashNode.pairs().forEach((key, value) -> {
+        hashNode.getPairs().forEach((key, value) -> {
             assertTrue(key instanceof StringLiteralExpressionNode);
             var stringKey = (StringLiteralExpressionNode) key;
             var expectedValue = expectedMap.get(stringKey.toString());
@@ -592,42 +592,42 @@ public class ParserTest {
     public void test$emptyHashLiteral() {
         var input = "{}";
 
-        var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var lexer = new Lexer(input);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
         checkParserErrors(parser);
 
-        assertEquals(1, programNode.statementNodes().size());
-        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, programNode.getStatementNodes().size());
+        assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        var statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+        var statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-        assertTrue(statementNode.expressionNode() instanceof HashLiteralExpressionNode);
+        assertTrue(statementNode.getExpressionNode() instanceof HashLiteralExpressionNode);
 
-        var hashNode = (HashLiteralExpressionNode) statementNode.expressionNode();
-        assertEquals(0, hashNode.pairs().size());
+        var hashNode = (HashLiteralExpressionNode) statementNode.getExpressionNode();
+        assertEquals(0, hashNode.getPairs().size());
     }
 
     @Test
     public void test$hashLiteralWithExpressions() {
         var input = "{\"one\": 0 + 1, \"two\": 10 - 8, \"three\": 15 / 5}";
 
-        var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var lexer = new Lexer(input);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
         checkParserErrors(parser);
 
-        assertEquals(1, programNode.statementNodes().size());
-        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, programNode.getStatementNodes().size());
+        assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        var statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+        var statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-        assertTrue(statementNode.expressionNode() instanceof HashLiteralExpressionNode);
+        assertTrue(statementNode.getExpressionNode() instanceof HashLiteralExpressionNode);
 
-        var hashNode = (HashLiteralExpressionNode) statementNode.expressionNode();
-        assertEquals(3, hashNode.pairs().size());
+        var hashNode = (HashLiteralExpressionNode) statementNode.getExpressionNode();
+        assertEquals(3, hashNode.getPairs().size());
 
         Map<String, Consumer<ExpressionNode>> testFunctionMap = Map.of(
                 "one", (ExpressionNode expression) -> testInfixExpression(0, "+", 1, expression),
@@ -635,7 +635,7 @@ public class ParserTest {
                 "three", (ExpressionNode expression) -> testInfixExpression(15, "/", 5, expression)
         );
 
-        hashNode.pairs().forEach((key, value) -> {
+        hashNode.getPairs().forEach((key, value) -> {
             assertTrue(key instanceof StringLiteralExpressionNode);
             var stringKey = (StringLiteralExpressionNode) key;
 
@@ -654,23 +654,23 @@ public class ParserTest {
                     return 20;
                 """;
 
-        var lexer = Lexer.newInstance(input);
-        var parser = Parser.newInstance(lexer);
+        var lexer = new Lexer(input);
+        var parser = new Parser(lexer);
         var programNode = parser.parseProgram();
 
         checkParserErrors(parser);
 
-        assertEquals(1, programNode.statementNodes().size());
-        assertTrue(programNode.statementNodes().get(0) instanceof ExpressionStatementNode);
+        assertEquals(1, programNode.getStatementNodes().size());
+        assertTrue(programNode.getStatementNodes().get(0) instanceof ExpressionStatementNode);
 
-        var statementNode = (ExpressionStatementNode) programNode.statementNodes().get(0);
+        var statementNode = (ExpressionStatementNode) programNode.getStatementNodes().get(0);
 
-        assertTrue(statementNode.expressionNode() instanceof IfExpressionNode);
+        assertTrue(statementNode.getExpressionNode() instanceof IfExpressionNode);
 
-        var ifNode = (IfExpressionNode) statementNode.expressionNode();
+        var ifNode = (IfExpressionNode) statementNode.getExpressionNode();
 
-        assertEquals(1, ifNode.consequence().statementNodes().size());
-        assertEquals(1, ifNode.alternative().statementNodes().size());
+        assertEquals(1, ifNode.getConsequence().getStatementNodes().size());
+        assertEquals(1, ifNode.getAlternative().getStatementNodes().size());
     }
 
     private void testLetStatement(StatementNode statement, String name) {
@@ -679,8 +679,8 @@ public class ParserTest {
 
         LetStatementNode letStatement = (LetStatementNode) statement;
 
-        assertEquals(name, letStatement.identifier().value());
-        assertEquals(name, letStatement.identifier().tokenLiteral());
+        assertEquals(name, letStatement.getIdentifier().getValue());
+        assertEquals(name, letStatement.getIdentifier().tokenLiteral());
     }
 
     private void testIntegerLiteral(int expectedValue, ExpressionNode expressionNode) {
@@ -688,7 +688,7 @@ public class ParserTest {
 
         IntegerLiteralExpressionNode literalExpressionNode = (IntegerLiteralExpressionNode) expressionNode;
 
-        assertEquals(expectedValue, literalExpressionNode.value());
+        assertEquals(expectedValue, literalExpressionNode.getValue());
         assertEquals(String.valueOf(expectedValue), literalExpressionNode.tokenLiteral());
     }
 
@@ -697,9 +697,9 @@ public class ParserTest {
 
         InfixExpressionNode infixExpressionNode = (InfixExpressionNode) expressionNode;
 
-        testLiteralExpression(expectedLeft, infixExpressionNode.left());
-        assertEquals(expectedOperator, infixExpressionNode.operator());
-        testLiteralExpression(expectedRight, infixExpressionNode.right());
+        testLiteralExpression(expectedLeft, infixExpressionNode.getLeft());
+        assertEquals(expectedOperator, infixExpressionNode.getOperator());
+        testLiteralExpression(expectedRight, infixExpressionNode.getRight());
     }
 
     private void testBooleanLiteral(boolean expectedValue, ExpressionNode expressionNode) {
@@ -707,14 +707,14 @@ public class ParserTest {
 
         BooleanExpressionNode booleanExpressionNode = (BooleanExpressionNode) expressionNode;
 
-        assertEquals(expectedValue, booleanExpressionNode.value());
+        assertEquals(expectedValue, booleanExpressionNode.getValue());
         assertEquals(String.valueOf(expectedValue), booleanExpressionNode.tokenLiteral());
     }
 
     private void testIdentifier(String expectedValue, ExpressionNode expressionNode) {
         assertTrue(expressionNode instanceof IdentifierExpressionNode);
         IdentifierExpressionNode identifierExpressionNode = (IdentifierExpressionNode) expressionNode;
-        assertEquals(expectedValue, identifierExpressionNode.value());
+        assertEquals(expectedValue, identifierExpressionNode.getValue());
         assertEquals(expectedValue, identifierExpressionNode.tokenLiteral());
     }
 
@@ -729,11 +729,11 @@ public class ParserTest {
     }
 
     private void checkParserErrors(Parser parser) {
-        if (parser.errorMessages().size() == 0)
+        if (parser.getErrorMessages().size() == 0)
             return;
 
-        System.err.printf("parser has %d errors\n", parser.errorMessages().size());
-        parser.errorMessages().stream()
+        System.err.printf("parser has %d errors\n", parser.getErrorMessages().size());
+        parser.getErrorMessages().stream()
                 .map(message -> "parser error: " + message)
                 .forEach(System.err::println);
 
