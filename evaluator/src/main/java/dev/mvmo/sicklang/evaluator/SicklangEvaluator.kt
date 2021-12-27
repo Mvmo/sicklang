@@ -267,8 +267,6 @@ object SicklangEvaluator {
         if (env.hasKey(node.value))
             return env[node.value]!!
 
-        println(builtinFunctions.firstOrNull { it.name.contentEquals(node.value) })
-
         return builtinFunctions.firstOrNull { it.name.contentEquals(node.value) }
             ?: ErrorObject.formatted("identifier not found: " + node.value)
     }
