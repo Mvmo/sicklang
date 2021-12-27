@@ -62,8 +62,8 @@ public class SicklangReplApplication {
                 return;
             }
 
-            var evaluated = SicklangEvaluator.eval(programNode, environment);
-            if (evaluated == null)
+            var evaluated = SicklangEvaluator.INSTANCE.eval(programNode, environment);
+            if (evaluated == null) // TODO: what is this
                 return;
 
             System.out.println(evaluated.inspect());
@@ -97,7 +97,7 @@ public class SicklangReplApplication {
         }
 
         var environment = SickEnvironment.newInstance();
-        var evaluated = SicklangEvaluator.eval(programNode, environment);
+        var evaluated = SicklangEvaluator.INSTANCE.eval(programNode, environment);
 
         System.out.println(evaluated.inspect());
     }

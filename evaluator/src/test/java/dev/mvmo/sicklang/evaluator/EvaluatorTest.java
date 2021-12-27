@@ -395,7 +395,7 @@ public class EvaluatorTest {
         var programNode = parser.parseProgram();
         var environment = SickEnvironment.newInstance();
 
-        return SicklangEvaluator.eval(programNode, environment);
+        return SicklangEvaluator.INSTANCE.eval(programNode, environment);
     }
 
     private void testIntegerObject(SickObject object, int expected) {
