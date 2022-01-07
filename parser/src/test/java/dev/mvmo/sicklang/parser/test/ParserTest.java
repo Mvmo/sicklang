@@ -276,7 +276,9 @@ public class ParserTest {
                 new TestCase("add(a * b[2], b[1], 2 * [1, 2][1])", "add((a * (b[2])), (b[1]), (2 * ([1, 2][1])))"),
                 new TestCase("x || b", "(x || b)"),
                 new TestCase("x && b", "(x && b)"),
-                new TestCase("x == 5 && y == 5", "((x == 5) && (y == 5))")
+                new TestCase("x == 5 && y == 5", "((x == 5) && (y == 5))"),
+                new TestCase("x | y", "(x | y)"),
+                new TestCase("x & y", "(x & y)")
         };
 
         for (TestCase testCase : testCases) {

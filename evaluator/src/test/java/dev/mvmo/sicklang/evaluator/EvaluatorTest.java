@@ -45,7 +45,11 @@ public class EvaluatorTest {
                 new SimpleTestCase<>("2 * (5 + 10)", 30),
                 new SimpleTestCase<>("3 * 3 * 3 + 10", 37),
                 new SimpleTestCase<>("3 * (3 * 3) + 10", 37),
-                new SimpleTestCase<>("(5 + 10 * 2 + 15 / 3) * 2 + -10", 50)
+                new SimpleTestCase<>("(5 + 10 * 2 + 15 / 3) * 2 + -10", 50),
+                new SimpleTestCase<>("5 & 5", 5),
+                new SimpleTestCase<>("5 & 100", 5 & 100),
+                new SimpleTestCase<>("5 | 5", 5),
+                new SimpleTestCase<>("5 | 100", 5 | 100)
         ).forEach(testCase -> {
             var evaluated = testEval(testCase.input);
             testIntegerObject(evaluated, testCase.expected);
@@ -77,9 +81,20 @@ public class EvaluatorTest {
                 new SimpleTestCase<>("true || true", true),
                 new SimpleTestCase<>("false || false", false),
                 new SimpleTestCase<>("false || true", true),
+                new SimpleTestCase<>("false || false || true || false", true),
+                new SimpleTestCase<>("false || false || false || false", false),
                 new SimpleTestCase<>("true && true", true),
                 new SimpleTestCase<>("true && false", false),
-                new SimpleTestCase<>("false && false", false)
+                new SimpleTestCase<>("false && false", false),
+                new SimpleTestCase<>("true && true && true", true),
+                new SimpleTestCase<>("false || (true && true)", true),
+                new SimpleTestCase<>("true & false", false),
+                new SimpleTestCase<>("false & false & true", false),
+                new SimpleTestCase<>("false | false", false),
+                new SimpleTestCase<>("false | false | false", false),
+                new SimpleTestCase<>("true | true | true", true),
+                new SimpleTestCase<>("false | true | false", true),
+                new SimpleTestCase<>("false & true | false & true", false)
         ).forEach(testCase -> {
             var evaluated = testEval(testCase.input);
             testBooleanObject(evaluated, testCase.expected);

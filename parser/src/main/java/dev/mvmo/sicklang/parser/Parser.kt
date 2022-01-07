@@ -49,6 +49,8 @@ class Parser(private val lexer: Lexer) {
             put(TokenType.LEFT_BRACKET, InfixParseFunction { parseIndexExpression(it) })
             put(TokenType.OR, InfixParseFunction { parseInfixExpression(it) })
             put(TokenType.AND, InfixParseFunction { parseInfixExpression(it) })
+            put(TokenType.BITWISE_AND, InfixParseFunction { parseInfixExpression(it) })
+            put(TokenType.BITWISE_OR, InfixParseFunction { parseInfixExpression(it) })
         }
 
         this.currentToken = lexer.nextToken()

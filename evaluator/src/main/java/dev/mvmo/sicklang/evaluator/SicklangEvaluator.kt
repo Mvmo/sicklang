@@ -116,7 +116,7 @@ object SicklangEvaluator {
         }
     }
 
-    fun evalProgram(programNode: ProgramNode, environment: SickEnvironment): SickObject {
+    private fun evalProgram(programNode: ProgramNode, environment: SickEnvironment): SickObject {
         var result: SickObject = NullObject.NULL
 
         for (node in programNode.statementNodes) {
@@ -130,7 +130,7 @@ object SicklangEvaluator {
         return result
     }
 
-    fun evalBlockStatement(blockStatementNode: BlockStatementNode, environment: SickEnvironment): SickObject {
+    private fun evalBlockStatement(blockStatementNode: BlockStatementNode, environment: SickEnvironment): SickObject {
         var result: SickObject = NullObject.NULL
 
         for (statementNode in blockStatementNode.statementNodes) {
@@ -143,24 +143,24 @@ object SicklangEvaluator {
         return result
     }
 
-    fun evalPrefixExpression(operator: String, right: SickObject): SickObject =
+    private fun evalPrefixExpression(operator: String, right: SickObject): SickObject =
         when (operator) {
             "!" -> evalBangOperatorExpression(right)
             "-" -> evalMinusPrefixOperatorExpression(right)
             else -> ErrorObject.formatted("unknown operator: %s%s", operator, right.objectType())
         }
 
-    fun evalBangOperatorExpression(right: SickObject): SickObject {
+    private fun evalBangOperatorExpression(right: SickObject): SickObject {
         return if (BooleanObject.FALSE.equals(right) || NullObject.NULL == right) BooleanObject.TRUE else BooleanObject.FALSE
     }
 
-    fun evalMinusPrefixOperatorExpression(right: SickObject): SickObject =
+    private fun evalMinusPrefixOperatorExpression(right: SickObject): SickObject =
         when (right) {
             is IntegerObject -> IntegerObject(-right.value)
             else -> ErrorObject.formatted("unknown operator: -%s", right.objectType())
         }
 
-    fun evalInfixExpression(operator: String, left: SickObject, right: SickObject): SickObject {
+    private fun evalInfixExpression(operator: String, left: SickObject, right: SickObject): SickObject {
         if (left.objectType() != right.objectType())
             return ErrorObject.formatted("type mismatch: %s %s %s", left.objectType(), operator, right.objectType())
 
@@ -179,7 +179,7 @@ object SicklangEvaluator {
             ErrorObject.formatted("unknown operator: %s %s %s", left.objectType(), operator, right.objectType())
     }
 
-    fun evalIntegerInfixExpression(operator: String, left: SickObject, right: SickObject): SickObject {
+    private fun evalIntegerInfixExpression(operator: String, left: SickObject, right: SickObject): SickObject {
         Preconditions.checkArgument(left is IntegerObject)
         Preconditions.checkArgument(right is IntegerObject)
 
@@ -197,21 +197,24 @@ object SicklangEvaluator {
             "==" -> BooleanObject.fromNative(leftInt == rightInt) // TODO: not required?
             "!=" -> BooleanObject.fromNative(leftInt != rightInt) // TODO: not required?
 
+            "&" -> IntegerObject(leftInt.and(rightInt))
+            "|" -> IntegerObject(leftInt.or(rightInt))
+
             else -> ErrorObject.formatted("unknown operator: %s %s %s", left.objectType(), operator, right.objectType())
         }
     }
 
-    fun evalStringInfixExpression(operator: String, left: SickObject, right: SickObject): SickObject {
+    private fun evalStringInfixExpression(operator: String, left: SickObject, right: SickObject): SickObject {
         Preconditions.checkArgument(left is StringObject)
         Preconditions.checkArgument(right is StringObject)
-
-        if (operator != "+")
-            return ErrorObject.formatted("unknown operator: %s %s %s", left.objectType(), operator, right.objectType())
 
         val leftValue = (left as StringObject).value
         val rightValue = (right as StringObject).value
 
-        return StringObject(leftValue + rightValue)
+        return when (operator) {
+            "+" -> StringObject(leftValue + rightValue)
+            else -> ErrorObject.formatted("unknown operator: %s %s %s", left.objectType(), operator, right.objectType())
+        }
     }
 
     fun evalBooleanInfixExpression(operator: String, left: SickObject, right: SickObject): SickObject {
@@ -222,7 +225,9 @@ object SicklangEvaluator {
         val rightValue = (right as BooleanObject).value
 
         return when (operator) {
+            "|" -> BooleanObject.fromNative(leftValue.or(rightValue))
             "||" -> BooleanObject.fromNative(leftValue || rightValue)
+            "&" -> BooleanObject.fromNative(leftValue.and(rightValue))
             "&&" -> BooleanObject.fromNative(leftValue && rightValue)
             else -> ErrorObject.formatted("unknown operator: %s %s %s", left.objectType(), operator, right.objectType())
         }
@@ -251,7 +256,7 @@ object SicklangEvaluator {
         return ErrorObject.formatted("index operator not supported: %s", left.objectType())
     }
 
-    fun evalArrayIndexExpression(left: SickObject, index: SickObject): SickObject {
+    private fun evalArrayIndexExpression(left: SickObject, index: SickObject): SickObject {
         Preconditions.checkArgument(left is ArrayObject)
         Preconditions.checkArgument(index is IntegerObject)
 
@@ -266,7 +271,7 @@ object SicklangEvaluator {
         return array.elements[elementIndex]
     }
 
-    fun evalHashIndexExpression(left: SickObject, index: SickObject): SickObject {
+    private fun evalHashIndexExpression(left: SickObject, index: SickObject): SickObject {
         Preconditions.checkArgument(left is HashObject)
 
         val hashObject = left as HashObject
@@ -279,7 +284,7 @@ object SicklangEvaluator {
         return hashObject.pairs[hashKey]?.value ?: NullObject.NULL
     }
 
-    fun evalIdentifier(node: IdentifierExpressionNode, env: SickEnvironment): SickObject {
+    private fun evalIdentifier(node: IdentifierExpressionNode, env: SickEnvironment): SickObject {
         if (env.hasKey(node.value))
             return env[node.value]!!
 
@@ -287,7 +292,7 @@ object SicklangEvaluator {
             ?: ErrorObject.formatted("identifier not found: " + node.value)
     }
 
-    fun evalHashLiteral(node: HashLiteralExpressionNode, env: SickEnvironment): SickObject {
+    private fun evalHashLiteral(node: HashLiteralExpressionNode, env: SickEnvironment): SickObject {
         val pairs = mutableMapOf<HashKey, HashObject.Entry>()
 
         node.pairs.entries.forEach {
@@ -309,7 +314,7 @@ object SicklangEvaluator {
         return HashObject(pairs)
     }
 
-    fun evalExpressions(expressionNodes: List<ExpressionNode>, env: SickEnvironment): List<SickObject> {
+    private fun evalExpressions(expressionNodes: List<ExpressionNode>, env: SickEnvironment): List<SickObject> {
         val result = mutableListOf<SickObject>()
 
         expressionNodes.forEach {
@@ -336,7 +341,7 @@ object SicklangEvaluator {
         }
 
 
-    fun extendFunctionEnvironment(functionObject: FunctionObject, args: List<SickObject>): SickEnvironment {
+    private fun extendFunctionEnvironment(functionObject: FunctionObject, args: List<SickObject>): SickEnvironment {
         val env = SickEnvironment.newEnclosedInstance(functionObject.environment)
 
         functionObject.parameters.forEachIndexed { index, node ->
