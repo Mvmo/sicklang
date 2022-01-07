@@ -1,6 +1,9 @@
-let x = if (true) 10; else 20;
-println(x);
+let fib = fn(n) {
+    if ((n == 0) || (n == 1)) {
+        return n;
+    }
 
-println("hello, world")
+    return fib(n - 1) + fib(n - 2);
+}
 
-20
+println(fib(12))

@@ -17,6 +17,8 @@ enum class TokenType(private val literal: String) {
     GREATER_THAN(">"),
     EQUALS("=="),
     NOT_EQUALS("!="),
+    OR("||"),
+    AND("&&"),
     COMMA(","),
     COLON(":"),
     SEMICOLON(";"),

@@ -47,6 +47,8 @@ class Parser(private val lexer: Lexer) {
             put(TokenType.GREATER_THAN, InfixParseFunction { parseInfixExpression(it) })
             put(TokenType.LEFT_PAREN, InfixParseFunction { parseCallExpression(it) })
             put(TokenType.LEFT_BRACKET, InfixParseFunction { parseIndexExpression(it) })
+            put(TokenType.OR, InfixParseFunction { parseInfixExpression(it) })
+            put(TokenType.AND, InfixParseFunction { parseInfixExpression(it) })
         }
 
         this.currentToken = lexer.nextToken()
@@ -170,7 +172,7 @@ class Parser(private val lexer: Lexer) {
         val infixExpressionNode = InfixExpressionNode(currentToken, left, currentToken.literal)
         val precedence = Precedence.findPrecedence(currentToken.type)
 
-        nextToken();
+        nextToken()
 
         infixExpressionNode.right = parseExpression(precedence)
 

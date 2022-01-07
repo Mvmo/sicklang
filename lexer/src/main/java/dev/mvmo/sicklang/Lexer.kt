@@ -64,6 +64,24 @@ class Lexer(private val input: String) {
             ']' -> Token(TokenType.RIGHT_BRACKET, "]")
             '"' -> Token(TokenType.STRING, readString())
             ':' -> Token(TokenType.COLON, ":")
+            '|' -> {
+                if (peekChar() == '|') {
+                    val c = currentChar
+                    readChar()
+                    val literal = "$c$currentChar"
+                    Token(TokenType.OR, literal)
+                } else
+                    Token(TokenType.BITWISE_OR, "|")
+            }
+            '&' -> {
+                if (peekChar() == '&') {
+                    val c = currentChar
+                    readChar()
+                    val literal = "$c$currentChar"
+                    Token(TokenType.AND, literal)
+                } else
+                    Token(TokenType.BITWISE_AND, "&")
+            }
             '\u0000' -> Token(TokenType.EOF, "")
             else -> return findToken()
         }

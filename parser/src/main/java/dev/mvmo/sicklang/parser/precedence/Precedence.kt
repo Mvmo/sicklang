@@ -6,8 +6,10 @@ import dev.mvmo.sicklang.token.TokenType
 enum class Precedence(vararg appliedTo: TokenType) {
 
     LOWEST,
+    OR(TokenType.OR),
+    AND(TokenType.AND),
     EQUALS(TokenType.EQUALS, TokenType.NOT_EQUALS),  // ==
-    LESS_GREATER_THAN(TokenType.LESS_THAN, TokenType.GREATER_THAN),  // > or <
+    LESS_GREATER_THAN(TokenType.LESS_THAN, TokenType.GREATER_THAN),  // > or < and or - maybe rename to boolean arithmetic
     SUM(TokenType.PLUS, TokenType.MINUS),  // +
     PRODUCT(TokenType.SLASH, TokenType.ASTERISK),  // *
     PREFIX,  // -x or !x

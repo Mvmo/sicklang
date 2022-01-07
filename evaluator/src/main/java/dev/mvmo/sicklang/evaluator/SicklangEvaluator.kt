@@ -173,6 +173,8 @@ object SicklangEvaluator {
             evalIntegerInfixExpression(operator, left, right)
         else if (left is StringObject && right is StringObject)
             evalStringInfixExpression(operator, left, right)
+        else if (left is BooleanObject && right is BooleanObject)
+            evalBooleanInfixExpression(operator, left, right)
         else
             ErrorObject.formatted("unknown operator: %s %s %s", left.objectType(), operator, right.objectType())
     }
@@ -210,6 +212,20 @@ object SicklangEvaluator {
         val rightValue = (right as StringObject).value
 
         return StringObject(leftValue + rightValue)
+    }
+
+    fun evalBooleanInfixExpression(operator: String, left: SickObject, right: SickObject): SickObject {
+        Preconditions.checkArgument(left is BooleanObject)
+        Preconditions.checkArgument(right is BooleanObject)
+
+        val leftValue = (left as BooleanObject).value
+        val rightValue = (right as BooleanObject).value
+
+        return when (operator) {
+            "||" -> BooleanObject.fromNative(leftValue || rightValue)
+            "&&" -> BooleanObject.fromNative(leftValue && rightValue)
+            else -> ErrorObject.formatted("unknown operator: %s %s %s", left.objectType(), operator, right.objectType())
+        }
     }
 
     // TODO: norm param names
@@ -345,16 +361,6 @@ object SicklangEvaluator {
             return true
         return sickObject != BooleanObject.FALSE && sickObject != NullObject.NULL
     }
-
-/*    private static boolean truthy(SickObject
-    object) {
-        if (
-        object == BooleanObject.TRUE)
-        return true;
-        return
-        object != BooleanObject.FALSE &&
-        object != NullObject.NULL;
-    }*/
 
     private fun error(sickObject: SickObject?): Boolean {
         if (sickObject != null)
