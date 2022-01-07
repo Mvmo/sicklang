@@ -19,6 +19,8 @@ enum class TokenType(private val literal: String) {
     NOT_EQUALS("!="),
     OR("||"),
     AND("&&"),
+    BITWISE_OR("|"),
+    BITWISE_AND("&"),
     COMMA(","),
     COLON(":"),
     SEMICOLON(";"),
