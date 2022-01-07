@@ -216,6 +216,8 @@ public class ParserTest {
                 new TestCase<>("5 < 5;", 5, "<", 5), // <
                 new TestCase<>("5 == 5;", 5, "==", 5), // ==
                 new TestCase<>("5 != 5;", 5, "!=", 5), // !=
+                new TestCase<>("true || false", true, "||", false),
+                new TestCase<>("true && true", true, "&&", true),
                 new TestCase<>("true == true;", true, "==", true),
                 new TestCase<>("true != false;", true, "!=", false),
                 new TestCase<>("false == false", false, "==", false)
@@ -271,7 +273,10 @@ public class ParserTest {
                 new TestCase("add(a, b, 1, 2 * 3, 4 + 5, add(6, 7 * 8))", "add(a, b, 1, (2 * 3), (4 + 5), add(6, (7 * 8)))"),
                 new TestCase("add(a + b + c * d / f + g)", "add((((a + b) + ((c * d) / f)) + g))"),
                 new TestCase("a * [1, 2, 3, 4][b * c] * d", "((a * ([1, 2, 3, 4][(b * c)])) * d)"),
-                new TestCase("add(a * b[2], b[1], 2 * [1, 2][1])", "add((a * (b[2])), (b[1]), (2 * ([1, 2][1])))")
+                new TestCase("add(a * b[2], b[1], 2 * [1, 2][1])", "add((a * (b[2])), (b[1]), (2 * ([1, 2][1])))"),
+                new TestCase("x || b", "(x || b)"),
+                new TestCase("x && b", "(x && b)"),
+                new TestCase("x == 5 && y == 5", "((x == 5) && (y == 5))")
         };
 
         for (TestCase testCase : testCases) {

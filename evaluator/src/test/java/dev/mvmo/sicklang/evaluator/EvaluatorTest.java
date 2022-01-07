@@ -73,7 +73,13 @@ public class EvaluatorTest {
                 new SimpleTestCase<>("(1 < 2) == true", true),
                 new SimpleTestCase<>("(1 < 2) == false", false),
                 new SimpleTestCase<>("(1 > 2) == true", false),
-                new SimpleTestCase<>("(1 > 2) == false", true)
+                new SimpleTestCase<>("(1 > 2) == false", true),
+                new SimpleTestCase<>("true || true", true),
+                new SimpleTestCase<>("false || false", false),
+                new SimpleTestCase<>("false || true", true),
+                new SimpleTestCase<>("true && true", true),
+                new SimpleTestCase<>("true && false", false),
+                new SimpleTestCase<>("false && false", false)
         ).forEach(testCase -> {
             var evaluated = testEval(testCase.input);
             testBooleanObject(evaluated, testCase.expected);

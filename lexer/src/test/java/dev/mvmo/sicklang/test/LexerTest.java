@@ -32,6 +32,10 @@ public class LexerTest {
                 "foo bar"
                 [1, 2];
                 {"foo": "bar"}
+                ||
+                |
+                &&
+                &
                 """;
 
         Token[] expectedTokens = new Token[]{
@@ -121,6 +125,10 @@ public class LexerTest {
                 new Token(TokenType.COLON, ":"),
                 new Token(TokenType.STRING, "bar"),
                 new Token(TokenType.RIGHT_BRACE, "}"),
+                new Token(TokenType.OR, "||"),
+                new Token(TokenType.BITWISE_OR, "|"),
+                new Token(TokenType.AND, "&&"),
+                new Token(TokenType.BITWISE_AND, "&"),
                 new Token(TokenType.EOF, "")
         };
 
